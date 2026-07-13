@@ -229,14 +229,12 @@ p{margin:0;text-wrap:pretty}
 .plaque-panel{background:#101012;border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:20px}
 .plaque-title{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:1rem;display:flex;align-items:center;gap:9px}
 .plaque-title::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--g-blue);flex:none}
-.cpills{display:flex;flex-wrap:wrap;gap:10px}
-.cpill{position:relative;display:inline-flex;align-items:center;gap:9px;padding:11px 16px;border-radius:999px;background:#0d0d0f;border:1px solid rgba(255,255,255,.14);cursor:pointer;font-size:.92rem;transition:border-color .25s,transform .25s cubic-bezier(.2,.8,.2,1)}
-.cpill:hover{transform:translateY(-1px)}
-.cpill input{position:absolute;opacity:0;pointer-events:none}
-.cpill.is-active{border-color:var(--g-blue);box-shadow:0 0 0 1px var(--g-blue)}
-.cpill:has(input:focus-visible){outline:2px solid var(--g-blue);outline-offset:3px}
-.cpill-dot{width:14px;height:14px;border-radius:50%;border:1px solid rgba(255,255,255,.25);flex:none}
-@media (max-width:560px){.pack{padding:14px 16px}.plaque-panel{padding:16px}}
+/* combinaisons du pack de 2 */
+.vcards.vcards--trio{grid-template-columns:repeat(3,1fr);gap:12px}
+.vcards--trio .vcard-meta{padding:12px 8px}
+.vcards--trio .vcard-name{font-size:.82rem}
+.vcards--trio .vcard-check{width:22px;height:22px;font-size:.7rem;top:10px;right:10px}
+@media (max-width:560px){.pack{padding:14px 16px}.plaque-panel{padding:16px}.vcards.vcards--trio{grid-template-columns:repeat(3,1fr);gap:8px}.vcards--trio .vcard-name{font-size:.7rem}}
 .qty{display:inline-flex;align-items:center;border:1px solid rgba(255,255,255,.14);border-radius:999px;overflow:hidden}
 .qty button{width:46px;height:46px;background:transparent;border:0;color:var(--c-paper);font-size:1.2rem;transition:background .2s}
 .qty button:hover{background:rgba(255,255,255,.08)}

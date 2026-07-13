@@ -261,11 +261,10 @@
       /* Pack — 9,50 € de remise sur 2 plaques. Doit correspondre à la réduction
          automatique Shopify « Pack 2 plaques » (remise + livraison gratuite, min. 2 articles). */
       var PACK_DISCOUNT = 950;
-      var duoEl = root.querySelector('[data-pack-duo]');
+      var duoEls = Array.prototype.slice.call(root.querySelectorAll('[data-pack-duo]'));
       var singleEls = Array.prototype.slice.call(root.querySelectorAll('[data-pack-single]'));
       var packPrice1 = root.querySelector('[data-pack-price="1"]');
       var packPrice2 = root.querySelector('[data-pack-price="2"]');
-      var duoInit = false;
 
       function getVariant(id) {
         return variants.find(function (x) { return String(x.id) === String(id); });
@@ -274,22 +273,28 @@
         var r = form.querySelector('[data-pack-radio]:checked');
         return r && r.value === '2' ? 2 : 1;
       }
+      function selectedCombo() {
+        return form.querySelector('[data-combo]:checked');
+      }
       function plaqueVariant(i) {
-        var r = form.querySelector('[data-plaque-color="' + i + '"]:checked');
-        var v = r && getVariant(r.value);
+        var combo = selectedCombo();
+        var v = combo && getVariant(combo.dataset['v' + i]);
         return v || getVariant(idInput.value);
       }
-      function setImage(v, card) {
-        if (!imgEl || !v) return;
-        var src = v.featured_image && (v.featured_image.src || v.featured_image.url);
-        if (!src && card && card.dataset.image) src = card.dataset.image;
-        if (!src) return;
+      function setMainImage(src, imageId) {
+        if (!imgEl || !src) return;
         imgEl.removeAttribute('srcset');
         imgEl.src = src;
         if (!reduced() && imgEl.animate) {
           imgEl.animate([{ opacity: .3 }, { opacity: 1 }], { duration: 420, easing: 'ease' });
         }
-        setActiveThumb(v.featured_image && v.featured_image.id, src);
+        setActiveThumb(imageId, src);
+      }
+      function setImage(v, card) {
+        if (!v) return;
+        var src = v.featured_image && (v.featured_image.src || v.featured_image.url);
+        if (!src && card && card.dataset.image) src = card.dataset.image;
+        if (src) setMainImage(src, v.featured_image && v.featured_image.id);
       }
       function setPrice(cents, compareCents) {
         if (priceEl) {
@@ -327,10 +332,10 @@
           setAvail(v.available);
         }
       }
-      function syncCpills() {
-        root.querySelectorAll('.cpill').forEach(function (c) {
+      function syncCards() {
+        root.querySelectorAll('.vcard').forEach(function (c) {
           var input = c.querySelector('input');
-          c.classList.toggle('is-active', input && input.checked);
+          c.classList.toggle('is-active', !!(input && input.checked));
         });
       }
       function setGroupHidden(el, hide) {
@@ -342,20 +347,19 @@
       }
       function setMode() {
         var mode = packMode();
-        if (mode === 2 && !duoInit) {
-          duoInit = true;
-          [1, 2].forEach(function (i) {
-            var r = form.querySelector('[data-plaque-color="' + i + '"][value="' + idInput.value + '"]');
-            if (r) r.checked = true;
-          });
-          syncCpills();
-        }
         singleEls.forEach(function (el) { setGroupHidden(el, mode === 2); });
-        if (duoEl) setGroupHidden(duoEl, mode !== 2);
+        duoEls.forEach(function (el) { setGroupHidden(el, mode !== 2); });
         root.querySelectorAll('.pack').forEach(function (c) {
           var input = c.querySelector('input');
           c.classList.toggle('is-active', input && input.checked);
         });
+        var combo = selectedCombo();
+        if (mode === 2 && combo && combo.dataset.image) {
+          setMainImage(combo.dataset.image);
+        } else if (mode === 1) {
+          var checked = form.querySelector('[data-variant-radio]:checked');
+          setImage(getVariant(idInput.value), checked && checked.closest('.vcard'));
+        }
         refresh();
       }
       function select(v, card) {
@@ -364,9 +368,7 @@
         setImage(v, card);
         if (packPrice1) packPrice1.textContent = money(v.price);
         if (packPrice2) packPrice2.textContent = money(v.price * 2 - PACK_DISCOUNT);
-        root.querySelectorAll('.vcard').forEach(function (c) {
-          c.classList.toggle('is-active', c.querySelector('input') && c.querySelector('input').checked);
-        });
+        syncCards();
         refresh();
       }
       root.querySelectorAll('[data-variant-radio]').forEach(function (radio) {
@@ -377,10 +379,10 @@
       root.querySelectorAll('[data-pack-radio]').forEach(function (radio) {
         radio.addEventListener('change', setMode);
       });
-      root.querySelectorAll('[data-plaque-color]').forEach(function (radio) {
+      root.querySelectorAll('[data-combo]').forEach(function (radio) {
         radio.addEventListener('change', function () {
-          syncCpills();
-          setImage(getVariant(radio.value), radio.closest('.cpill'));
+          syncCards();
+          if (radio.dataset.image) setMainImage(radio.dataset.image);
           refresh();
         });
       });
@@ -409,11 +411,13 @@
         };
         if (packMode() === 2) {
           var note = form.querySelector('[name="properties[Remarque]"]');
+          var combo = selectedCombo();
           var items = [1, 2].map(function (i) {
             var v = plaqueVariant(i);
             var nameField = form.querySelector('[data-plaque-name="' + i + '"]');
             var linkField = form.querySelector('[data-plaque-link="' + i + '"]');
             var props = { 'Plaque': i + '/2' };
+            if (combo && combo.dataset.label) props['Combinaison'] = combo.dataset.label;
             if (nameField && nameField.value) props['Nom de l’établissement'] = nameField.value;
             if (linkField && linkField.value) props['Lien Google'] = linkField.value;
             if (note && note.value) props['Remarque'] = note.value;
