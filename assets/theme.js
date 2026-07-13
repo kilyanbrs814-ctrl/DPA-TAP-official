@@ -43,14 +43,38 @@
     qsa(scope, '[data-header]').forEach(function (header) {
       if (!guard(header, 'Header')) return;
       var heroEl = document.querySelector('.hero');
-      var onScroll = function () {
+      var scrollRaf = null;
+      var menu = header.querySelector('.hdr-menu');
+      var updateHeader = function () {
+        scrollRaf = null;
         header.classList.toggle('is-scrolled', window.scrollY > 40);
         var limit = heroEl ? heroEl.offsetTop + heroEl.offsetHeight - 80 : 40;
-        header.classList.toggle('is-visible', window.scrollY > limit);
+        header.classList.toggle('is-visible', !heroEl || window.scrollY > limit);
+      };
+      var onScroll = function () {
+        if (scrollRaf === null) scrollRaf = requestAnimationFrame(updateHeader);
       };
       window.addEventListener('scroll', onScroll, { passive: true });
-      onCleanup(header, function () { window.removeEventListener('scroll', onScroll); });
-      onScroll();
+      var closeMenu = function (ev) {
+        if (!menu || !menu.open) return;
+        if (ev.type === 'keydown' && ev.key !== 'Escape') return;
+        if (ev.type === 'click' && menu.contains(ev.target) && !ev.target.closest('a')) return;
+        menu.open = false;
+        if (ev.type === 'keydown') menu.querySelector('summary').focus();
+      };
+      if (menu) {
+        document.addEventListener('click', closeMenu);
+        document.addEventListener('keydown', closeMenu);
+      }
+      onCleanup(header, function () {
+        window.removeEventListener('scroll', onScroll);
+        if (scrollRaf !== null) cancelAnimationFrame(scrollRaf);
+        if (menu) {
+          document.removeEventListener('click', closeMenu);
+          document.removeEventListener('keydown', closeMenu);
+        }
+      });
+      updateHeader();
     });
   }
 
@@ -75,22 +99,32 @@
     qsa(scope, '.hero').forEach(function (hero) {
       if (!guard(hero, 'Parallax')) return;
       var img = hero.querySelector('.hero-bg img');
-      if (!img || reduced() || !('IntersectionObserver' in window)) return;
+      if (!img || reduced() || window.matchMedia('(max-width: 900px)').matches || !('IntersectionObserver' in window)) return;
       var visible = false, rafId = null;
       function frame() {
-        if (!visible) { rafId = null; img.style.transform = ''; return; }
+        rafId = null;
+        if (!visible) { img.style.transform = ''; return; }
         var r = hero.getBoundingClientRect();
         var h = r.height || 1;
         var p = Math.min(1, Math.max(0, -r.top / h));
         img.style.transform = 'translate3d(0,' + (p * h * 0.05).toFixed(1) + 'px,0) scale(1.08)';
-        rafId = requestAnimationFrame(frame);
       }
+      function queue() { if (visible && rafId === null) rafId = requestAnimationFrame(frame); }
       var io = new IntersectionObserver(function (entries) {
         visible = entries[0].isIntersecting;
-        if (visible && rafId === null) rafId = requestAnimationFrame(frame);
+        if (visible) queue();
+        else img.style.transform = '';
       });
       io.observe(hero);
-      onCleanup(hero, function () { io.disconnect(); visible = false; });
+      window.addEventListener('scroll', queue, { passive: true });
+      window.addEventListener('resize', queue, { passive: true });
+      onCleanup(hero, function () {
+        io.disconnect();
+        visible = false;
+        window.removeEventListener('scroll', queue);
+        window.removeEventListener('resize', queue);
+        if (rafId !== null) cancelAnimationFrame(rafId);
+      });
     });
   }
 
@@ -98,14 +132,15 @@
   function initScrolly(scope) {
     qsa(scope, '[data-scrolly]').forEach(function (root) {
       if (!guard(root, 'Scrolly')) return;
-      if (reduced() || !('IntersectionObserver' in window)) { root.classList.add('is-static'); return; }
+      if (reduced() || window.matchMedia('(max-width: 900px) and (max-height: 560px)').matches || !('IntersectionObserver' in window)) { root.classList.add('is-static'); return; }
       var stage = root.querySelector('.scrolly-stage');
       var steps = root.querySelectorAll('[data-step]');
       var track = root.querySelector('.scrolly-track');
       if (!stage || !track) return;
       var active = false, rafId = null;
       function frame() {
-        if (!active) { rafId = null; return; }
+        rafId = null;
+        if (!active) return;
         var r = track.getBoundingClientRect();
         var total = r.height - window.innerHeight;
         var p = total > 0 ? Math.min(1, Math.max(0, -r.top / total)) : 0;
@@ -120,14 +155,22 @@
             el.classList.toggle('is-done', i < phase - 1);
           });
         }
-        rafId = requestAnimationFrame(frame);
       }
+      function queue() { if (active && rafId === null) rafId = requestAnimationFrame(frame); }
       var io = new IntersectionObserver(function (entries) {
         active = entries[0].isIntersecting;
-        if (active && rafId === null) rafId = requestAnimationFrame(frame);
+        if (active) queue();
       }, { rootMargin: '20% 0px 20% 0px' });
       io.observe(root);
-      onCleanup(root, function () { io.disconnect(); active = false; });
+      window.addEventListener('scroll', queue, { passive: true });
+      window.addEventListener('resize', queue, { passive: true });
+      onCleanup(root, function () {
+        io.disconnect();
+        active = false;
+        window.removeEventListener('scroll', queue);
+        window.removeEventListener('resize', queue);
+        if (rafId !== null) cancelAnimationFrame(rafId);
+      });
     });
   }
 
@@ -290,10 +333,15 @@
         }
         setActiveThumb(imageId, src);
       }
+      function cardImage(card) {
+        if (!card) return '';
+        if (window.matchMedia('(max-width: 560px)').matches && card.dataset.imageMobile) return card.dataset.imageMobile;
+        return card.dataset.image || '';
+      }
       function setImage(v, card) {
         if (!v) return;
         var src = v.featured_image && (v.featured_image.src || v.featured_image.url);
-        if (!src && card && card.dataset.image) src = card.dataset.image;
+        if (!src) src = cardImage(card);
         if (src) setMainImage(src, v.featured_image && v.featured_image.id);
       }
       function setPrice(cents, compareCents) {
@@ -341,7 +389,7 @@
       function setGroupHidden(el, hide) {
         el.hidden = hide;
         Array.prototype.slice.call(el.querySelectorAll('input,textarea,select')).forEach(function (field) {
-          field.disabled = hide;
+          field.disabled = hide || field.hasAttribute('data-unavailable');
         });
         if (!hide) swapIn(el);
       }
@@ -349,13 +397,18 @@
         var mode = packMode();
         singleEls.forEach(function (el) { setGroupHidden(el, mode === 2); });
         duoEls.forEach(function (el) { setGroupHidden(el, mode !== 2); });
+        var combo = selectedCombo();
+        if (mode === 2 && (!combo || combo.disabled)) {
+          combo = form.querySelector('[data-combo]:not([disabled])');
+          if (combo) combo.checked = true;
+        }
+        syncCards();
         root.querySelectorAll('.pack').forEach(function (c) {
           var input = c.querySelector('input');
           c.classList.toggle('is-active', input && input.checked);
         });
-        var combo = selectedCombo();
-        if (mode === 2 && combo && combo.dataset.image) {
-          setMainImage(combo.dataset.image);
+        if (mode === 2 && combo && cardImage(combo)) {
+          setMainImage(cardImage(combo));
         } else if (mode === 1) {
           var checked = form.querySelector('[data-variant-radio]:checked');
           setImage(getVariant(idInput.value), checked && checked.closest('.vcard'));
@@ -382,7 +435,7 @@
       root.querySelectorAll('[data-combo]').forEach(function (radio) {
         radio.addEventListener('change', function () {
           syncCards();
-          if (radio.dataset.image) setMainImage(radio.dataset.image);
+          if (cardImage(radio)) setMainImage(cardImage(radio));
           refresh();
         });
       });
@@ -400,11 +453,34 @@
         });
       });
 
+      setMode();
+
       form.addEventListener('submit', function (ev) {
         ev.preventDefault();
         if (errEl) errEl.hidden = true;
         if (okEl) okEl.hidden = true;
-        if (btn) { btn.classList.remove('is-shake', 'is-added'); btn.classList.add('is-loading'); }
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          if (errEl) {
+            errEl.textContent = 'Vérifiez les champs obligatoires avant d’ajouter au panier.';
+            errEl.hidden = false;
+          }
+          return;
+        }
+        if (packMode() === 2 && (!selectedCombo() || selectedCombo().disabled)) {
+          if (errEl) {
+            errEl.textContent = 'Cette combinaison est actuellement indisponible.';
+            errEl.hidden = false;
+            errEl.focus({ preventScroll: true });
+          }
+          return;
+        }
+        if (btn) {
+          btn.classList.remove('is-shake', 'is-added');
+          btn.classList.add('is-loading');
+          btn.setAttribute('aria-busy', 'true');
+          btn.disabled = true;
+        }
         var opts = {
           method: 'POST',
           headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
@@ -444,14 +520,22 @@
             addedTimer = setTimeout(function () { btn.classList.remove('is-added'); }, 2000);
           }
         }).catch(function (err) {
-          if (errEl) { errEl.textContent = err.message; errEl.hidden = false; }
+          if (errEl) {
+            errEl.textContent = err.message;
+            errEl.hidden = false;
+            errEl.focus({ preventScroll: true });
+          }
           if (btn && !reduced()) {
             btn.classList.remove('is-shake');
             void btn.offsetWidth;
             btn.classList.add('is-shake');
           }
         }).finally(function () {
-          if (btn) btn.classList.remove('is-loading');
+          if (btn) {
+            btn.classList.remove('is-loading');
+            btn.removeAttribute('aria-busy');
+          }
+          refresh();
         });
       });
     });

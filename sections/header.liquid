@@ -8,8 +8,20 @@
     <a href="{{ section.settings.link_models | default: '/#modeles' }}">{{ section.settings.label_models | default: 'Modèles' }}</a>
     <a href="{{ section.settings.link_faq | default: '/#faq' }}">{{ section.settings.label_faq | default: 'FAQ' }}</a>
   </nav>
+  <details class="hdr-menu">
+    <summary>
+      <span class="sr-only">Ouvrir le menu</span>
+      <span class="hdr-menu-icon" aria-hidden="true"><span></span><span></span></span>
+    </summary>
+    <nav class="hdr-menu-nav" aria-label="Navigation mobile">
+      <a href="{{ section.settings.link_how | default: '/#fonctionnement' }}">{{ section.settings.label_how | default: 'Fonctionnement' }}</a>
+      <a href="{{ section.settings.link_models | default: '/#modeles' }}">{{ section.settings.label_models | default: 'Modèles' }}</a>
+      <a href="{{ section.settings.link_faq | default: '/#faq' }}">{{ section.settings.label_faq | default: 'FAQ' }}</a>
+    </nav>
+  </details>
   <a class="hdr-cart" href="{{ routes.cart_url }}">
-    Panier
+    <svg class="hdr-cart-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 10.1a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 1.9-1.4L21 8H7M10 20h.01M18 20h.01" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span class="hdr-cart-label">Panier</span>
     <span data-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
   </a>
 </header>

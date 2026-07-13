@@ -32,8 +32,8 @@
       {% assign lower_title = variant.title | downcase %}
       {% if lower_title contains 'bleu' or lower_title contains 'blue' %}{% assign fallback_asset = 'plaque-bleue.jpg' %}{% endif %}
       {% assign fallback_url = fallback_asset | asset_url %}
-      <label class="vcard{% if variant.id == current.id %} is-active{% endif %}" data-image="{{ fallback_url }}">
-        <input type="radio" name="variant-choice" value="{{ variant.id }}" data-variant-radio {% if variant.id == current.id %}checked{% endif %}>
+      <label class="vcard{% if variant.id == current.id %} is-active{% endif %}{% unless variant.available %} is-disabled{% endunless %}" data-image="{{ fallback_url }}">
+        <input type="radio" name="variant-choice" value="{{ variant.id }}" data-variant-radio {% if variant.id == current.id %}checked{% endif %}{% unless variant.available %} data-unavailable disabled{% endunless %}>
         {% if variant.featured_image %}
           {{ variant.featured_image | image_url: width: 800 | image_tag: loading: 'lazy', widths: '400, 800', sizes: '(max-width: 560px) 90vw, 320px', alt: variant.title }}
         {% else %}
@@ -41,6 +41,7 @@
         {% endif %}
         <span class="vcard-meta">
           <span class="vcard-name">{{ variant.title }}</span>
+          {% unless variant.available %}<span class="vcard-status">Épuisé</span>{% endunless %}
         </span>
         <span class="vcard-check" aria-hidden="true">✓</span>
       </label>
@@ -48,7 +49,7 @@
   </fieldset>
 
   <fieldset class="packs" style="border:0;padding:0;margin:0 0 30px">
-    <legend class="eyebrow" style="margin-bottom:16px;padding:0">Choisissez votre quantité</legend>
+    <legend class="eyebrow" style="margin-bottom:16px;padding:0">Choisissez votre offre</legend>
     <label class="pack is-active">
       <input type="radio" name="pack-choice" value="1" data-pack-radio checked>
       <span class="pack-dot" aria-hidden="true"></span>
@@ -61,7 +62,8 @@
       <input type="radio" name="pack-choice" value="2" data-pack-radio>
       <span class="pack-dot" aria-hidden="true"></span>
       <span class="pack-info">
-        <span class="pack-name">2 plaques</span>
+        <span class="pack-name"><span class="pack-mobile-prefix">Pack </span>2 plaques</span>
+        <span class="pack-badge">Livraison offerte</span>
       </span>
       <span class="pack-price" data-pack-price="2">{{ pack_price | money }}</span>
     </label>
@@ -70,33 +72,33 @@
   {% comment %} Combinaisons du pack de 2 — images à déposer dans assets/ avec exactement ces noms. {% endcomment %}
   <fieldset class="vcards vcards--trio" data-pack-duo hidden style="border:0;padding:0;margin:0 0 30px">
     <legend class="eyebrow" style="margin-bottom:16px;padding:0">Choisissez votre combinaison</legend>
-    <label class="vcard is-active">
+    <label class="vcard is-active{% unless v_black.available %} is-disabled{% endunless %}">
       <input type="radio" name="combo-{{ section.id }}" value="noire-noire" data-combo
              data-v1="{{ v_black.id }}" data-v2="{{ v_black.id }}"
-             data-label="2 plaques noires" data-image="{{ 'pack-2-noires.png' | asset_url }}" checked disabled>
-      <img src="{{ 'pack-2-noires.png' | asset_url }}" width="1254" height="1254" loading="lazy" alt="2 plaques noires">
-      <span class="vcard-meta"><span class="vcard-name">2 plaques noires</span></span>
+             data-label="2 plaques noires" data-image="{{ 'pack-2-noires.png' | asset_url }}" data-image-mobile="{{ 'pack-2-noires-mobile.jpg' | asset_url }}" checked disabled{% unless v_black.available %} data-unavailable{% endunless %}>
+      <picture><source media="(max-width: 560px)" srcset="{{ 'pack-2-noires-mobile.jpg' | asset_url }}"><img src="{{ 'pack-2-noires.png' | asset_url }}" width="1254" height="1254" loading="lazy" alt="2 plaques noires"></picture>
+      <span class="vcard-meta"><span class="vcard-name">2 plaques noires</span>{% unless v_black.available %}<span class="vcard-status">Indisponible</span>{% endunless %}</span>
       <span class="vcard-check" aria-hidden="true">✓</span>
     </label>
-    <label class="vcard">
+    <label class="vcard{% unless v_black.available and v_blue.available %} is-disabled{% endunless %}">
       <input type="radio" name="combo-{{ section.id }}" value="noire-bleue" data-combo
              data-v1="{{ v_black.id }}" data-v2="{{ v_blue.id }}"
-             data-label="1 noire + 1 bleue" data-image="{{ 'pack-noire-bleue.png' | asset_url }}" disabled>
-      <img src="{{ 'pack-noire-bleue.png' | asset_url }}" width="1254" height="1254" loading="lazy" alt="1 plaque noire + 1 plaque bleue">
-      <span class="vcard-meta"><span class="vcard-name">1 noire + 1 bleue</span></span>
+             data-label="1 noire + 1 bleue" data-image="{{ 'pack-noire-bleue.png' | asset_url }}" data-image-mobile="{{ 'pack-noire-bleue-mobile.jpg' | asset_url }}" disabled{% unless v_black.available and v_blue.available %} data-unavailable{% endunless %}>
+      <picture><source media="(max-width: 560px)" srcset="{{ 'pack-noire-bleue-mobile.jpg' | asset_url }}"><img src="{{ 'pack-noire-bleue.png' | asset_url }}" width="1254" height="1254" loading="lazy" alt="1 plaque noire + 1 plaque bleue"></picture>
+      <span class="vcard-meta"><span class="vcard-name">1 noire + 1 bleue</span>{% unless v_black.available and v_blue.available %}<span class="vcard-status">Indisponible</span>{% endunless %}</span>
       <span class="vcard-check" aria-hidden="true">✓</span>
     </label>
-    <label class="vcard">
+    <label class="vcard{% unless v_blue.available %} is-disabled{% endunless %}">
       <input type="radio" name="combo-{{ section.id }}" value="bleue-bleue" data-combo
              data-v1="{{ v_blue.id }}" data-v2="{{ v_blue.id }}"
-             data-label="2 plaques bleues" data-image="{{ 'pack-2-bleues.png' | asset_url }}" disabled>
-      <img src="{{ 'pack-2-bleues.png' | asset_url }}" width="1254" height="1254" loading="lazy" alt="2 plaques bleues">
-      <span class="vcard-meta"><span class="vcard-name">2 plaques bleues</span></span>
+             data-label="2 plaques bleues" data-image="{{ 'pack-2-bleues.png' | asset_url }}" data-image-mobile="{{ 'pack-2-bleues-mobile.jpg' | asset_url }}" disabled{% unless v_blue.available %} data-unavailable{% endunless %}>
+      <picture><source media="(max-width: 560px)" srcset="{{ 'pack-2-bleues-mobile.jpg' | asset_url }}"><img src="{{ 'pack-2-bleues.png' | asset_url }}" width="1254" height="1254" loading="lazy" alt="2 plaques bleues"></picture>
+      <span class="vcard-meta"><span class="vcard-name">2 plaques bleues</span>{% unless v_blue.available %}<span class="vcard-status">Indisponible</span>{% endunless %}</span>
       <span class="vcard-check" aria-hidden="true">✓</span>
     </label>
   </fieldset>
 
-  <p class="buy-avail{% unless current.available %} is-out{% endunless %}" data-availability
+  <p class="buy-avail{% unless current.available %} is-out{% endunless %}" data-availability role="status" aria-live="polite"
      data-in-stock="En stock — expédiée sous 24 h" data-out-stock="Épuisé — bientôt de retour">
     {% if current.available %}En stock — expédiée sous 24 h{% else %}Épuisé — bientôt de retour{% endif %}
   </p>
@@ -137,16 +139,17 @@
 
   <button type="submit" name="add" class="btn btn--blue buy-submit" data-add-btn
           data-label-add="Ajouter au panier" data-label-sold-out="Épuisé"
+          aria-describedby="buy-error-{{ section.id }}"
           {% unless current.available %}disabled{% endunless %}>
     <span class="spinner" aria-hidden="true"></span>
     <span class="check" aria-hidden="true">✓</span>
     <span class="label">{% if current.available %}Ajouter au panier{% else %}Épuisé{% endif %}</span>
   </button>
   <div data-pack-single>{{ form | payment_button }}</div>
-  <p class="buy-error" data-form-error role="alert" hidden></p>
-  <div class="buy-success" data-form-success hidden>
+  <p class="buy-error" id="buy-error-{{ section.id }}" data-form-error role="alert" tabindex="-1" hidden></p>
+  <div class="buy-success" data-form-success role="status" aria-live="polite" hidden>
     <span>Ajouté au panier ✓</span>
-    <span><a href="{{ routes.cart_url }}">Voir le panier</a> · <a href="{{ routes.cart_url }}/checkout">Payer</a></span>
+    <span><a href="{{ routes.cart_url }}">Voir le panier</a> · <a href="{{ routes.root_url }}checkout">Payer</a></span>
   </div>
 {% endform %}
 

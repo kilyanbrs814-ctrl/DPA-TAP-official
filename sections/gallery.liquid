@@ -10,9 +10,14 @@
         {% assign shape = shapes[forloop.index0] | default: 'c' %}
         <figure class="gal-item gal-item--{{ shape }} reveal" {{ block.shopify_attributes }}>
           {% if block.settings.image %}
-            {{ block.settings.image | image_url: width: 1600 | image_tag: loading: 'lazy', widths: '600, 1000, 1600', sizes: '(max-width: 760px) 100vw, 60vw', alt: block.settings.caption }}
+            {{ block.settings.image | image_url: width: 1600 | image_tag: loading: 'lazy', widths: '360, 540, 760, 1000, 1600', sizes: '(max-width: 760px) calc(100vw - 32px), 60vw', alt: block.settings.caption }}
           {% else %}
-            <img src="{{ block.settings.fallback | default: 'scene-cafe.png' | asset_url }}" width="1254" height="1254" loading="lazy" alt="{{ block.settings.caption | escape }}">
+            {% assign fallback_asset = block.settings.fallback | default: 'scene-cafe.png' %}
+            {% assign fallback_mobile = fallback_asset | replace: '.png', '-mobile.jpg' %}
+            <picture>
+              <source media="(max-width: 760px)" srcset="{{ fallback_mobile | asset_url }}">
+              <img src="{{ fallback_asset | asset_url }}" width="1254" height="1254" loading="lazy" alt="{{ block.settings.caption | escape }}">
+            </picture>
           {% endif %}
           {% if block.settings.caption != blank %}<figcaption>{{ block.settings.caption }}</figcaption>{% endif %}
         </figure>

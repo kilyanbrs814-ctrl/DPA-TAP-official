@@ -10,7 +10,7 @@
         <div class="reveal">
           {% assign main_img = product.selected_or_first_available_variant.featured_image | default: product.featured_image %}
           {% if main_img %}
-            {{ main_img | image_url: width: 1400 | image_tag: class: 'prod-media-img', loading: 'lazy', widths: '600, 1000, 1400', sizes: '(max-width: 980px) 100vw, 55vw', alt: product.title, data-buy-image: '', style: 'border-radius:26px;width:100%' }}
+            {{ main_img | image_url: width: 1400 | image_tag: class: 'prod-media-img', loading: 'lazy', widths: '360, 540, 750, 1000, 1400', sizes: '(max-width: 980px) calc(100vw - 32px), 55vw', alt: product.title, data-buy-image: '', style: 'border-radius:26px;width:100%' }}
           {% else %}
             <img src="{{ 'plaque-noire.jpg' | asset_url }}" width="1254" height="1254" data-buy-image loading="lazy" alt="{{ product.title | escape }}" style="border-radius:26px;width:100%">
           {% endif %}
@@ -28,7 +28,7 @@
                   aria-label="Afficher {{ thumb_alt | escape }}"
                   aria-pressed="{% if image.id == main_img.id %}true{% else %}false{% endif %}"
                 >
-                  {{ image | image_url: width: 160 | image_tag: loading: 'lazy', widths: '80, 120, 160', sizes: '72px', alt: thumb_alt }}
+                  {{ image | image_url: width: 160 | image_tag: loading: 'lazy', widths: '80, 120, 160', sizes: '(max-width: 560px) 60px, 72px', alt: thumb_alt }}
                 </button>
               {% endfor %}
             </div>

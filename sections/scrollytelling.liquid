@@ -13,7 +13,7 @@
         <div class="scrolly-stage" data-phase="1" aria-hidden="true">
           <div class="scrolly-rail"></div>
           {% if section.settings.plaque_image %}
-            {{ section.settings.plaque_image | image_url: width: 800 | image_tag: class: 'stage-plaque', loading: 'lazy', alt: '' }}
+            {{ section.settings.plaque_image | image_url: width: 800 | image_tag: class: 'stage-plaque', loading: 'lazy', widths: '240, 360, 540, 800', sizes: '(max-width: 900px) 56vw, 320px', alt: '' }}
           {% else %}
             <img class="stage-plaque" src="{{ 'plaque-bleue.jpg' | asset_url }}" width="1254" height="1254" loading="lazy" alt="">
           {% endif %}

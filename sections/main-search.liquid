@@ -1,5 +1,5 @@
 <section class="page-pad"><div class="container"><h1 class="h-lg">Recherche</h1>
-<form action="{{ routes.search_url }}" method="get" role="search" style="margin:28px 0 44px;display:flex;gap:12px;max-width:520px">
+<form class="search-form" action="{{ routes.search_url }}" method="get" role="search" style="margin:28px 0 44px;display:flex;gap:12px;max-width:520px">
   <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="Rechercher…" style="flex:1;padding:14px 18px;border:1px solid color-mix(in srgb,var(--c-ink) 20%,transparent);border-radius:999px;font:inherit;background:#fff">
   <button type="submit" class="btn btn--ink">Rechercher</button>
 </form>

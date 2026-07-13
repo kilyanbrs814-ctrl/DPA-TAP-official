@@ -16,7 +16,7 @@
           <tbody>
             {% for item in cart.items %}
               <tr>
-                <td>
+                <td data-label="Produit">
                   <div class="cart-item">
                     {% if item.image %}{{ item.image | image_url: width: 200 | image_tag: loading: 'lazy', alt: item.title }}{% endif %}
                     <div>
@@ -28,14 +28,14 @@
                     </div>
                   </div>
                 </td>
-                <td>
+                <td data-label="Quantité">
                   <label class="visually-hidden" for="updates_{{ item.key }}">Quantité</label>
                   <div class="qty" style="border-color:color-mix(in srgb,var(--c-ink) 20%,transparent)">
                     <input id="updates_{{ item.key }}" style="color:var(--c-ink)" type="number" name="updates[]" value="{{ item.quantity }}" min="0" inputmode="numeric">
                   </div>
                 </td>
-                <td>{{ item.final_line_price | money }}</td>
-                <td><a href="{{ item.url_to_remove }}" aria-label="Retirer {{ item.product.title | escape }}">Retirer</a></td>
+                <td data-label="Total">{{ item.final_line_price | money }}</td>
+                <td data-label="Action"><a href="{{ item.url_to_remove }}" aria-label="Retirer {{ item.product.title | escape }}">Retirer</a></td>
               </tr>
             {% endfor %}
           </tbody>
