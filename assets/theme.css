@@ -295,17 +295,10 @@ p{margin:0;text-wrap:pretty}
 .hero-scrollhint{animation:hintPulse 2.6s ease-in-out infinite}
 @keyframes hintPulse{0%,100%{opacity:.55;transform:translateX(-50%) translateY(0)}50%{opacity:1;transform:translateX(-50%) translateY(-6px)}}
 
-/* --- Scrollytelling : étapes + indicateur de progression --- */
+/* --- Scrollytelling : étapes --- */
 .scrolly-step small{transition:color .5s ease}
 .scrolly-step.is-active small{color:var(--g-blue)}
 .scrolly-step.is-done{color:color-mix(in srgb,var(--c-paper) 48%,transparent)}
-.scrolly-progress{display:flex;gap:8px;margin-top:34px;max-width:280px}
-.scrolly-progress span{flex:1;height:2px;border-radius:2px;background:rgba(255,255,255,.14);overflow:hidden}
-.scrolly-progress span::after{content:"";display:block;height:100%;background:var(--g-blue);transform-origin:left;transform:scaleX(var(--f,0))}
-.scrolly-progress span:nth-child(1){--f:clamp(0,calc(var(--p,0)*3),1)}
-.scrolly-progress span:nth-child(2){--f:clamp(0,calc(var(--p,0)*3 - 1),1)}
-.scrolly-progress span:nth-child(3){--f:clamp(0,calc(var(--p,0)*3 - 2),1)}
-.scrolly.is-static .scrolly-progress span::after{transform:scaleX(1)}
 .stage-plaque{transform:translateX(-16%) rotateZ(-3deg) translateY(calc(var(--p,0)*-14px))}
 
 /* --- Bénéfices : révélation en cascade + élément courant --- */
@@ -372,7 +365,6 @@ p{margin:0;text-wrap:pretty}
 @media (prefers-reduced-motion:reduce){
   .hero-scrollhint{animation:none}
   .hero-bg img{will-change:auto}
-  .scrolly-progress span::after{transform:scaleX(1)}
   .stage-plaque{transform:translateX(-16%) rotateZ(-3deg)}
   .vcard.is-active .vcard-check,.buy-success:not([hidden]),.buy-error:not([hidden]),.buy-submit.is-shake,.hdr-cart [data-cart-count].is-bump{animation:none}
   .gal-item.reveal img,.install-step.reveal .install-img img{transform:none;transition:none}
