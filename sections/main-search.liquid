@@ -1,0 +1,15 @@
+<section class="page-pad"><div class="container"><h1 class="h-lg">Recherche</h1>
+<form action="{{ routes.search_url }}" method="get" role="search" style="margin:28px 0 44px;display:flex;gap:12px;max-width:520px">
+  <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="Rechercher…" style="flex:1;padding:14px 18px;border:1px solid color-mix(in srgb,var(--c-ink) 20%,transparent);border-radius:999px;font:inherit;background:#fff">
+  <button type="submit" class="btn btn--ink">Rechercher</button>
+</form>
+{% if search.performed %}
+  {% if search.results_count == 0 %}<p>Aucun résultat pour « {{ search.terms }} ».</p>{% endif %}
+  <div style="display:grid;gap:18px">
+    {% for item in search.results %}<a href="{{ item.url }}" style="text-decoration:none"><strong>{{ item.title }}</strong></a>{% endfor %}
+  </div>
+{% endif %}</div></section>
+
+{% schema %}
+{ "name": "Recherche", "settings": [] }
+{% endschema %}

@@ -1,0 +1,17 @@
+<section class="page-pad"><div class="container"><h1 class="h-lg">{{ collection.title }}</h1>
+{% paginate collection.products by 24 %}
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px;margin-top:44px">
+  {% for product in collection.products %}
+    <a href="{{ product.url }}" style="text-decoration:none">
+      {% if product.featured_image %}{{ product.featured_image | image_url: width: 700 | image_tag: loading: 'lazy', alt: product.title, style: 'border-radius:18px;aspect-ratio:1;object-fit:cover' }}{% endif %}
+      <p style="margin-top:12px"><strong>{{ product.title }}</strong><br><span style="color:var(--c-grey)">{{ product.price | money }}</span></p>
+    </a>
+  {% endfor %}
+</div>
+{% if paginate.pages > 1 %}<div style="margin-top:40px">{{ paginate | default_pagination }}</div>{% endif %}
+{% endpaginate %}
+</div></section>
+
+{% schema %}
+{ "name": "Collection", "settings": [] }
+{% endschema %}

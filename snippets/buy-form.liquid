@@ -1,0 +1,82 @@
+{% comment %} Formulaire d'achat connecté aux variantes — utilisé sur l'accueil et la page produit. {% endcomment %}
+{% assign current = product.selected_or_first_available_variant | default: product.variants.first %}
+<script type="application/json" data-variants>{{ product.variants | json }}</script>
+{% form 'product', product, data-product-form: '', novalidate: 'novalidate' %}
+  <input type="hidden" name="id" value="{{ current.id }}" data-variant-id>
+
+  <fieldset class="vcards" style="border:0;padding:0;margin:0 0 30px">
+    <legend class="eyebrow" style="margin-bottom:16px;padding:0">Choisissez votre modèle</legend>
+    {% for variant in product.variants %}
+      {% assign fallback_asset = 'plaque-noire.jpg' %}
+      {% assign lower_title = variant.title | downcase %}
+      {% if lower_title contains 'bleu' or lower_title contains 'blue' %}{% assign fallback_asset = 'plaque-bleue.jpg' %}{% endif %}
+      {% assign fallback_url = fallback_asset | asset_url %}
+      <label class="vcard{% if variant.id == current.id %} is-active{% endif %}" data-image="{{ fallback_url }}">
+        <input type="radio" name="variant-choice" value="{{ variant.id }}" data-variant-radio {% if variant.id == current.id %}checked{% endif %}>
+        {% if variant.featured_image %}
+          {{ variant.featured_image | image_url: width: 800 | image_tag: loading: 'lazy', widths: '400, 800', sizes: '(max-width: 560px) 90vw, 320px', alt: variant.title }}
+        {% else %}
+          <img src="{{ fallback_url }}" width="1254" height="1254" loading="lazy" alt="{{ variant.title | escape }}">
+        {% endif %}
+        <span class="vcard-meta">
+          <span class="vcard-name">{{ variant.title }}</span>
+          <span class="vcard-price">{{ variant.price | money }}</span>
+        </span>
+        <span class="vcard-check" aria-hidden="true">✓</span>
+      </label>
+    {% endfor %}
+  </fieldset>
+
+  <div class="buy-price-row">
+    <span class="buy-price" data-price>{{ current.price | money }}</span>
+    <s class="buy-compare" data-compare-price {% unless current.compare_at_price > current.price %}hidden{% endunless %}>{% if current.compare_at_price %}{{ current.compare_at_price | money }}{% endif %}</s>
+  </div>
+  <p class="buy-avail{% unless current.available %} is-out{% endunless %}" data-availability
+     data-in-stock="En stock — expédiée sous 24 h" data-out-stock="Épuisé — bientôt de retour">
+    {% if current.available %}En stock — expédiée sous 24 h{% else %}Épuisé — bientôt de retour{% endif %}
+  </p>
+
+  <div class="buy-field">
+    <label for="qty-{{ section.id }}">Quantité</label>
+    <div class="qty" data-qty>
+      <button type="button" data-dir="down" aria-label="Diminuer la quantité">−</button>
+      <input id="qty-{{ section.id }}" type="number" name="quantity" value="1" min="1" inputmode="numeric">
+      <button type="button" data-dir="up" aria-label="Augmenter la quantité">+</button>
+    </div>
+  </div>
+
+  <div class="buy-field">
+    <label for="prop-name-{{ section.id }}">Nom de l’établissement</label>
+    <input id="prop-name-{{ section.id }}" type="text" name="properties[Nom de l’établissement]" required autocomplete="organization" placeholder="Ex. Café des Halles">
+  </div>
+  <div class="buy-field">
+    <label for="prop-link-{{ section.id }}">Lien Google</label>
+    <input id="prop-link-{{ section.id }}" type="url" name="properties[Lien Google]" placeholder="https://g.page/r/…" inputmode="url">
+    <p class="hint">Le lien de votre fiche Google. Pas encore sous la main ? Nous vous le retrouvons.</p>
+  </div>
+  <div class="buy-field">
+    <label for="prop-note-{{ section.id }}">Remarque <span style="text-transform:none;letter-spacing:0">(facultatif)</span></label>
+    <textarea id="prop-note-{{ section.id }}" name="properties[Remarque]" placeholder="Une précision pour la programmation ?"></textarea>
+  </div>
+
+  <button type="submit" name="add" class="btn btn--blue buy-submit" data-add-btn
+          data-label-add="Ajouter au panier" data-label-sold-out="Épuisé"
+          {% unless current.available %}disabled{% endunless %}>
+    <span class="spinner" aria-hidden="true"></span>
+    <span class="label">{% if current.available %}Ajouter au panier{% else %}Épuisé{% endif %}</span>
+  </button>
+  {{ form | payment_button }}
+  <p class="buy-error" data-form-error role="alert" hidden></p>
+  <div class="buy-success" data-form-success hidden>
+    <span>Ajouté au panier ✓</span>
+    <span><a href="{{ routes.cart_url }}">Voir le panier</a> · <a href="{{ routes.cart_url }}/checkout">Payer</a></span>
+  </div>
+{% endform %}
+
+<ul class="reassure">
+  <li>NFC programmé avant expédition</li>
+  <li>Adhésif 3M au verso</li>
+  <li>Format 10 × 10 cm</li>
+  <li>Aucun abonnement</li>
+  <li>Prête à l’emploi</li>
+</ul>

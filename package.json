@@ -1,0 +1,12 @@
+{
+  "name": "dpa-tap-theme",
+  "private": true,
+  "version": "1.0.0",
+  "description": "DPA TAP — Thème Shopify Online Store 2.0. Plaques NFC pour avis Google.",
+  "scripts": {
+    "dev": "shopify theme dev",
+    "check": "shopify theme check",
+    "push": "shopify theme push",
+    "pull": "shopify theme pull"
+  }
+}

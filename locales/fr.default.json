@@ -1,0 +1,33 @@
+{
+  "general": {
+    "skip_to_content": "Aller au contenu",
+    "cart": "Panier",
+    "close": "Fermer",
+    "menu": "Menu",
+    "search": "Rechercher",
+    "continue_shopping": "Continuer mes achats"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Ajouter au panier",
+      "adding": "Ajout en cours…",
+      "added": "Ajouté au panier",
+      "sold_out": "Épuisé",
+      "available": "En stock — expédiée sous 24 h",
+      "unavailable": "Indisponible",
+      "quantity": "Quantité",
+      "view_cart": "Voir le panier",
+      "checkout": "Passer au paiement"
+    }
+  },
+  "cart": {
+    "title": "Votre panier",
+    "empty": "Votre panier est vide.",
+    "subtotal": "Sous-total",
+    "note": "Note pour la commande",
+    "update": "Mettre à jour",
+    "remove": "Retirer",
+    "checkout": "Paiement sécurisé",
+    "taxes_shipping": "Taxes et livraison calculées au paiement."
+  }
+}

@@ -1,0 +1,66 @@
+<section class="page-pad">
+  <div class="container">
+    <h1 class="h-lg" style="margin-bottom:44px">Votre panier</h1>
+    {% if cart.item_count == 0 %}
+      <div class="empty-state">
+        <h2 class="h-lg">Il est encore vide.</h2>
+        <p>Votre future plaque n’attend que vous.</p>
+        <a class="btn btn--ink" href="{{ routes.root_url }}#modeles">Choisir ma plaque</a>
+      </div>
+    {% else %}
+      <form action="{{ routes.cart_url }}" method="post">
+        <table class="cart-table">
+          <thead>
+            <tr><th scope="col">Produit</th><th scope="col">Quantité</th><th scope="col">Total</th><th scope="col"><span class="visually-hidden">Retirer</span></th></tr>
+          </thead>
+          <tbody>
+            {% for item in cart.items %}
+              <tr>
+                <td>
+                  <div class="cart-item">
+                    {% if item.image %}{{ item.image | image_url: width: 200 | image_tag: loading: 'lazy', alt: item.title }}{% endif %}
+                    <div>
+                      <p class="t">{{ item.product.title }}</p>
+                      {% if item.variant.title != 'Default Title' %}<p class="p">{{ item.variant.title }}</p>{% endif %}
+                      {% for property in item.properties %}
+                        {% if property.last != blank %}<p class="p">{{ property.first }} : {{ property.last }}</p>{% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <label class="visually-hidden" for="updates_{{ item.key }}">Quantité</label>
+                  <div class="qty" style="border-color:color-mix(in srgb,var(--c-ink) 20%,transparent)">
+                    <input id="updates_{{ item.key }}" style="color:var(--c-ink)" type="number" name="updates[]" value="{{ item.quantity }}" min="0" inputmode="numeric">
+                  </div>
+                </td>
+                <td>{{ item.final_line_price | money }}</td>
+                <td><a href="{{ item.url_to_remove }}" aria-label="Retirer {{ item.product.title | escape }}">Retirer</a></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <div class="cart-foot">
+          <div class="cart-note">
+            <label for="cart-note" class="eyebrow" style="display:block;margin-bottom:10px">Note pour la commande</label>
+            <textarea id="cart-note" name="note">{{ cart.note }}</textarea>
+            <p style="margin-top:16px"><button type="submit" class="btn btn--ghost" style="color:var(--c-ink);border-color:color-mix(in srgb,var(--c-ink) 30%,transparent)">Mettre à jour</button></p>
+          </div>
+          <div class="cart-summary">
+            <div class="row"><span>Sous-total</span><span>{{ cart.total_price | money }}</span></div>
+            <p class="small">Taxes et livraison calculées au paiement.</p>
+            <button type="submit" name="checkout" class="btn btn--blue">Paiement sécurisé</button>
+          </div>
+        </div>
+      </form>
+    {% endif %}
+  </div>
+</section>
+<style>.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}</style>
+
+{% schema %}
+{
+  "name": "Panier",
+  "settings": []
+}
+{% endschema %}

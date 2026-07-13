@@ -1,0 +1,5 @@
+<section class="page-pad"><div class="container"><article style="max-width:70ch"><h1 class="h-lg">{{ article.title }}</h1><p style="color:var(--c-grey);margin:14px 0 34px">{{ article.published_at | date: '%d/%m/%Y' }}</p>{{ article.content }}</article></div></section>
+
+{% schema %}
+{ "name": "Article", "settings": [] }
+{% endschema %}

@@ -1,0 +1,57 @@
+<section class="install" id="installation">
+  <div class="container">
+    <div class="bene-head">
+      <h2 class="h-xl reveal">{{ section.settings.title | default: 'Installée en trente secondes.' }}</h2>
+      <p class="eyebrow reveal">{{ section.settings.eyebrow | default: 'Installation' }}</p>
+    </div>
+    <div class="install-grid">
+      {% for block in section.blocks %}
+        {% assign default_img = forloop.index | append: '.png' %}
+        <div class="install-step reveal" {{ block.shopify_attributes }}>
+          <figure class="install-img">
+            {% if block.settings.image %}
+              {{ block.settings.image | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '500, 800, 1000', sizes: '(max-width: 760px) 92vw, 33vw', alt: block.settings.title }}
+            {% else %}
+              <img src="{{ default_img | asset_url }}" width="1254" height="1254" loading="lazy" alt="{{ block.settings.title | escape }}">
+            {% endif %}
+          </figure>
+          <span class="num">ÉTAPE {{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+          <h3>{{ block.settings.title }}</h3>
+          <p>{{ block.settings.text }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Installation",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Sur-titre", "default": "Installation" },
+    { "type": "text", "id": "title", "label": "Titre", "default": "Installée en trente secondes." }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Étape",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image", "info": "Par défaut : 1.png / 2.png / 3.png selon la position de l’étape." },
+        { "type": "text", "id": "title", "label": "Titre", "default": "Nettoyez la surface" },
+        { "type": "textarea", "id": "text", "label": "Texte", "default": "" }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [
+    {
+      "name": "Installation",
+      "blocks": [
+        { "type": "step", "settings": { "title": "Nettoyez la surface", "text": "Un chiffon sec suffit. Choisissez un endroit plat et visible." } },
+        { "type": "step", "settings": { "title": "Retirez la protection 3M", "text": "L’adhésif industriel au verso tient sur bois, verre, métal et stratifié." } },
+        { "type": "step", "settings": { "title": "Posez la plaque près de la caisse", "text": "Appuyez trois secondes. Elle est prête à recevoir son premier avis." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

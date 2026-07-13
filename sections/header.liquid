@@ -1,0 +1,30 @@
+<header class="hdr" data-header>
+  <a class="hdr-logo" href="{{ routes.root_url }}">
+    {{ section.settings.logo_text | default: 'DPA TAP' }}
+    <span class="g-dots" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+  </a>
+  <nav class="hdr-nav" aria-label="Navigation principale">
+    <a href="{{ section.settings.link_how | default: '/#fonctionnement' }}">{{ section.settings.label_how | default: 'Fonctionnement' }}</a>
+    <a href="{{ section.settings.link_models | default: '/#modeles' }}">{{ section.settings.label_models | default: 'Modèles' }}</a>
+    <a href="{{ section.settings.link_faq | default: '/#faq' }}">{{ section.settings.label_faq | default: 'FAQ' }}</a>
+  </nav>
+  <a class="hdr-cart" href="{{ routes.cart_url }}">
+    Panier
+    <span data-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
+  </a>
+</header>
+
+{% schema %}
+{
+  "name": "En-tête",
+  "settings": [
+    { "type": "text", "id": "logo_text", "label": "Logo (texte)", "default": "DPA TAP" },
+    { "type": "text", "id": "label_how", "label": "Libellé — fonctionnement", "default": "Fonctionnement" },
+    { "type": "url", "id": "link_how", "label": "Lien — fonctionnement" },
+    { "type": "text", "id": "label_models", "label": "Libellé — modèles", "default": "Modèles" },
+    { "type": "url", "id": "link_models", "label": "Lien — modèles" },
+    { "type": "text", "id": "label_faq", "label": "Libellé — FAQ", "default": "FAQ" },
+    { "type": "url", "id": "link_faq", "label": "Lien — FAQ" }
+  ]
+}
+{% endschema %}

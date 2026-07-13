@@ -1,0 +1,45 @@
+<section class="buy-sec" id="modeles">
+  <div class="container">
+    <div class="buy-head">
+      <h2 class="h-xl reveal">{{ section.settings.title_line1 | default: 'Deux designs.' }}<br>{{ section.settings.title_line2 | default: 'Un même impact.' }}</h2>
+      <p class="reveal">{{ section.settings.text | default: 'Midnight Black pour les comptoirs affirmés, Google Blue pour les enseignes lumineuses. Les deux embarquent la même puce NFC, programmée pour vous.' }}</p>
+    </div>
+    {% assign product = section.settings.product %}
+    {% if product != blank %}
+      <div class="buy-grid" data-buy>
+        <div class="reveal">
+          {% assign main_img = product.selected_or_first_available_variant.featured_image | default: product.featured_image %}
+          {% if main_img %}
+            {{ main_img | image_url: width: 1400 | image_tag: class: 'prod-media-img', loading: 'lazy', widths: '600, 1000, 1400', sizes: '(max-width: 980px) 100vw, 55vw', alt: product.title, data-buy-image: '', style: 'border-radius:26px;width:100%' }}
+          {% else %}
+            <img src="{{ 'plaque-noire.jpg' | asset_url }}" width="1254" height="1254" data-buy-image loading="lazy" alt="{{ product.title | escape }}" style="border-radius:26px;width:100%">
+          {% endif %}
+        </div>
+        <div class="buy-form-col reveal">
+          {% render 'buy-form', product: product %}
+        </div>
+      </div>
+    {% else %}
+      <div class="buy-grid">
+        <img src="{{ 'plaque-noire.jpg' | asset_url }}" width="1254" height="1254" loading="lazy" alt="Plaque Midnight Black" style="border-radius:26px">
+        <div class="buy-form-col">
+          <p class="eyebrow">Configuration requise</p>
+          <p style="margin-top:14px;color:var(--c-grey)">Sélectionnez votre produit « Plaque NFC Google » dans les réglages de cette section pour activer l’achat (variantes Noire / Bleue).</p>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Choix du modèle + achat",
+  "settings": [
+    { "type": "text", "id": "title_line1", "label": "Titre — ligne 1", "default": "Deux designs." },
+    { "type": "text", "id": "title_line2", "label": "Titre — ligne 2", "default": "Un même impact." },
+    { "type": "textarea", "id": "text", "label": "Texte", "default": "Midnight Black pour les comptoirs affirmés, Google Blue pour les enseignes lumineuses. Les deux embarquent la même puce NFC, programmée pour vous." },
+    { "type": "product", "id": "product", "label": "Produit" }
+  ],
+  "presets": [{ "name": "Choix du modèle + achat" }]
+}
+{% endschema %}

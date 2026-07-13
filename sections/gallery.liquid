@@ -1,0 +1,55 @@
+<section class="gal">
+  <div class="container">
+    <div class="bene-head">
+      <h2 class="h-xl reveal">{{ section.settings.title | default: 'Chez eux, elle travaille déjà.' }}</h2>
+      <p class="eyebrow reveal">{{ section.settings.eyebrow | default: 'En situation' }}</p>
+    </div>
+    <div class="gal-grid">
+      {% assign shapes = 'a,b,c,d' | split: ',' %}
+      {% for block in section.blocks %}
+        {% assign shape = shapes[forloop.index0] | default: 'c' %}
+        <figure class="gal-item gal-item--{{ shape }} reveal" {{ block.shopify_attributes }}>
+          {% if block.settings.image %}
+            {{ block.settings.image | image_url: width: 1600 | image_tag: loading: 'lazy', widths: '600, 1000, 1600', sizes: '(max-width: 760px) 100vw, 60vw', alt: block.settings.caption }}
+          {% else %}
+            <img src="{{ block.settings.fallback | default: 'scene-cafe.png' | asset_url }}" width="1254" height="1254" loading="lazy" alt="{{ block.settings.caption | escape }}">
+          {% endif %}
+          {% if block.settings.caption != blank %}<figcaption>{{ block.settings.caption }}</figcaption>{% endif %}
+        </figure>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Galerie immersive",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Sur-titre", "default": "En situation" },
+    { "type": "text", "id": "title", "label": "Titre", "default": "Chez eux, elle travaille déjà." }
+  ],
+  "blocks": [
+    {
+      "type": "photo",
+      "name": "Photo",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "caption", "label": "Légende", "default": "Café" },
+        { "type": "text", "id": "fallback", "label": "Image par défaut (asset)", "default": "scene-cafe.png", "info": "Utilisée tant qu’aucune image n’est choisie." }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "Galerie immersive",
+      "blocks": [
+        { "type": "photo", "settings": { "caption": "Salon de coiffure", "fallback": "scene-salon.png" } },
+        { "type": "photo", "settings": { "caption": "Café", "fallback": "scene-cafe.png" } },
+        { "type": "photo", "settings": { "caption": "Boutique", "fallback": "scene-boutique.png" } },
+        { "type": "photo", "settings": { "caption": "Restaurant", "fallback": "scene-restaurant.png" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

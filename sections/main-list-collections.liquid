@@ -1,0 +1,8 @@
+<section class="page-pad"><div class="container"><h1 class="h-lg">Collections</h1>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px;margin-top:44px">
+  {% for collection in collections %}<a href="{{ collection.url }}" style="text-decoration:none"><strong>{{ collection.title }}</strong></a>{% endfor %}
+</div></div></section>
+
+{% schema %}
+{ "name": "Collections", "settings": [] }
+{% endschema %}

@@ -1,0 +1,35 @@
+<footer class="ftr">
+  <div class="container">
+    <div class="ftr-cta">
+      <h2>{{ section.settings.cta_title | default: 'Vos clients sont prêts à vous noter.' }}</h2>
+      <a class="btn btn--paper" href="{{ section.settings.cta_link | default: '/#modeles' }}">{{ section.settings.cta_label | default: 'Choisir ma plaque' }}</a>
+    </div>
+    <nav class="ftr-links" aria-label="Pied de page">
+      <a href="{{ section.settings.link_how | default: '/#fonctionnement' }}">Fonctionnement</a>
+      <a href="{{ section.settings.link_models | default: '/#modeles' }}">Modèles</a>
+      <a href="{{ section.settings.link_faq | default: '/#faq' }}">FAQ</a>
+      <a href="{{ routes.cart_url }}">Panier</a>
+      {% for link in linklists[section.settings.menu].links %}
+        <a href="{{ link.url }}">{{ link.title }}</a>
+      {% endfor %}
+    </nav>
+    <div class="ftr-bottom">
+      <p>© {{ 'now' | date: '%Y' }} {{ shop.name }} — {{ section.settings.legal | default: 'Plaques NFC pour avis Google.' }}</p>
+      <p>{{ section.settings.note | default: 'Google est une marque de Google LLC.' }}</p>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Pied de page",
+  "settings": [
+    { "type": "text", "id": "cta_title", "label": "Titre de l’appel à l’action", "default": "Vos clients sont prêts à vous noter." },
+    { "type": "text", "id": "cta_label", "label": "Bouton — libellé", "default": "Choisir ma plaque" },
+    { "type": "url", "id": "cta_link", "label": "Bouton — lien" },
+    { "type": "link_list", "id": "menu", "label": "Menu additionnel" },
+    { "type": "text", "id": "legal", "label": "Mention", "default": "Plaques NFC pour avis Google." },
+    { "type": "text", "id": "note", "label": "Note", "default": "Google est une marque de Google LLC." }
+  ]
+}
+{% endschema %}

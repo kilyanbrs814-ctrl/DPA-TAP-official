@@ -1,0 +1,49 @@
+<section class="bene">
+  <div class="container">
+    <div class="bene-head">
+      <h2 class="h-xl reveal">{{ section.settings.title | default: 'Ce que la plaque change, concrètement.' }}</h2>
+      <p class="eyebrow reveal">{{ section.settings.eyebrow | default: 'Bénéfices' }}</p>
+    </div>
+    <div class="bene-list">
+      {% for block in section.blocks %}
+        <div class="bene-row reveal" {{ block.shopify_attributes }}>
+          <span class="bene-num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+          <h3 class="bene-term">{{ block.settings.title }}</h3>
+          <p class="bene-desc">{{ block.settings.text }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Bénéfices",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Sur-titre", "default": "Bénéfices" },
+    { "type": "text", "id": "title", "label": "Titre", "default": "Ce que la plaque change, concrètement." }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Bénéfice",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Titre", "default": "Plus d’avis" },
+        { "type": "textarea", "id": "text", "label": "Description", "default": "" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bénéfices",
+      "blocks": [
+        { "type": "benefit", "settings": { "title": "Plus d’avis", "text": "Demander un avis devient un réflexe naturel, sans QR code ni discours." } },
+        { "type": "benefit", "settings": { "title": "Plus de confiance", "text": "Chaque étoile gagnée rassure les clients qui vous découvrent sur Google." } },
+        { "type": "benefit", "settings": { "title": "Aucun abonnement", "text": "Un seul achat. La plaque vous appartient, à vie." } },
+        { "type": "benefit", "settings": { "title": "Aucune application", "text": "Le téléphone du client fait tout. Rien à installer, ni pour lui, ni pour vous." } },
+        { "type": "benefit", "settings": { "title": "Prête à l’emploi", "text": "NFC programmé avec votre lien Google avant expédition. Posez-la, c’est tout." } }
+      ]
+    }
+  ]
+}
+{% endschema %}
