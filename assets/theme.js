@@ -258,47 +258,130 @@
         });
       }
 
-      function select(v, card) {
-        if (!v) return;
-        idInput.value = v.id;
+      /* Pack — 9,50 € de remise sur 2 plaques. Doit correspondre à la réduction
+         automatique Shopify « Pack 2 plaques » (remise + livraison gratuite, min. 2 articles). */
+      var PACK_DISCOUNT = 950;
+      var duoEl = root.querySelector('[data-pack-duo]');
+      var singleEls = Array.prototype.slice.call(root.querySelectorAll('[data-pack-single]'));
+      var packPrice1 = root.querySelector('[data-pack-price="1"]');
+      var packPrice2 = root.querySelector('[data-pack-price="2"]');
+      var duoInit = false;
+
+      function getVariant(id) {
+        return variants.find(function (x) { return String(x.id) === String(id); });
+      }
+      function packMode() {
+        var r = form.querySelector('[data-pack-radio]:checked');
+        return r && r.value === '2' ? 2 : 1;
+      }
+      function plaqueVariant(i) {
+        var r = form.querySelector('[data-plaque-color="' + i + '"]:checked');
+        var v = r && getVariant(r.value);
+        return v || getVariant(idInput.value);
+      }
+      function setImage(v, card) {
+        if (!imgEl || !v) return;
+        var src = v.featured_image && (v.featured_image.src || v.featured_image.url);
+        if (!src && card && card.dataset.image) src = card.dataset.image;
+        if (!src) return;
+        imgEl.removeAttribute('srcset');
+        imgEl.src = src;
+        if (!reduced() && imgEl.animate) {
+          imgEl.animate([{ opacity: .3 }, { opacity: 1 }], { duration: 420, easing: 'ease' });
+        }
+        setActiveThumb(v.featured_image && v.featured_image.id, src);
+      }
+      function setPrice(cents, compareCents) {
         if (priceEl) {
-          var newPrice = money(v.price);
+          var newPrice = money(cents);
           if (priceEl.textContent !== newPrice) { priceEl.textContent = newPrice; swapIn(priceEl); }
         }
         if (compareEl) {
-          var has = v.compare_at_price && v.compare_at_price > v.price;
+          var has = compareCents && compareCents > cents;
           compareEl.hidden = !has;
-          if (has) compareEl.textContent = money(v.compare_at_price);
+          if (has) compareEl.textContent = money(compareCents);
         }
+      }
+      function setAvail(ok) {
         if (availEl) {
-          var newAvail = v.available ? availEl.dataset.inStock : availEl.dataset.outStock;
-          availEl.classList.toggle('is-out', !v.available);
+          var newAvail = ok ? availEl.dataset.inStock : availEl.dataset.outStock;
+          availEl.classList.toggle('is-out', !ok);
           if (availEl.textContent.trim() !== newAvail) { availEl.textContent = newAvail; swapIn(availEl); }
         }
-        if (imgEl) {
-          var src = v.featured_image && (v.featured_image.src || v.featured_image.url);
-          if (!src && card && card.dataset.image) src = card.dataset.image;
-          if (src) {
-            imgEl.removeAttribute('srcset');
-            imgEl.src = src;
-            if (!reduced() && imgEl.animate) {
-              imgEl.animate([{ opacity: .3 }, { opacity: 1 }], { duration: 420, easing: 'ease' });
-            }
-            setActiveThumb(v.featured_image && v.featured_image.id, src);
-          }
-        }
         if (btn) {
-          btn.disabled = !v.available;
-          if (btnLabel) btnLabel.textContent = v.available ? btn.dataset.labelAdd : btn.dataset.labelSoldOut;
+          btn.disabled = !ok;
+          if (btnLabel) btnLabel.textContent = ok ? btn.dataset.labelAdd : btn.dataset.labelSoldOut;
         }
+      }
+      function refresh() {
+        if (packMode() === 2) {
+          var v1 = plaqueVariant(1), v2 = plaqueVariant(2);
+          if (!v1 || !v2) return;
+          var total = v1.price + v2.price;
+          setPrice(total - PACK_DISCOUNT, total);
+          setAvail(v1.available && v2.available);
+        } else {
+          var v = getVariant(idInput.value);
+          if (!v) return;
+          setPrice(v.price, v.compare_at_price);
+          setAvail(v.available);
+        }
+      }
+      function syncCpills() {
+        root.querySelectorAll('.cpill').forEach(function (c) {
+          var input = c.querySelector('input');
+          c.classList.toggle('is-active', input && input.checked);
+        });
+      }
+      function setGroupHidden(el, hide) {
+        el.hidden = hide;
+        Array.prototype.slice.call(el.querySelectorAll('input,textarea,select')).forEach(function (field) {
+          field.disabled = hide;
+        });
+        if (!hide) swapIn(el);
+      }
+      function setMode() {
+        var mode = packMode();
+        if (mode === 2 && !duoInit) {
+          duoInit = true;
+          [1, 2].forEach(function (i) {
+            var r = form.querySelector('[data-plaque-color="' + i + '"][value="' + idInput.value + '"]');
+            if (r) r.checked = true;
+          });
+          syncCpills();
+        }
+        singleEls.forEach(function (el) { setGroupHidden(el, mode === 2); });
+        if (duoEl) setGroupHidden(duoEl, mode !== 2);
+        root.querySelectorAll('.pack').forEach(function (c) {
+          var input = c.querySelector('input');
+          c.classList.toggle('is-active', input && input.checked);
+        });
+        refresh();
+      }
+      function select(v, card) {
+        if (!v) return;
+        idInput.value = v.id;
+        setImage(v, card);
+        if (packPrice1) packPrice1.textContent = money(v.price);
+        if (packPrice2) packPrice2.textContent = money(v.price * 2 - PACK_DISCOUNT);
         root.querySelectorAll('.vcard').forEach(function (c) {
           c.classList.toggle('is-active', c.querySelector('input') && c.querySelector('input').checked);
         });
+        refresh();
       }
       root.querySelectorAll('[data-variant-radio]').forEach(function (radio) {
         radio.addEventListener('change', function () {
-          var v = variants.find(function (x) { return String(x.id) === radio.value; });
-          select(v, radio.closest('.vcard'));
+          select(getVariant(radio.value), radio.closest('.vcard'));
+        });
+      });
+      root.querySelectorAll('[data-pack-radio]').forEach(function (radio) {
+        radio.addEventListener('change', setMode);
+      });
+      root.querySelectorAll('[data-plaque-color]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+          syncCpills();
+          setImage(getVariant(radio.value), radio.closest('.cpill'));
+          refresh();
         });
       });
 
@@ -315,26 +398,33 @@
         });
       });
 
-      root.querySelectorAll('[data-qty]').forEach(function (q) {
-        var input = q.querySelector('input');
-        q.querySelectorAll('button').forEach(function (b) {
-          b.addEventListener('click', function () {
-            var d = b.dataset.dir === 'up' ? 1 : -1;
-            input.value = Math.max(1, (parseInt(input.value, 10) || 1) + d);
-          });
-        });
-      });
-
       form.addEventListener('submit', function (ev) {
         ev.preventDefault();
         if (errEl) errEl.hidden = true;
         if (okEl) okEl.hidden = true;
         if (btn) { btn.classList.remove('is-shake', 'is-added'); btn.classList.add('is-loading'); }
-        fetch(routes.cartAdd, {
+        var opts = {
           method: 'POST',
-          headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-          body: new FormData(form)
-        }).then(function (res) {
+          headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+        };
+        if (packMode() === 2) {
+          var note = form.querySelector('[name="properties[Remarque]"]');
+          var items = [1, 2].map(function (i) {
+            var v = plaqueVariant(i);
+            var nameField = form.querySelector('[data-plaque-name="' + i + '"]');
+            var linkField = form.querySelector('[data-plaque-link="' + i + '"]');
+            var props = { 'Plaque': i + '/2' };
+            if (nameField && nameField.value) props['Nom de l’établissement'] = nameField.value;
+            if (linkField && linkField.value) props['Lien Google'] = linkField.value;
+            if (note && note.value) props['Remarque'] = note.value;
+            return { id: v && v.id, quantity: 1, properties: props };
+          });
+          opts.headers['Content-Type'] = 'application/json';
+          opts.body = JSON.stringify({ items: items });
+        } else {
+          opts.body = new FormData(form);
+        }
+        fetch(routes.cartAdd, opts).then(function (res) {
           return res.json().then(function (json) {
             if (!res.ok) throw new Error(json.description || json.message || 'Impossible d’ajouter au panier.');
             return json;

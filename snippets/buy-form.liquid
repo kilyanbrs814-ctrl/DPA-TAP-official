@@ -1,10 +1,19 @@
-{% comment %} Formulaire d'achat connecté aux variantes — utilisé sur l'accueil et la page produit. {% endcomment %}
+{% comment %}
+  Formulaire d'achat connecté aux variantes — utilisé sur l'accueil et la page produit.
+  « Pack 2 plaques » : ajoute 2 lignes au panier, avec couleur, nom d'établissement et lien
+  Google propres à chaque plaque. Le prix pack (2 × prix unitaire − 9,50 €) et la livraison
+  offerte doivent être portés au checkout par deux réductions automatiques Shopify combinables
+  (minimum 2 articles) : « 9,50 € de remise » + « livraison gratuite ». Le montant 950 ci-dessous
+  doit rester aligné avec PACK_DISCOUNT dans theme.js et avec la réduction automatique.
+{% endcomment %}
 {% assign current = product.selected_or_first_available_variant | default: product.variants.first %}
+{% assign pack_full_price = current.price | times: 2 %}
+{% assign pack_price = pack_full_price | minus: 950 %}
 <script type="application/json" data-variants>{{ product.variants | json }}</script>
 {% form 'product', product, data-product-form: '', novalidate: 'novalidate' %}
   <input type="hidden" name="id" value="{{ current.id }}" data-variant-id>
 
-  <fieldset class="vcards" style="border:0;padding:0;margin:0 0 30px">
+  <fieldset class="vcards" data-pack-single style="border:0;padding:0;margin:0 0 30px">
     <legend class="eyebrow" style="margin-bottom:16px;padding:0">Choisissez votre modèle</legend>
     {% for variant in product.variants %}
       {% assign fallback_asset = 'plaque-noire.jpg' %}
@@ -20,40 +29,85 @@
         {% endif %}
         <span class="vcard-meta">
           <span class="vcard-name">{{ variant.title }}</span>
-          <span class="vcard-price">{{ variant.price | money }}</span>
         </span>
         <span class="vcard-check" aria-hidden="true">✓</span>
       </label>
     {% endfor %}
   </fieldset>
 
-  <div class="buy-price-row">
-    <span class="buy-price" data-price>{{ current.price | money }}</span>
-    <s class="buy-compare" data-compare-price {% unless current.compare_at_price > current.price %}hidden{% endunless %}>{% if current.compare_at_price %}{{ current.compare_at_price | money }}{% endif %}</s>
-  </div>
+  <fieldset class="packs" style="border:0;padding:0;margin:0 0 30px">
+    <legend class="eyebrow" style="margin-bottom:16px;padding:0">Choisissez votre quantité</legend>
+    <label class="pack is-active">
+      <input type="radio" name="pack-choice" value="1" data-pack-radio checked>
+      <span class="pack-dot" aria-hidden="true"></span>
+      <span class="pack-info">
+        <span class="pack-name">1 plaque</span>
+      </span>
+      <span class="pack-price" data-pack-price="1">{{ current.price | money }}</span>
+    </label>
+    <label class="pack">
+      <input type="radio" name="pack-choice" value="2" data-pack-radio>
+      <span class="pack-dot" aria-hidden="true"></span>
+      <span class="pack-info">
+        <span class="pack-name">2 plaques</span>
+      </span>
+      <span class="pack-price" data-pack-price="2">{{ pack_price | money }}</span>
+    </label>
+  </fieldset>
+
   <p class="buy-avail{% unless current.available %} is-out{% endunless %}" data-availability
      data-in-stock="En stock — expédiée sous 24 h" data-out-stock="Épuisé — bientôt de retour">
     {% if current.available %}En stock — expédiée sous 24 h{% else %}Épuisé — bientôt de retour{% endif %}
   </p>
 
-  <div class="buy-field">
-    <label for="qty-{{ section.id }}">Quantité</label>
-    <div class="qty" data-qty>
-      <button type="button" data-dir="down" aria-label="Diminuer la quantité">−</button>
-      <input id="qty-{{ section.id }}" type="number" name="quantity" value="1" min="1" inputmode="numeric">
-      <button type="button" data-dir="up" aria-label="Augmenter la quantité">+</button>
+  <div data-pack-single>
+    <div class="buy-field">
+      <label for="prop-name-{{ section.id }}">Nom de l’établissement</label>
+      <input id="prop-name-{{ section.id }}" type="text" name="properties[Nom de l’établissement]" required autocomplete="organization" placeholder="Ex. Café des Halles">
+    </div>
+    <div class="buy-field">
+      <label for="prop-link-{{ section.id }}">Lien Google</label>
+      <input id="prop-link-{{ section.id }}" type="url" name="properties[Lien Google]" placeholder="https://g.page/r/…" inputmode="url">
+      <p class="hint">Le lien de votre fiche Google. Pas encore sous la main ? Nous vous le retrouvons.</p>
     </div>
   </div>
 
-  <div class="buy-field">
-    <label for="prop-name-{{ section.id }}">Nom de l’établissement</label>
-    <input id="prop-name-{{ section.id }}" type="text" name="properties[Nom de l’établissement]" required autocomplete="organization" placeholder="Ex. Café des Halles">
+  <div class="pack-plaques" data-pack-duo hidden>
+    {% for i in (1..2) %}
+      <div class="plaque-panel" role="group" aria-labelledby="plaque-title-{{ i }}-{{ section.id }}">
+        <p class="plaque-title" id="plaque-title-{{ i }}-{{ section.id }}">Plaque {{ i }}</p>
+        <div class="buy-field">
+          <label id="plaque-color-label-{{ i }}-{{ section.id }}">Couleur</label>
+          <div class="cpills" role="radiogroup" aria-labelledby="plaque-color-label-{{ i }}-{{ section.id }}">
+            {% for variant in product.variants %}
+              {% assign fallback_asset = 'plaque-noire.jpg' %}
+              {% assign dot_color = '#17171a' %}
+              {% assign lower_title = variant.title | downcase %}
+              {% if lower_title contains 'bleu' or lower_title contains 'blue' %}
+                {% assign fallback_asset = 'plaque-bleue.jpg' %}
+                {% assign dot_color = 'var(--g-blue)' %}
+              {% endif %}
+              <label class="cpill{% if variant.id == current.id %} is-active{% endif %}" data-image="{{ fallback_asset | asset_url }}">
+                <input type="radio" name="plaque-{{ i }}-color-{{ section.id }}" value="{{ variant.id }}" data-plaque-color="{{ i }}" {% if variant.id == current.id %}checked{% endif %} disabled>
+                <span class="cpill-dot" style="background:{{ dot_color }}" aria-hidden="true"></span>
+                <span>{{ variant.title }}</span>
+              </label>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="buy-field">
+          <label for="prop-name-{{ i }}-{{ section.id }}">Nom de l’établissement</label>
+          <input id="prop-name-{{ i }}-{{ section.id }}" type="text" data-plaque-name="{{ i }}" required autocomplete="organization" placeholder="Ex. Café des Halles" disabled>
+        </div>
+        <div class="buy-field">
+          <label for="prop-link-{{ i }}-{{ section.id }}">Lien Google</label>
+          <input id="prop-link-{{ i }}-{{ section.id }}" type="url" data-plaque-link="{{ i }}" placeholder="https://g.page/r/…" inputmode="url" disabled>
+          {% if i == 1 %}<p class="hint">Le lien de votre fiche Google. Pas encore sous la main ? Nous vous le retrouvons.</p>{% endif %}
+        </div>
+      </div>
+    {% endfor %}
   </div>
-  <div class="buy-field">
-    <label for="prop-link-{{ section.id }}">Lien Google</label>
-    <input id="prop-link-{{ section.id }}" type="url" name="properties[Lien Google]" placeholder="https://g.page/r/…" inputmode="url">
-    <p class="hint">Le lien de votre fiche Google. Pas encore sous la main ? Nous vous le retrouvons.</p>
-  </div>
+
   <div class="buy-field">
     <label for="prop-note-{{ section.id }}">Remarque <span style="text-transform:none;letter-spacing:0">(facultatif)</span></label>
     <textarea id="prop-note-{{ section.id }}" name="properties[Remarque]" placeholder="Une précision pour la programmation ?"></textarea>
@@ -66,7 +120,7 @@
     <span class="check" aria-hidden="true">✓</span>
     <span class="label">{% if current.available %}Ajouter au panier{% else %}Épuisé{% endif %}</span>
   </button>
-  {{ form | payment_button }}
+  <div data-pack-single>{{ form | payment_button }}</div>
   <p class="buy-error" data-form-error role="alert" hidden></p>
   <div class="buy-success" data-form-success hidden>
     <span>Ajouté au panier ✓</span>
