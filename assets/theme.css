@@ -112,11 +112,11 @@ p{margin:0;text-wrap:pretty}
 .stage-phone{transform:translate(calc(95% - min(var(--p),.38)*185%),calc(64% - min(var(--p),.38)*158%)) rotateZ(calc(8deg - min(var(--p),.38)*15deg))}
 /* waves */
 .nfc-waves{position:absolute;z-index:2;width:200px;height:200px;transform:translate(6%,-4%);pointer-events:none}
-.nfc-waves span{position:absolute;inset:0;margin:auto;border-radius:50%;border:2px solid var(--g-blue);opacity:0;width:40px;height:40px}
+.nfc-waves span{position:absolute;inset:0;margin:auto;border-radius:50%;border:2.5px solid #66b7ff;box-shadow:0 0 8px rgba(102,183,255,.72),inset 0 0 6px rgba(102,183,255,.38);opacity:0;width:40px;height:40px}
 .scrolly-stage[data-phase="2"] .nfc-waves span{animation:wave 1.6s ease-out infinite}
 .scrolly-stage[data-phase="2"] .nfc-waves span:nth-child(2){animation-delay:.4s}
 .scrolly-stage[data-phase="2"] .nfc-waves span:nth-child(3){animation-delay:.8s}
-@keyframes wave{0%{width:40px;height:40px;opacity:.9}100%{width:190px;height:190px;opacity:0}}
+@keyframes wave{0%{width:40px;height:40px;opacity:1}68%{opacity:.82}88%{opacity:.34}100%{width:190px;height:190px;opacity:0}}
 /* review ui inside phone */
 .review-ui{width:82%;background:#fff;color:#1c1c1e;border-radius:14px;padding:16px 14px;text-align:center;box-shadow:0 18px 40px rgba(0,0,0,.5);opacity:0;transform:translateY(26px) scale(.94);transition:opacity .5s ease,transform .5s cubic-bezier(.2,.8,.2,1)}
 .scrolly-stage[data-phase="3"] .review-ui{opacity:1;transform:none}
