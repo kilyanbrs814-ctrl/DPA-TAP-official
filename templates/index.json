@@ -1,61 +1,256 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
-      "type": "hero"
+      "type": "hero",
+      "settings": {
+        "title_line1": "Un geste.",
+        "title_line2": "Un avis.",
+        "subtitle": "Transformez chaque client satisfait en une preuve qui fait grandir votre commerce.",
+        "cta1_label": "Choisir ma plaque",
+        "cta1_link": "",
+        "cta2_label": "Voir comment ça marche",
+        "cta2_link": "",
+        "scroll_hint": "Faites défiler"
+      }
     },
     "scrolly": {
       "type": "scrollytelling",
       "blocks": {
-        "s1": { "type": "step", "settings": { "title": "Il approche." } },
-        "s2": { "type": "step", "settings": { "title": "Il touche." } },
-        "s3": { "type": "step", "settings": { "title": "Il vous note." } }
+        "s1": {
+          "type": "step",
+          "settings": {
+            "title": "Il approche."
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "title": "Il touche."
+          }
+        },
+        "s3": {
+          "type": "step",
+          "settings": {
+            "title": "Il vous note."
+          }
+        }
       },
-      "block_order": ["s1", "s2", "s3"]
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ],
+      "settings": {
+        "eyebrow": "Comment ça marche",
+        "review_name": "Votre établissement"
+      }
     },
     "benefits": {
       "type": "benefits",
       "blocks": {
-        "b1": { "type": "benefit", "settings": { "title": "Plus d’avis", "text": "Demander un avis devient un réflexe naturel, sans QR code ni discours." } },
-        "b2": { "type": "benefit", "settings": { "title": "Plus de confiance", "text": "Chaque étoile gagnée rassure les clients qui vous découvrent sur Google." } },
-        "b3": { "type": "benefit", "settings": { "title": "Remplacement garanti", "text": "En cas de casse, votre plaque NFC pour avis Google est remplacée par une neuve, afin de continuer à collecter les avis de vos clients sans interruption." } },
-        "b4": { "type": "benefit", "settings": { "title": "Aucune application", "text": "Le téléphone du client fait tout. Rien à installer, ni pour lui, ni pour vous." } },
-        "b5": { "type": "benefit", "settings": { "title": "Prête à l’emploi", "text": "NFC programmé avec votre lien Google avant expédition. Posez-la, c’est tout." } }
+        "b1": {
+          "type": "benefit",
+          "settings": {
+            "title": "Plus d’avis",
+            "text": "Demander un avis devient un réflexe naturel, sans QR code ni discours."
+          }
+        },
+        "b2": {
+          "type": "benefit",
+          "settings": {
+            "title": "Plus de confiance",
+            "text": "Chaque étoile gagnée rassure les clients qui vous découvrent sur Google."
+          }
+        },
+        "b3": {
+          "type": "benefit",
+          "settings": {
+            "title": "Remplacement garanti",
+            "text": "En cas de casse, votre plaque NFC pour avis Google est remplacée par une neuve, afin de continuer à collecter les avis de vos clients sans interruption."
+          }
+        },
+        "b4": {
+          "type": "benefit",
+          "settings": {
+            "title": "Aucune application",
+            "text": "Le téléphone du client fait tout. Rien à installer, ni pour lui, ni pour vous."
+          }
+        },
+        "b5": {
+          "type": "benefit",
+          "settings": {
+            "title": "Prête à l’emploi",
+            "text": "NFC programmé avec votre lien Google avant expédition. Posez-la, c’est tout."
+          }
+        }
       },
-      "block_order": ["b1", "b2", "b3", "b4", "b5"]
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5"
+      ],
+      "settings": {
+        "eyebrow": "Bénéfices",
+        "title": "Ce que la plaque change, concrètement."
+      }
+    },
+    "buy": {
+      "type": "product-buy",
+      "settings": {
+        "title_line1": "Deux designs.",
+        "title_line2": "Un même impact.",
+        "text": "Midnight Black pour les comptoirs affirmés, Google Blue pour les enseignes lumineuses. Les deux embarquent la même puce NFC, programmée pour vous.",
+        "product": "plaque-nfc-google"
+      }
     },
     "gallery": {
       "type": "gallery",
       "blocks": {
-        "g1": { "type": "photo", "settings": { "caption": "Salon de coiffure", "fallback": "scene-salon.png" } },
-        "g2": { "type": "photo", "settings": { "caption": "Café", "fallback": "scene-cafe.png" } },
-        "g3": { "type": "photo", "settings": { "caption": "Boutique", "fallback": "scene-boutique.png" } },
-        "g4": { "type": "photo", "settings": { "caption": "Restaurant", "fallback": "scene-restaurant.png" } }
+        "g1": {
+          "type": "photo",
+          "settings": {
+            "caption": "Salon de coiffure",
+            "fallback": "scene-salon.png"
+          }
+        },
+        "g2": {
+          "type": "photo",
+          "settings": {
+            "caption": "Café",
+            "fallback": "scene-cafe.png"
+          }
+        },
+        "g3": {
+          "type": "photo",
+          "settings": {
+            "caption": "Boutique",
+            "fallback": "scene-boutique.png"
+          }
+        },
+        "g4": {
+          "type": "photo",
+          "settings": {
+            "caption": "Restaurant",
+            "fallback": "scene-restaurant.png"
+          }
+        }
       },
-      "block_order": ["g1", "g2", "g3", "g4"]
-    },
-    "buy": {
-      "type": "product-buy"
+      "block_order": [
+        "g1",
+        "g2",
+        "g3",
+        "g4"
+      ],
+      "settings": {
+        "eyebrow": "En situation",
+        "title": "Chez eux, elle travaille déjà."
+      }
     },
     "install": {
       "type": "installation",
       "blocks": {
-        "i1": { "type": "step", "settings": { "title": "Nettoyez la surface", "text": "Un chiffon sec suffit. Choisissez un endroit plat et visible." } },
-        "i2": { "type": "step", "settings": { "title": "Retirez la protection 3M", "text": "L’adhésif industriel au verso tient sur bois, verre, métal et stratifié." } },
-        "i3": { "type": "step", "settings": { "title": "Posez la plaque près de la caisse", "text": "Appuyez trois secondes. Elle est prête à recevoir son premier avis." } }
+        "i1": {
+          "type": "step",
+          "settings": {
+            "title": "Nettoyez la surface",
+            "text": "Un chiffon sec suffit. Choisissez un endroit plat et visible."
+          }
+        },
+        "i2": {
+          "type": "step",
+          "settings": {
+            "title": "Retirez la protection 3M",
+            "text": "L’adhésif industriel au verso tient sur bois, verre, métal et stratifié."
+          }
+        },
+        "i3": {
+          "type": "step",
+          "settings": {
+            "title": "Posez la plaque près de la caisse",
+            "text": "Appuyez trois secondes. Elle est prête à recevoir son premier avis."
+          }
+        }
       },
-      "block_order": ["i1", "i2", "i3"]
+      "block_order": [
+        "i1",
+        "i2",
+        "i3"
+      ],
+      "settings": {
+        "eyebrow": "Installation",
+        "title": "Installée en trente secondes."
+      }
     },
     "faq": {
       "type": "faq",
       "blocks": {
-        "q1": { "type": "qa", "settings": { "question": "Comment la plaque est-elle programmée ?", "answer": "<p>Vous nous indiquez le nom de votre établissement et votre lien Google au moment de la commande. Nous programmons la puce NFC avant l’expédition : la plaque arrive prête à l’emploi.</p>" } },
-        "q2": { "type": "qa", "settings": { "question": "Le client doit-il installer une application ?", "answer": "<p>Non. Le NFC est natif sur tous les smartphones récents, iPhone comme Android. Le client approche son téléphone, la page d’avis s’ouvre, il note. C’est tout.</p>" } },
-        "q3": { "type": "qa", "settings": { "question": "Y a-t-il un abonnement ?", "answer": "<p>Aucun. Vous achetez la plaque une seule fois, elle vous appartient et fonctionne sans limite de durée ni de scans.</p>" } },
-        "q4": { "type": "qa", "settings": { "question": "Et si je change de lien Google ?", "answer": "<p>Écrivez-nous : nous vous expliquons comment reprogrammer la puce gratuitement, ou nous le faisons pour vous.</p>" } },
-        "q5": { "type": "qa", "settings": { "question": "Sur quelles surfaces tient l’adhésif ?", "answer": "<p>L’adhésif 3M au verso tient sur bois, verre, métal, carrelage et stratifié. Format 10 × 10 cm, résistant aux nettoyages quotidiens.</p>" } }
+        "q1": {
+          "type": "qa",
+          "settings": {
+            "question": "Comment la plaque est-elle programmée ?",
+            "answer": "<p>Vous nous indiquez le nom de votre établissement et votre lien Google au moment de la commande. Nous programmons la puce NFC avant l’expédition : la plaque arrive prête à l’emploi.</p>"
+          }
+        },
+        "q2": {
+          "type": "qa",
+          "settings": {
+            "question": "Le client doit-il installer une application ?",
+            "answer": "<p>Non. Le NFC est natif sur tous les smartphones récents, iPhone comme Android. Le client approche son téléphone, la page d’avis s’ouvre, il note. C’est tout.</p>"
+          }
+        },
+        "q3": {
+          "type": "qa",
+          "settings": {
+            "question": "Y a-t-il un abonnement ?",
+            "answer": "<p>Aucun. Vous achetez la plaque une seule fois, elle vous appartient et fonctionne sans limite de durée ni de scans.</p>"
+          }
+        },
+        "q4": {
+          "type": "qa",
+          "settings": {
+            "question": "Et si je change de lien Google ?",
+            "answer": "<p>Écrivez-nous : nous vous expliquons comment reprogrammer la puce gratuitement, ou nous le faisons pour vous.</p>"
+          }
+        },
+        "q5": {
+          "type": "qa",
+          "settings": {
+            "question": "Sur quelles surfaces tient l’adhésif ?",
+            "answer": "<p>L’adhésif 3M au verso tient sur bois, verre, métal, carrelage et stratifié. Format 10 × 10 cm, résistant aux nettoyages quotidiens.</p>"
+          }
+        }
       },
-      "block_order": ["q1", "q2", "q3", "q4", "q5"]
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5"
+      ],
+      "settings": {
+        "eyebrow": "FAQ",
+        "title": "Les questions qu’on nous pose."
+      }
     }
   },
-  "order": ["hero", "scrolly", "benefits", "gallery", "buy", "install", "faq"]
+  "order": [
+    "hero",
+    "scrolly",
+    "benefits",
+    "buy",
+    "install",
+    "gallery",
+    "faq"
+  ]
 }
