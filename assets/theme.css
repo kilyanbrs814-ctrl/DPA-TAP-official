@@ -180,6 +180,11 @@ p{margin:0;text-wrap:pretty}
 .buy-head{margin-bottom:64px;max-width:800px}
 .buy-head p{margin-top:20px;color:color-mix(in srgb,var(--c-paper) 65%,transparent);font-size:1.1rem}
 .buy-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:64px;align-items:start}
+.prod-thumbs{display:flex;gap:10px;margin-top:14px;padding:2px 2px 6px;overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x proximity;scrollbar-width:thin}
+.prod-thumb{flex:0 0 72px;width:72px;aspect-ratio:1;padding:0;overflow:hidden;border:1px solid rgba(255,255,255,.2);border-radius:10px;background:#141416;cursor:pointer;scroll-snap-align:start;transition:border-color .2s ease,box-shadow .2s ease,opacity .2s ease}
+@media (hover:hover){.prod-thumb:hover{opacity:.86}}
+.prod-thumb.is-active{border-color:var(--g-blue);box-shadow:0 0 0 1px var(--g-blue)}
+.prod-thumb img{width:100%;height:100%;object-fit:cover}
 .vcards{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 .vcard{position:relative;display:block;border-radius:22px;overflow:clip;background:#141416;border:1px solid rgba(255,255,255,.08);cursor:pointer;transition:border-color .3s,transform .3s cubic-bezier(.2,.8,.2,1)}
 .vcard:hover{transform:translateY(-4px)}
@@ -228,6 +233,7 @@ p{margin:0;text-wrap:pretty}
 .reassure li{font-size:.85rem;color:var(--c-grey);display:flex;align-items:center;gap:8px}
 .reassure li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--g-green);flex:none}
 @media (max-width:980px){.buy-grid{grid-template-columns:1fr;gap:36px}.buy-form-col{padding:26px}}
+@media (max-width:560px){.prod-thumbs{gap:8px}.prod-thumb{flex-basis:58px;width:58px}}
 @media (max-width:560px){.vcards{grid-template-columns:1fr}}
 
 /* ============ Installation ============ */

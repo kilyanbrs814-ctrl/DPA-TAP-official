@@ -223,11 +223,40 @@
       var compareEl = root.querySelector('[data-compare-price]');
       var availEl = root.querySelector('[data-availability]');
       var imgEl = root.querySelector('[data-buy-image]');
+      var thumbs = Array.prototype.slice.call(root.querySelectorAll('[data-buy-thumb]'));
       var btn = form.querySelector('[data-add-btn]');
       var btnLabel = btn ? btn.querySelector('.label') : null;
       var errEl = root.querySelector('[data-form-error]');
       var okEl = root.querySelector('[data-form-success]');
       var addedTimer = null;
+
+      function imageKey(src) {
+        if (!src) return '';
+        try {
+          var url = new URL(src, window.location.href);
+          url.searchParams.delete('width');
+          return url.origin + url.pathname + url.search;
+        } catch (e) {
+          return src.split('?')[0];
+        }
+      }
+
+      function setActiveThumb(imageId, src) {
+        var id = imageId ? String(imageId) : '';
+        var key = imageKey(src);
+        var activeThumb = null;
+        if (id) {
+          activeThumb = thumbs.find(function (thumb) { return thumb.dataset.imageId === id; });
+        }
+        if (!activeThumb && key) {
+          activeThumb = thumbs.find(function (thumb) { return imageKey(thumb.dataset.imageSrc) === key; });
+        }
+        thumbs.forEach(function (thumb) {
+          var active = thumb === activeThumb;
+          thumb.classList.toggle('is-active', active);
+          thumb.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
 
       function select(v, card) {
         if (!v) return;
@@ -255,6 +284,7 @@
             if (!reduced() && imgEl.animate) {
               imgEl.animate([{ opacity: .3 }, { opacity: 1 }], { duration: 420, easing: 'ease' });
             }
+            setActiveThumb(v.featured_image && v.featured_image.id, src);
           }
         }
         if (btn) {
@@ -269,6 +299,19 @@
         radio.addEventListener('change', function () {
           var v = variants.find(function (x) { return String(x.id) === radio.value; });
           select(v, radio.closest('.vcard'));
+        });
+      });
+
+      thumbs.forEach(function (thumb) {
+        thumb.addEventListener('click', function () {
+          if (!imgEl || !thumb.dataset.imageSrc) return;
+          imgEl.removeAttribute('srcset');
+          imgEl.src = thumb.dataset.imageSrc;
+          if (thumb.dataset.imageAlt) imgEl.alt = thumb.dataset.imageAlt;
+          setActiveThumb(thumb.dataset.imageId, thumb.dataset.imageSrc);
+          if (!reduced() && imgEl.animate) {
+            imgEl.animate([{ opacity: .35 }, { opacity: 1 }], { duration: 300, easing: EASE });
+          }
         });
       });
 

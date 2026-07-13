@@ -14,6 +14,25 @@
           {% else %}
             <img src="{{ 'plaque-noire.jpg' | asset_url }}" width="1254" height="1254" data-buy-image loading="lazy" alt="{{ product.title | escape }}" style="border-radius:26px;width:100%">
           {% endif %}
+          {% if product.images.size > 1 %}
+            <div class="prod-thumbs" aria-label="Images du produit">
+              {% for image in product.images %}
+                {% assign thumb_alt = image.alt | default: product.title %}
+                <button
+                  type="button"
+                  class="prod-thumb{% if image.id == main_img.id %} is-active{% endif %}"
+                  data-buy-thumb
+                  data-image-id="{{ image.id }}"
+                  data-image-src="{{ image | image_url: width: 1400 }}"
+                  data-image-alt="{{ thumb_alt | escape }}"
+                  aria-label="Afficher {{ thumb_alt | escape }}"
+                  aria-pressed="{% if image.id == main_img.id %}true{% else %}false{% endif %}"
+                >
+                  {{ image | image_url: width: 160 | image_tag: loading: 'lazy', widths: '80, 120, 160', sizes: '72px', alt: thumb_alt }}
+                </button>
+              {% endfor %}
+            </div>
+          {% endif %}
         </div>
         <div class="buy-form-col reveal">
           {% render 'buy-form', product: product %}
