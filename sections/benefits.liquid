@@ -4,7 +4,7 @@
       <h2 class="h-xl reveal">{{ section.settings.title | default: 'Ce que la plaque change, concrètement.' }}</h2>
       <p class="eyebrow reveal">{{ section.settings.eyebrow | default: 'Bénéfices' }}</p>
     </div>
-    <div class="bene-list">
+    <div class="bene-list" data-spotlight>
       {% for block in section.blocks %}
         <div class="bene-row reveal" {{ block.shopify_attributes }}>
           <span class="bene-num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>

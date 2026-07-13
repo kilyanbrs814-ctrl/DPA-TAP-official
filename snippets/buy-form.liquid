@@ -63,6 +63,7 @@
           data-label-add="Ajouter au panier" data-label-sold-out="Épuisé"
           {% unless current.available %}disabled{% endunless %}>
     <span class="spinner" aria-hidden="true"></span>
+    <span class="check" aria-hidden="true">✓</span>
     <span class="label">{% if current.available %}Ajouter au panier{% else %}Épuisé{% endif %}</span>
   </button>
   {{ form | payment_button }}

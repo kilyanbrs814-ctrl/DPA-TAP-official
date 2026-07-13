@@ -4,7 +4,7 @@
       <h2 class="h-xl reveal">{{ section.settings.title | default: 'Installée en trente secondes.' }}</h2>
       <p class="eyebrow reveal">{{ section.settings.eyebrow | default: 'Installation' }}</p>
     </div>
-    <div class="install-grid">
+    <div class="install-grid" data-spotlight>
       {% for block in section.blocks %}
         {% assign default_img = forloop.index | append: '.png' %}
         <div class="install-step reveal" {{ block.shopify_attributes }}>

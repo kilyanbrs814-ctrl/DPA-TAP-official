@@ -67,7 +67,7 @@ p{margin:0;text-wrap:pretty}
 .hero-bg{position:absolute;inset:0;z-index:0}
 .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:right center}
 .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(11,11,12,.92) 0%,rgba(11,11,12,.55) 45%,rgba(11,11,12,0) 70%)}
-.hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:33%;z-index:1;pointer-events:none;background:linear-gradient(to bottom,transparent 0%,rgba(11,11,12,.25) 30%,rgba(11,11,12,.75) 70%,var(--section-bg) 100%)}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:33%;z-index:1;pointer-events:none;background:linear-gradient(to bottom,transparent 0%,rgba(11,11,12,.25) 30%,rgba(11,11,12,.75) 70%,var(--c-bg) 100%)}
 .hero{margin-bottom:0;border:0}
 .hero h1{color:var(--c-paper)}
 .hero h1 em{font-style:normal;color:var(--g-blue)}
@@ -83,7 +83,7 @@ p{margin:0;text-wrap:pretty}
 @media (max-width:900px){.hero{padding-top:120px}.hero-grid{grid-template-columns:1fr;gap:24px}.hero-plaque{width:min(420px,88%)}.hero-bg::after{background:rgba(11,11,12,.72)}}
 
 /* ============ Scrollytelling ============ */
-.scrolly{background:var(--section-bg);color:var(--c-paper);margin-top:0;border:0}
+.scrolly{background:var(--c-bg);color:var(--c-paper);margin-top:0;border:0}
 .scrolly-track{height:380vh}
 .scrolly-sticky{position:sticky;top:0;height:100svh;overflow:clip;display:grid;align-items:center}
 .scrolly-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:48px;align-items:center}
@@ -284,3 +284,97 @@ p{margin:0;text-wrap:pretty}
 @media (max-width:800px){.cart-foot{grid-template-columns:1fr}}
 .empty-state{text-align:center;padding:60px 0}
 .empty-state p{color:var(--c-grey);margin:14px 0 28px}
+
+/* ============ Motion & micro-interactions ============ */
+/* --- Hero : entrée progressive + parallaxe --- */
+.hero .reveal{transition-duration:.9s}
+.hero h1.reveal{transition-delay:.08s}
+.hero .hero-sub.reveal{transition-delay:.22s}
+.hero .hero-cta.reveal{transition-delay:.36s}
+.hero-bg img{will-change:transform}
+.hero-scrollhint{animation:hintPulse 2.6s ease-in-out infinite}
+@keyframes hintPulse{0%,100%{opacity:.55;transform:translateX(-50%) translateY(0)}50%{opacity:1;transform:translateX(-50%) translateY(-6px)}}
+
+/* --- Scrollytelling : étapes + indicateur de progression --- */
+.scrolly-step small{transition:color .5s ease}
+.scrolly-step.is-active small{color:var(--g-blue)}
+.scrolly-step.is-done{color:color-mix(in srgb,var(--c-paper) 48%,transparent)}
+.scrolly-progress{display:flex;gap:8px;margin-top:34px;max-width:280px}
+.scrolly-progress span{flex:1;height:2px;border-radius:2px;background:rgba(255,255,255,.14);overflow:hidden}
+.scrolly-progress span::after{content:"";display:block;height:100%;background:var(--g-blue);transform-origin:left;transform:scaleX(var(--f,0))}
+.scrolly-progress span:nth-child(1){--f:clamp(0,calc(var(--p,0)*3),1)}
+.scrolly-progress span:nth-child(2){--f:clamp(0,calc(var(--p,0)*3 - 1),1)}
+.scrolly-progress span:nth-child(3){--f:clamp(0,calc(var(--p,0)*3 - 2),1)}
+.scrolly.is-static .scrolly-progress span::after{transform:scaleX(1)}
+.stage-plaque{transform:translateX(-16%) rotateZ(-3deg) translateY(calc(var(--p,0)*-14px))}
+
+/* --- Bénéfices : révélation en cascade + élément courant --- */
+.bene-row{position:relative;transition:padding-left .3s cubic-bezier(.2,.8,.2,1),opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+.bene-row.reveal:nth-child(2){transition-delay:0s,.07s,.07s}
+.bene-row.reveal:nth-child(3){transition-delay:0s,.14s,.14s}
+.bene-row.reveal:nth-child(4){transition-delay:0s,.21s,.21s}
+.bene-row.reveal:nth-child(5){transition-delay:0s,.28s,.28s}
+.bene-row.reveal:nth-child(6){transition-delay:0s,.35s,.35s}
+.bene-row::before{content:"";position:absolute;left:-1px;top:26%;bottom:26%;width:2px;background:var(--g-blue);transform:scaleY(0);transform-origin:top;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.bene-row.is-current::before{transform:scaleY(1)}
+.bene-num{transition:color .4s ease}
+.bene-row.is-current .bene-num,.bene-row:hover .bene-num{color:var(--g-blue)}
+.bene-desc{transition:color .4s ease}
+.bene-row.is-current .bene-desc{color:color-mix(in srgb,var(--c-ink) 78%,transparent)}
+
+/* --- Galerie : révélation + profondeur au survol --- */
+.gal-item.reveal{transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1),box-shadow .5s ease}
+.gal-grid .gal-item.reveal:nth-child(2){transition-delay:.08s,.08s,0s}
+.gal-grid .gal-item.reveal:nth-child(3){transition-delay:.16s,.16s,0s}
+.gal-grid .gal-item.reveal:nth-child(4){transition-delay:.24s,.24s,0s}
+.gal-item.reveal img{transform:scale(1.12)}
+.gal-item.reveal.is-in img{transform:scale(1)}
+.gal-item.reveal.is-in:hover img{transform:scale(1.04)}
+.gal-item:hover{box-shadow:0 30px 60px -30px rgba(0,0,0,.35)}
+.gal-item figcaption{transition:transform .5s cubic-bezier(.2,.8,.2,1),background .3s ease}
+.gal-item:hover figcaption{transform:translateY(-4px);background:rgba(10,10,12,.85)}
+
+/* --- Achat : sélection de variante + retours du bouton --- */
+@keyframes checkPop{0%{transform:scale(.5)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+.vcard.is-active .vcard-check{animation:checkPop .35s cubic-bezier(.2,.8,.2,1)}
+.vcard:active{transform:translateY(-1px) scale(.985)}
+.vcard img{transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.vcard:hover img{transform:scale(1.03)}
+.qty button{transition:background .2s,transform .15s ease}
+.qty button:active{transform:scale(.9)}
+.buy-submit .check{display:none;font-weight:700}
+.buy-submit.is-added{background:var(--g-green)}
+.buy-submit.is-added:hover{background:var(--g-green)}
+.buy-submit.is-added .check{display:inline}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes shakeX{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}
+.buy-success:not([hidden]){animation:fadeUp .45s cubic-bezier(.2,.8,.2,1)}
+.buy-error:not([hidden]){animation:shakeX .4s ease}
+.buy-submit.is-shake{animation:shakeX .4s ease}
+.hdr-cart [data-cart-count].is-bump{animation:checkPop .4s cubic-bezier(.2,.8,.2,1)}
+
+/* --- Installation : progression visuelle des étapes --- */
+.install-step.reveal{transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1),border-color .5s ease}
+.install-grid .install-step.reveal:nth-child(2){transition-delay:.12s,.12s,0s}
+.install-grid .install-step.reveal:nth-child(3){transition-delay:.24s,.24s,0s}
+.install-step.is-current{border-top-color:var(--g-blue)}
+.install-step .num{transition:color .4s ease}
+.install-step.is-current .num{color:var(--g-blue)}
+.install-img img{transition:transform 1s cubic-bezier(.2,.8,.2,1)}
+.install-step.reveal .install-img img{transform:scale(1.08)}
+.install-step.reveal.is-in .install-img img{transform:scale(1)}
+
+/* --- FAQ --- */
+.faq-item summary .plus{transition:transform .35s cubic-bezier(.2,.8,.2,1),background .3s,color .3s,border-color .3s}
+.faq-item summary:hover .plus{border-color:var(--c-ink)}
+
+/* --- Mouvement réduit : tout est neutralisé --- */
+@media (prefers-reduced-motion:reduce){
+  .hero-scrollhint{animation:none}
+  .hero-bg img{will-change:auto}
+  .scrolly-progress span::after{transform:scaleX(1)}
+  .stage-plaque{transform:translateX(-16%) rotateZ(-3deg)}
+  .vcard.is-active .vcard-check,.buy-success:not([hidden]),.buy-error:not([hidden]),.buy-submit.is-shake,.hdr-cart [data-cart-count].is-bump{animation:none}
+  .gal-item.reveal img,.install-step.reveal .install-img img{transform:none;transition:none}
+  .bene-row,.bene-row::before,.bene-num,.bene-desc,.gal-item figcaption,.vcard img,.install-step.reveal{transition:none}
+}
