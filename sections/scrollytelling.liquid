@@ -3,11 +3,12 @@
     <div class="scrolly-sticky">
       <div class="container scrolly-grid">
         <div class="scrolly-steps">
-          <p class="eyebrow" style="margin-bottom:26px">{{ section.settings.eyebrow | default: 'Comment ça marche' }}</p>
+          <h2 class="eyebrow" style="margin-bottom:26px">{{ section.settings.eyebrow | default: 'Comment ça marche' }}</h2>
           {% for block in section.blocks %}
-            <h3 class="scrolly-step{% if forloop.first %} is-active{% endif %}" data-step {{ block.shopify_attributes }}>
-              <small>Étape {{ forloop.index }}</small>{{ block.settings.title }}
-            </h3>
+            <div class="scrolly-step{% if forloop.first %} is-active{% endif %}" data-step {{ block.shopify_attributes }}>
+              <small>Étape {{ forloop.index }}</small>
+              <h3>{{ block.settings.title }}</h3>
+            </div>
           {% endfor %}
         </div>
         <div class="scrolly-stage" data-phase="1" aria-hidden="true">

@@ -6,6 +6,10 @@
   <title>{{ page_title }}{% unless page_title contains shop.name %} — {{ shop.name }}{% endunless %}</title>
   {% if page_description %}<meta name="description" content="{{ page_description | escape }}">{% endif %}
   <link rel="canonical" href="{{ canonical_url }}">
+  {% if settings.favicon %}
+    <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 96, height: 96, crop: 'center' }}">
+    <link rel="apple-touch-icon" href="{{ settings.favicon | image_url: width: 180, height: 180, crop: 'center' }}">
+  {% endif %}
   <meta property="og:title" content="{{ page_title | escape }}">
   {% if page_description %}<meta property="og:description" content="{{ page_description | escape }}">{% endif %}
   {{ content_for_header }}
