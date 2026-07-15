@@ -2,14 +2,61 @@
   "sections": {
     "main": {
       "type": "main-guide-article",
+      "blocks": {
+        "guide_nfc": {
+          "type": "related_article",
+          "settings": {
+            "article": "guides/plaque-nfc-avis-google-comment-ca-marche",
+            "fallback_title": "Plaque NFC pour avis Google : comment ça marche ?",
+            "fallback_excerpt": "Comprendre le geste, la lecture de la puce et l’ouverture de la page Google.",
+            "fallback_url": "/blogs/guides/plaque-nfc-avis-google-comment-ca-marche",
+            "icon_style": "signal"
+          }
+        },
+        "guide_compare": {
+          "type": "related_article",
+          "settings": {
+            "article": "guides/nfc-ou-qr-code-avis-google",
+            "fallback_title": "NFC ou QR code : quelle solution choisir ?",
+            "fallback_excerpt": "Comparer les gestes, la compatibilité et les usages sans opposer artificiellement les deux solutions.",
+            "fallback_url": "/blogs/guides/nfc-ou-qr-code-avis-google",
+            "icon_style": "compare"
+          }
+        },
+        "guide_link": {
+          "type": "related_article",
+          "settings": {
+            "article": "guides/comment-obtenir-lien-avis-google",
+            "fallback_title": "Comment obtenir le lien direct vers ses avis Google ?",
+            "fallback_excerpt": "Récupérer, contrôler et transmettre le bon lien avant la programmation de la plaque.",
+            "fallback_url": "/blogs/guides/comment-obtenir-lien-avis-google",
+            "icon_style": "link"
+          }
+        }
+      },
+      "block_order": ["guide_nfc", "guide_compare", "guide_link"],
       "settings": {
-        "eyebrow": "Guide DPA TAP",
+        "badge": "Guide DPA TAP",
+        "intro_fallback": "Un guide pratique pour comprendre, choisir et installer votre solution NFC.",
+        "reading_time_label": "min de lecture",
+        "reading_time_fallback": 8,
+        "updated_label": "Mis à jour le",
+        "toc_heading": "Dans ce guide",
+        "toc_aria_label": "Sommaire du guide",
         "product": "plaque-nfc-avis-google",
-        "cta_eyebrow": "Prête à l’emploi",
-        "cta_heading": "Découvrez la plaque NFC pour avis Google",
-        "cta_text": "Votre lien Google est programmé avant l’expédition. La plaque arrive prête à installer, sans abonnement.",
-        "cta_label": "Découvrir la plaque NFC",
-        "related_heading": "Guides complémentaires"
+        "product_eyebrow": "La solution DPA TAP",
+        "price_prefix": "À partir de",
+        "product_benefit_1": "Programmée avant l’expédition",
+        "product_benefit_2": "Sans abonnement ni application dédiée",
+        "product_benefit_3": "Disponible en noir, bleu ou pack de deux",
+        "product_button": "Découvrir la plaque",
+        "related_eyebrow": "Continuer à explorer",
+        "related_heading": "Guides associés",
+        "related_link_label": "Lire ce guide",
+        "final_eyebrow": "Prêt à passer au NFC ?",
+        "final_heading": "Un geste simple au bon moment",
+        "final_text": "Découvrez la plaque DPA TAP et choisissez le modèle adapté à votre comptoir.",
+        "final_button": "Découvrir la plaque"
       }
     }
   },

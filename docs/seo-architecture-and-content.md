@@ -615,3 +615,14 @@ Dans Shopify Admin :
 Les cinq collections `parfum`, `robes-dete`, `ensembles-legers`, `accessoires-solaires` et `best-sellers` sont vides, sans lien dans les menus Shopify, mais encore publiées sur la Boutique en ligne, Shop, Point de vente, Inbox et Google & YouTube. Leurs intitulés correspondent à l’ancien univers textile Sarah Robe, mais l’API Admin ne fournit pas de champ d’attribution permettant de prouver formellement leur source.
 
 Recommandation préparée : les dépublier d’abord de la **Boutique en ligne** (publication `gid://shopify/Publication/361120072025`), contrôler les éventuels backlinks et résultats indexés, puis décider au cas par cas d’une redirection vers une future catégorie pertinente ou d’une réponse 410. Ne pas rediriger automatiquement vers l’accueil. Aucune collection n’a été supprimée, dépubliée ou redirigée pendant cette intervention.
+
+## 14. Édition du rendu visuel des guides
+
+- L’image principale reste le champ natif `article.image`. En son absence, le template affiche une composition légère propre au sujet du guide.
+- L’introduction reste le champ Extrait de Shopify, avec un texte de secours configurable dans le template.
+- Le résumé visuel est placé au début du corps HTML sous la forme `<aside class="guide-essential">…</aside>`, puis séparé du corps principal par `<!--guide-body-->`.
+- Tous les éléments situés après `<!--guide-body-->` restent le contenu SEO principal éditable dans Shopify.
+- Les H2 du corps alimentent automatiquement le sommaire. Il n’est pas nécessaire de saisir les ancres manuellement.
+- Les listes ordonnées deviennent des étapes, les listes simples deviennent des cartes et le tableau NFC/QR code devient une série de cartes sous 760 px.
+- La carte produit utilise le produit sélectionné dans le template : image, titre, URL et prix minimum restent dynamiques.
+- Les guides associés sont des blocs du template. Chaque bloc accepte un article, une image et des valeurs de secours afin de rester prévisualisable tant que les articles sont brouillons.

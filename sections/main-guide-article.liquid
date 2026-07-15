@@ -1,55 +1,214 @@
-<section class="guide-article">
+{% liquid
+  assign featured_product = section.settings.product
+  assign article_kind = 'link'
+  if article.handle contains 'comment-ca-marche'
+    assign article_kind = 'nfc'
+  elsif article.handle contains 'nfc-ou-qr-code'
+    assign article_kind = 'compare'
+  endif
+
+  assign content_marker = '<!--guide-body-->'
+  assign content_parts = article.content | split: content_marker
+  assign content_part_count = content_parts | size
+  assign main_content = article.content
+  assign quick_summary = blank
+  if content_part_count > 1
+    assign quick_summary = content_parts | first
+    assign main_content = content_parts | last
+  endif
+
+  assign article_date = article.updated_at | default: article.published_at
+  assign article_intro = article.excerpt | default: section.settings.intro_fallback
+%}
+
+<section class="guide-article guide-article--{{ article_kind }}" data-guide-article>
   <div class="container">
     {% render 'seo-breadcrumbs', current_title: article.title, parent_title: blog.title, parent_url: blog.url %}
 
     <article class="guide-article__layout">
-      <header class="guide-article__header">
-        <p class="eyebrow">{{ section.settings.eyebrow }}</p>
-        <h1>{{ article.title }}</h1>
-        {% if article.excerpt != blank %}<div class="guide-article__dek">{{ article.excerpt }}</div>{% endif %}
-        <p class="guide-article__meta">
-          {% if article.author != blank %}<span>{{ 'seo.written_by' | t: author: article.author }}</span>{% endif %}
-          {% if article.published_at != blank %}<time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: '%d/%m/%Y' }}</time>{% endif %}
-        </p>
+      <header class="guide-hero">
+        <div class="guide-hero__copy">
+          <div class="guide-badge">
+            <span class="g-dots" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+            {{ section.settings.badge }}
+          </div>
+          <h1>{{ article.title }}</h1>
+          {% if article_intro != blank %}<div class="guide-hero__dek">{{ article_intro }}</div>{% endif %}
+          <div class="guide-hero__meta">
+            <span><strong data-reading-time>{{ section.settings.reading_time_fallback }}</strong> {{ section.settings.reading_time_label }}</span>
+            {% if article_date != blank %}
+              <span>{{ section.settings.updated_label }} <time datetime="{{ article_date | date: '%Y-%m-%d' }}">{{ article_date | date: '%d/%m/%Y' }}</time></span>
+            {% endif %}
+          </div>
+        </div>
+
+        <figure class="guide-hero__visual guide-hero__visual--{{ article_kind }}">
+          {% if article.image %}
+            {{ article.image | image_url: width: 1600 | image_tag: class: 'guide-hero__image', loading: 'eager', fetchpriority: 'high', widths: '360, 540, 760, 1000, 1280, 1600', sizes: '(max-width: 799px) calc(100vw - 32px), 44vw', alt: article.image.alt | default: article.title }}
+          {% elsif article_kind == 'nfc' %}
+            <div class="signal-scene" role="img" aria-label="{{ 'seo.guide_nfc.hero_alt' | t }}">
+              {% if featured_product.featured_image %}
+                {{ featured_product.featured_image | image_url: width: 800 | image_tag: class: 'signal-scene__plaque', loading: 'eager', fetchpriority: 'high', widths: '320, 480, 640, 800', sizes: '(max-width: 799px) 48vw, 250px', alt: featured_product.featured_image.alt | default: featured_product.title }}
+              {% endif %}
+              <div class="signal-scene__waves" aria-hidden="true"><span></span><span></span><span></span></div>
+              <div class="signal-scene__phone" aria-hidden="true">
+                <span class="signal-scene__notch"></span>
+                <span class="signal-scene__notice"><b>NFC</b><small>{{ 'seo.guide_nfc.detected' | t }}</small></span>
+              </div>
+            </div>
+          {% elsif article_kind == 'compare' %}
+            <div class="compare-scene" role="img" aria-label="{{ 'seo.guide_compare.hero_alt' | t }}">
+              <div class="compare-scene__card compare-scene__card--nfc">
+                <span class="compare-scene__label">NFC</span>
+                <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M18 42c8-8 8-20 0-28M28 48c12-12 12-30 0-42M38 53c16-16 16-40 0-56" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>
+                <small>{{ 'seo.guide_compare.approach' | t }}</small>
+              </div>
+              <div class="compare-scene__versus" aria-hidden="true">/</div>
+              <div class="compare-scene__card compare-scene__card--qr">
+                <span class="compare-scene__label">QR</span>
+                <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 8h18v18H8zM38 8h18v18H38zM8 38h18v18H8zM40 38h7v7h-7zM50 38h6v18H44v-6h6zM32 31h8v8h-8z" fill="currentColor"/></svg>
+                <small>{{ 'seo.guide_compare.frame' | t }}</small>
+              </div>
+            </div>
+          {% else %}
+            <div class="link-scene" role="img" aria-label="{{ 'seo.guide_link.hero_alt' | t }}">
+              <div class="link-scene__browser" aria-hidden="true">
+                <div class="link-scene__browserbar"><span></span><span></span><span></span></div>
+                <div class="link-scene__profile">
+                  <span class="link-scene__avatar">DPA</span>
+                  <span><b>{{ 'seo.guide_link.profile' | t }}</b><small>{{ 'seo.guide_link.business' | t }}</small></span>
+                </div>
+                <div class="link-scene__action">{{ 'seo.guide_link.receive' | t }}</div>
+              </div>
+              <div class="link-scene__url"><span>https://g.page/r/…/review</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 14.5l5-5m-7.8 8.8l-1 1a3.5 3.5 0 0 1-5-5l3-3a3.5 3.5 0 0 1 5 0m6.6-5.6l1-1a3.5 3.5 0 0 1 5 5l-3 3a3.5 3.5 0 0 1-5 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+            </div>
+          {% endif %}
+        </figure>
       </header>
 
-      {% if article.image %}
-        <figure class="guide-article__figure">
-          {{ article.image | image_url: width: 1600 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '360, 540, 760, 1000, 1280, 1600', sizes: '(max-width: 760px) calc(100vw - 32px), 920px', alt: article.image.alt | default: article.title }}
-        </figure>
+      {% if quick_summary != blank %}
+        <div class="guide-summary">{{ quick_summary }}</div>
       {% endif %}
 
-      <div class="guide-article__content">
-        {{ article.content }}
+      {% case article_kind %}
+        {% when 'nfc' %}
+          <section class="guide-feature guide-feature--nfc" aria-labelledby="guide-nfc-steps">
+            <div class="guide-section-heading">
+              <p class="eyebrow">{{ 'seo.guide_nfc.eyebrow' | t }}</p>
+              <h2 id="guide-nfc-steps">{{ 'seo.guide_nfc.steps_heading' | t }}</h2>
+            </div>
+            <ol class="signal-steps">
+              <li><span class="signal-steps__number">01</span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M10 18h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><h3>{{ 'seo.guide_nfc.step_1_title' | t }}</h3><p>{{ 'seo.guide_nfc.step_1_text' | t }}</p></li>
+              <li><span class="signal-steps__number">02</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16c4-4 4-8 0-12M10 19c6-6 6-12 0-18M15 21c8-8 8-16 0-24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><h3>{{ 'seo.guide_nfc.step_2_title' | t }}</h3><p>{{ 'seo.guide_nfc.step_2_text' | t }}</p></li>
+              <li><span class="signal-steps__number">03</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 9h16" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8 14h8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><h3>{{ 'seo.guide_nfc.step_3_title' | t }}</h3><p>{{ 'seo.guide_nfc.step_3_text' | t }}</p></li>
+            </ol>
+            <div class="compatibility-row">
+              <div><span>iPhone</span><p>{{ 'seo.guide_nfc.iphone' | t }}</p></div>
+              <div><span>Android</span><p>{{ 'seo.guide_nfc.android' | t }}</p></div>
+              <aside><strong>{{ 'seo.guide_nfc.limit_label' | t }}</strong><p>{{ 'seo.guide_nfc.limit_text' | t }}</p></aside>
+            </div>
+          </section>
+        {% when 'compare' %}
+          <section class="guide-feature guide-feature--compare" aria-labelledby="guide-compare-heading">
+            <div class="guide-section-heading">
+              <p class="eyebrow">{{ 'seo.guide_compare.eyebrow' | t }}</p>
+              <h2 id="guide-compare-heading">{{ 'seo.guide_compare.heading' | t }}</h2>
+            </div>
+            <div class="technology-cards">
+              <article><span class="technology-cards__tag">NFC</span><h3>{{ 'seo.guide_compare.nfc_title' | t }}</h3><p>{{ 'seo.guide_compare.nfc_text' | t }}</p><ul><li>{{ 'seo.guide_compare.nfc_point_1' | t }}</li><li>{{ 'seo.guide_compare.nfc_point_2' | t }}</li></ul></article>
+              <article><span class="technology-cards__tag">QR code</span><h3>{{ 'seo.guide_compare.qr_title' | t }}</h3><p>{{ 'seo.guide_compare.qr_text' | t }}</p><ul><li>{{ 'seo.guide_compare.qr_point_1' | t }}</li><li>{{ 'seo.guide_compare.qr_point_2' | t }}</li></ul></article>
+            </div>
+            <aside class="guide-callout"><span>{{ 'seo.guide_compare.choice_label' | t }}</span><p>{{ 'seo.guide_compare.choice_text' | t }}</p></aside>
+          </section>
+        {% else %}
+          <section class="guide-feature guide-feature--link" aria-labelledby="guide-link-heading">
+            <div class="guide-section-heading">
+              <p class="eyebrow">{{ 'seo.guide_link.eyebrow' | t }}</p>
+              <h2 id="guide-link-heading">{{ 'seo.guide_link.heading' | t }}</h2>
+            </div>
+            <ol class="link-path">
+              <li><span>01</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 9h16" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="7" cy="7" r=".8" fill="currentColor"/></svg><h3>{{ 'seo.guide_link.path_1_title' | t }}</h3><p>{{ 'seo.guide_link.path_1_text' | t }}</p></li>
+              <li><span>02</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9M12 3v9h9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><h3>{{ 'seo.guide_link.path_2_title' | t }}</h3><p>{{ 'seo.guide_link.path_2_text' | t }}</p></li>
+              <li><span>03</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 14.5l5-5m-7.8 8.8l-1 1a3.5 3.5 0 0 1-5-5l3-3a3.5 3.5 0 0 1 5 0m6.6-5.6l1-1a3.5 3.5 0 0 1 5 5l-3 3a3.5 3.5 0 0 1-5 0" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><h3>{{ 'seo.guide_link.path_3_title' | t }}</h3><p>{{ 'seo.guide_link.path_3_text' | t }}</p></li>
+            </ol>
+            <div class="platform-cards">
+              <article><span>{{ 'seo.guide_link.computer' | t }}</span><p>{{ 'seo.guide_link.computer_text' | t }}</p></article>
+              <article><span>{{ 'seo.guide_link.phone' | t }}</span><p>{{ 'seo.guide_link.phone_text' | t }}</p></article>
+            </div>
+            <aside class="guide-callout"><span>{{ 'seo.guide_link.verify_label' | t }}</span><p>{{ 'seo.guide_link.verify_text' | t }}</p></aside>
+          </section>
+      {% endcase %}
+
+      <div class="guide-reading">
+        <details class="guide-toc" data-guide-toc open>
+          <summary>{{ section.settings.toc_heading }}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
+          <nav aria-label="{{ section.settings.toc_aria_label }}"><ol data-toc-list></ol></nav>
+        </details>
+
+        <div class="guide-article__content" data-guide-content>
+          {{ main_content }}
+        </div>
       </div>
 
-      {% assign featured_product = section.settings.product %}
       {% if featured_product != blank %}
-        <aside class="guide-article__cta" aria-label="{{ 'seo.product_link' | t }}">
-          <div>
-            <p class="eyebrow">{{ section.settings.cta_eyebrow }}</p>
-            <h2>{{ section.settings.cta_heading }}</h2>
-            <p>{{ section.settings.cta_text }}</p>
+        <aside class="guide-product" aria-label="{{ 'seo.product_link' | t }}">
+          <div class="guide-product__media">
+            {% if featured_product.featured_image %}
+              {{ featured_product.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '320, 480, 640, 900', sizes: '(max-width: 759px) calc(100vw - 64px), 360px', alt: featured_product.featured_image.alt | default: featured_product.title }}
+            {% endif %}
           </div>
-          <a class="btn btn--blue" href="{{ featured_product.url }}">{{ section.settings.cta_label }}</a>
+          <div class="guide-product__copy">
+            <p class="eyebrow">{{ section.settings.product_eyebrow }}</p>
+            <h2>{{ featured_product.title }}</h2>
+            <p class="guide-product__price">{{ section.settings.price_prefix }} {{ featured_product.price_min | money }}</p>
+            <ul><li>{{ section.settings.product_benefit_1 }}</li><li>{{ section.settings.product_benefit_2 }}</li><li>{{ section.settings.product_benefit_3 }}</li></ul>
+            <a class="btn btn--blue" href="{{ featured_product.url }}">{{ section.settings.product_button }}</a>
+          </div>
         </aside>
       {% endif %}
 
-      {% assign related_count = 0 %}
-      {% for block in section.blocks %}
-        {% if block.settings.article != blank %}{% assign related_count = related_count | plus: 1 %}{% endif %}
-      {% endfor %}
-      {% if related_count > 0 %}
-        <aside class="guide-article__related">
-          <h2>{{ section.settings.related_heading }}</h2>
-          <ul>
-            {% for block in section.blocks %}
-              {% assign related_article = block.settings.article %}
-              {% if related_article != blank and related_article.id != article.id %}
-                <li {{ block.shopify_attributes }}><a href="{{ related_article.url }}">{{ related_article.title }}</a></li>
-              {% endif %}
-            {% endfor %}
-          </ul>
+      <aside class="guide-related" aria-labelledby="guide-related-heading">
+        <div class="guide-section-heading">
+          <p class="eyebrow">{{ section.settings.related_eyebrow }}</p>
+          <h2 id="guide-related-heading">{{ section.settings.related_heading }}</h2>
+        </div>
+        <div class="guide-related__grid">
+          {% for block in section.blocks %}
+            {% liquid
+              assign related_article = block.settings.article
+              assign related_url = block.settings.fallback_url
+              assign related_title = block.settings.fallback_title
+              assign related_excerpt = block.settings.fallback_excerpt
+              assign related_image = block.settings.image
+              if related_article != blank
+                assign related_url = related_article.url
+                assign related_title = related_article.title
+                assign related_excerpt = related_article.excerpt | strip_html | default: related_excerpt
+                assign related_image = related_article.image | default: related_image
+              endif
+            %}
+            {% if related_url != blank and related_url != article.url %}
+              <article class="guide-related__card" {{ block.shopify_attributes }}>
+                <a href="{{ related_url }}">
+                  <span class="guide-related__visual guide-related__visual--{{ block.settings.icon_style }}">
+                    {% if related_image %}
+                      {{ related_image | image_url: width: 700 | image_tag: loading: 'lazy', widths: '280, 420, 560, 700', sizes: '(max-width: 759px) calc(100vw - 64px), 360px', alt: related_image.alt | default: related_title }}
+                    {% else %}
+                      <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M12 18h40v28H12zM18 12v12M46 12v12M20 32h24M20 39h17" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+                    {% endif %}
+                  </span>
+                  <span class="guide-related__body"><strong>{{ related_title }}</strong><span>{{ related_excerpt }}</span><em>{{ section.settings.related_link_label }}</em></span>
+                </a>
+              </article>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </aside>
+
+      {% if featured_product != blank %}
+        <aside class="guide-final">
+          <div><p class="eyebrow">{{ section.settings.final_eyebrow }}</p><h2>{{ section.settings.final_heading }}</h2><p>{{ section.settings.final_text }}</p></div>
+          <a class="btn btn--paper" href="{{ featured_product.url }}">{{ section.settings.final_button }}</a>
         </aside>
       {% endif %}
     </article>
@@ -62,199 +221,1020 @@
 
 {% stylesheet %}
   .guide-article {
+    --guide-panel: #151518;
+    --guide-panel-strong: #1b1b20;
+    --guide-line: rgba(255, 255, 255, 0.11);
+    --guide-muted: rgba(247, 244, 236, 0.68);
     min-height: 100vh;
-    padding: 128px 0 96px;
-    background: var(--c-paper);
-    color: var(--c-ink);
+    padding: 128px 0 calc(96px + env(safe-area-inset-bottom));
+    overflow: clip;
+    background: var(--c-bg);
+    color: var(--c-paper);
+    font-family: "Space Grotesk", Helvetica, Arial, sans-serif;
+  }
+
+  .guide-article .seo-breadcrumb {
+    color: rgba(247, 244, 236, 0.62);
+  }
+
+  .guide-article .seo-breadcrumb [aria-current="page"] {
+    color: var(--c-paper);
   }
 
   .guide-article__layout {
-    width: min(100%, 920px);
+    width: min(100%, 1120px);
     margin-inline: auto;
   }
 
-  .guide-article__header h1 {
-    margin-top: 14px;
-    font-size: clamp(2.35rem, 8vw, 5rem);
+  .guide-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(340px, 0.95fr);
+    gap: clamp(36px, 6vw, 84px);
+    align-items: center;
+    padding: clamp(24px, 4vw, 52px) 0 clamp(56px, 8vw, 96px);
   }
 
-  .guide-article__dek {
-    max-width: 65ch;
+  .guide-badge {
+    width: fit-content;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 14px;
+    border: 1px solid var(--guide-line);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--c-paper);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .guide-badge .g-dots span {
+    width: 5px;
+    height: 5px;
+  }
+
+  .guide-hero h1 {
+    max-width: 13ch;
     margin-top: 24px;
-    color: #5f5f63;
-    font-size: clamp(1.05rem, 2vw, 1.25rem);
+    color: var(--c-paper);
+    font-size: clamp(2.4rem, 6vw, 5.3rem);
+    line-height: 0.98;
   }
 
-  .guide-article__meta {
+  .guide-hero__dek {
+    max-width: 58ch;
+    margin-top: 24px;
+    color: var(--guide-muted);
+    font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+    line-height: 1.55;
+  }
+
+  .guide-hero__dek p + p {
+    margin-top: 0.75em;
+  }
+
+  .guide-hero__meta {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px 18px;
-    margin-top: 22px;
-    color: var(--c-grey);
-    font-size: 0.9rem;
+    gap: 10px 22px;
+    margin-top: 28px;
+    color: rgba(247, 244, 236, 0.54);
+    font-size: 0.88rem;
   }
 
-  .guide-article__figure {
-    margin: 42px 0 0;
+  .guide-hero__meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
   }
 
-  .guide-article__figure img {
+  .guide-hero__meta span::before {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--g-blue);
+    content: "";
+  }
+
+  .guide-hero__visual {
+    position: relative;
+    min-width: 0;
+    min-height: 430px;
+    margin: 0;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border: 1px solid var(--guide-line);
+    border-radius: 32px;
+    background: radial-gradient(circle at 30% 20%, rgba(26, 115, 232, 0.2), transparent 40%), #111114;
+    box-shadow: 0 40px 90px -48px rgba(0, 0, 0, 0.95);
+  }
+
+  .guide-hero__image {
     width: 100%;
+    height: 100%;
+    min-height: 430px;
+    object-fit: cover;
+  }
+
+  .signal-scene {
+    position: relative;
+    width: 100%;
+    height: 430px;
+  }
+
+  .signal-scene__plaque {
+    position: absolute;
+    left: 9%;
+    top: 50%;
+    z-index: 1;
+    width: 48%;
+    aspect-ratio: 1;
+    object-fit: cover;
     border-radius: 24px;
+    transform: translateY(-50%) rotate(-5deg);
+    box-shadow: 0 34px 70px -28px #000;
+  }
+
+  .signal-scene__phone {
+    position: absolute;
+    right: 10%;
+    top: 50%;
+    z-index: 3;
+    width: 34%;
+    aspect-ratio: 9 / 18;
+    padding: 12px;
+    border: 2px solid #36363d;
+    border-radius: 32px;
+    background: #08080a;
+    transform: translateY(-48%) rotate(6deg);
+    box-shadow: 0 38px 80px -30px #000;
+  }
+
+  .signal-scene__notch {
+    width: 38%;
+    height: 13px;
+    display: block;
+    margin: 0 auto;
+    border-radius: 999px;
+    background: #000;
+  }
+
+  .signal-scene__notice {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 28px;
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    background: #242429;
+    color: #fff;
+  }
+
+  .signal-scene__notice b {
+    flex: 0 0 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border-radius: 9px;
+    background: var(--g-blue);
+    font-size: 0.64rem;
+  }
+
+  .signal-scene__notice small {
+    font-size: 0.62rem;
+    line-height: 1.25;
+  }
+
+  .signal-scene__waves {
+    position: absolute;
+    left: 48%;
+    top: 50%;
+    z-index: 2;
+    width: 150px;
+    height: 150px;
+    transform: translate(-50%, -50%);
+  }
+
+  .signal-scene__waves span {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: calc(36px + var(--wave, 0) * 44px);
+    height: calc(36px + var(--wave, 0) * 44px);
+    border: 2px solid rgba(102, 183, 255, calc(0.9 - var(--wave, 0) * 0.2));
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .signal-scene__waves span:nth-child(2) { --wave: 1; }
+  .signal-scene__waves span:nth-child(3) { --wave: 2; }
+
+  .compare-scene {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 12px;
+    align-items: center;
+    padding: 26px;
+  }
+
+  .compare-scene__card {
+    min-width: 0;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 24px;
+    border: 1px solid var(--guide-line);
+    border-radius: 24px;
+    background: #18181c;
+  }
+
+  .compare-scene__card--nfc { color: #7fc0ff; }
+  .compare-scene__card--qr { color: var(--c-paper); }
+  .compare-scene__card svg { width: 82px; margin-inline: auto; }
+  .compare-scene__label { color: currentColor; font-size: 1.1rem; font-weight: 700; }
+  .compare-scene__card small { color: var(--guide-muted); }
+  .compare-scene__versus { color: rgba(255, 255, 255, 0.36); font-size: 2rem; }
+
+  .link-scene {
+    width: 100%;
+    padding: 30px;
+  }
+
+  .link-scene__browser {
+    overflow: hidden;
+    border: 1px solid var(--guide-line);
+    border-radius: 22px;
+    background: #f7f5ef;
+    color: #1a1a1c;
+    box-shadow: 0 30px 60px -35px #000;
+  }
+
+  .link-scene__browserbar {
+    display: flex;
+    gap: 6px;
+    padding: 13px 16px;
+    border-bottom: 1px solid #dedbd4;
+  }
+
+  .link-scene__browserbar span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #b8b5af;
+  }
+
+  .link-scene__browserbar span:nth-child(1) { background: var(--g-red); }
+  .link-scene__browserbar span:nth-child(2) { background: var(--g-yellow); }
+  .link-scene__browserbar span:nth-child(3) { background: var(--g-green); }
+
+  .link-scene__profile {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 28px 26px 18px;
+  }
+
+  .link-scene__avatar {
+    flex: 0 0 54px;
+    height: 54px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: #111114;
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+
+  .link-scene__profile > span:last-child { display: grid; }
+  .link-scene__profile small { color: #69676c; }
+
+  .link-scene__action {
+    width: calc(100% - 52px);
+    min-height: 46px;
+    display: grid;
+    place-items: center;
+    margin: 0 26px 26px;
+    border-radius: 999px;
+    background: var(--g-blue);
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .link-scene__url {
+    position: relative;
+    z-index: 2;
+    min-height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin: -8px 16px 0;
+    padding: 14px 18px;
+    overflow: hidden;
+    border: 1px solid rgba(127, 192, 255, 0.42);
+    border-radius: 16px;
+    background: #17171b;
+    color: #9acbff;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 0.78rem;
+  }
+
+  .link-scene__url span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .link-scene__url svg { flex: 0 0 24px; width: 24px; }
+
+  .guide-summary {
+    margin-bottom: clamp(64px, 8vw, 96px);
+  }
+
+  .guide-summary > .guide-essential,
+  .guide-summary > aside {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(190px, 0.38fr) 1fr;
+    gap: 32px;
+    padding: clamp(26px, 4vw, 44px);
+    overflow: hidden;
+    border: 1px solid rgba(127, 192, 255, 0.3);
+    border-radius: 28px;
+    background: linear-gradient(135deg, rgba(26, 115, 232, 0.15), rgba(255, 255, 255, 0.035));
+  }
+
+  .guide-summary h2 {
+    color: var(--c-paper);
+    font-size: clamp(1.6rem, 3vw, 2.35rem);
+  }
+
+  .guide-summary ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .guide-summary li {
+    position: relative;
+    padding-left: 20px;
+    color: var(--guide-muted);
+    line-height: 1.5;
+  }
+
+  .guide-summary li::before {
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--g-blue);
+    content: "";
+  }
+
+  .guide-feature {
+    margin-bottom: clamp(72px, 10vw, 120px);
+  }
+
+  .guide-section-heading {
+    max-width: 760px;
+    margin-bottom: 32px;
+  }
+
+  .guide-section-heading h2 {
+    margin-top: 10px;
+    color: var(--c-paper);
+    font-size: clamp(2rem, 5vw, 3.8rem);
+  }
+
+  .signal-steps,
+  .link-path {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .signal-steps li,
+  .link-path li {
+    min-width: 0;
+    min-height: 290px;
+    display: flex;
+    flex-direction: column;
+    padding: 26px;
+    border: 1px solid var(--guide-line);
+    border-radius: 24px;
+    background: var(--guide-panel);
+  }
+
+  .signal-steps__number,
+  .link-path li > span {
+    color: rgba(247, 244, 236, 0.38);
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+  }
+
+  .signal-steps svg,
+  .link-path svg {
+    width: 42px;
+    height: 42px;
+    margin: 42px 0 28px;
+    color: #77baff;
+  }
+
+  .signal-steps h3,
+  .link-path h3 {
+    color: var(--c-paper);
+    font-size: 1.25rem;
+    line-height: 1.15;
+  }
+
+  .signal-steps p,
+  .link-path p {
+    margin-top: 12px;
+    color: var(--guide-muted);
+    line-height: 1.55;
+  }
+
+  .compatibility-row {
+    display: grid;
+    grid-template-columns: 0.8fr 0.8fr 1.4fr;
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .compatibility-row > * {
+    padding: 24px;
+    border: 1px solid var(--guide-line);
+    border-radius: 20px;
+    background: #101012;
+  }
+
+  .compatibility-row span,
+  .compatibility-row strong {
+    color: var(--c-paper);
+    font-weight: 600;
+  }
+
+  .compatibility-row p {
+    margin-top: 9px;
+    color: var(--guide-muted);
+    line-height: 1.5;
+  }
+
+  .compatibility-row aside {
+    border-color: rgba(251, 188, 4, 0.32);
+    background: rgba(251, 188, 4, 0.07);
+  }
+
+  .technology-cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .technology-cards article {
+    min-width: 0;
+    padding: clamp(26px, 4vw, 42px);
+    border: 1px solid var(--guide-line);
+    border-radius: 28px;
+    background: var(--guide-panel);
+  }
+
+  .technology-cards article:first-child {
+    border-color: rgba(26, 115, 232, 0.44);
+    background: linear-gradient(145deg, rgba(26, 115, 232, 0.14), #151518 58%);
+  }
+
+  .technology-cards__tag {
+    display: inline-flex;
+    padding: 7px 11px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.07);
+    color: #9acbff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .technology-cards h3 {
+    margin-top: 40px;
+    color: var(--c-paper);
+    font-size: clamp(1.65rem, 3vw, 2.4rem);
+  }
+
+  .technology-cards p { margin-top: 16px; color: var(--guide-muted); }
+  .technology-cards ul { display: grid; gap: 10px; margin: 24px 0 0; padding: 0; list-style: none; }
+  .technology-cards li { position: relative; padding-left: 18px; color: var(--guide-muted); }
+  .technology-cards li::before { position: absolute; left: 0; top: 0.62em; width: 6px; height: 6px; border-radius: 50%; background: var(--g-blue); content: ""; }
+
+  .guide-callout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 28px;
+    margin-top: 18px;
+    padding: 28px;
+    border: 1px solid rgba(52, 168, 83, 0.34);
+    border-radius: 22px;
+    background: rgba(52, 168, 83, 0.07);
+  }
+
+  .guide-callout span { color: var(--c-paper); font-weight: 600; }
+  .guide-callout p { color: var(--guide-muted); }
+
+  .platform-cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .platform-cards article {
+    padding: 24px;
+    border: 1px solid var(--guide-line);
+    border-radius: 20px;
+    background: #101012;
+  }
+
+  .platform-cards span { color: var(--c-paper); font-weight: 600; }
+  .platform-cards p { margin-top: 9px; color: var(--guide-muted); }
+
+  .guide-reading {
+    display: grid;
+    grid-template-columns: 250px minmax(0, 1fr);
+    gap: clamp(40px, 7vw, 88px);
+    align-items: start;
+  }
+
+  .guide-toc {
+    position: sticky;
+    top: 110px;
+    border-top: 1px solid var(--guide-line);
+    border-bottom: 1px solid var(--guide-line);
+  }
+
+  .guide-toc summary {
+    min-height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    color: var(--c-paper);
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    list-style: none;
+    text-transform: uppercase;
+  }
+
+  .guide-toc summary::-webkit-details-marker { display: none; }
+  .guide-toc summary svg { width: 20px; transition: transform 0.2s ease; }
+  .guide-toc[open] summary svg { transform: rotate(180deg); }
+  .guide-toc ol { display: grid; gap: 3px; margin: 0; padding: 0 0 18px; list-style: none; }
+
+  .guide-toc a {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    padding: 8px 10px;
+    border-left: 2px solid transparent;
+    color: rgba(247, 244, 236, 0.57);
+    font-size: 0.86rem;
+    line-height: 1.35;
+    text-decoration: none;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .guide-toc a:hover,
+  .guide-toc a:focus-visible {
+    border-color: var(--g-blue);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--c-paper);
   }
 
   .guide-article__content {
-    margin-top: 48px;
+    min-width: 0;
+    color: var(--guide-muted);
     font-size: 1.0625rem;
+    line-height: 1.72;
   }
 
-  .guide-article__content > * {
-    max-width: 72ch;
-  }
-
-  .guide-article__content > * + * {
-    margin-top: 1.15em;
-  }
+  .guide-article__content > * { max-width: 68ch; }
+  .guide-article__content > * + * { margin-top: 1.05em; }
 
   .guide-article__content h2 {
-    margin-top: 2.1em;
-    font-size: clamp(1.75rem, 5vw, 2.6rem);
+    max-width: 19ch;
+    margin-top: 3.2em;
+    padding-top: 0.65em;
+    border-top: 1px solid var(--guide-line);
+    color: var(--c-paper);
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    scroll-margin-top: 120px;
   }
+
+  .guide-article__content h2:first-child { margin-top: 0; }
 
   .guide-article__content h3 {
-    margin-top: 1.8em;
-    font-size: clamp(1.25rem, 4vw, 1.65rem);
-    line-height: 1.2;
+    margin-top: 2.2em;
+    color: var(--c-paper);
+    font-size: clamp(1.22rem, 2.6vw, 1.6rem);
+    line-height: 1.22;
   }
 
-  .guide-article__content ul,
-  .guide-article__content ol {
-    padding-left: 1.4rem;
+  .guide-article__content a { color: #86c2ff; text-underline-offset: 4px; }
+
+  .guide-article__content > ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    max-width: none;
+    margin: 24px 0;
+    padding: 0;
+    list-style: none;
   }
 
-  .guide-article__content li + li {
-    margin-top: 0.55em;
+  .guide-article__content > ul li {
+    position: relative;
+    min-width: 0;
+    padding: 18px 18px 18px 38px;
+    border: 1px solid var(--guide-line);
+    border-radius: 16px;
+    background: var(--guide-panel);
+    line-height: 1.5;
   }
 
-  .guide-article__content a,
-  .guide-article__related a {
-    color: #1465d8;
-    text-underline-offset: 4px;
+  .guide-article__content > ul li::before {
+    position: absolute;
+    left: 18px;
+    top: 1.45em;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--g-blue);
+    content: "";
+  }
+
+  .guide-article__content > ol {
+    max-width: none;
+    display: grid;
+    gap: 12px;
+    margin: 24px 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: guide-step;
+  }
+
+  .guide-article__content > ol li {
+    position: relative;
+    min-height: 74px;
+    display: flex;
+    align-items: center;
+    padding: 18px 20px 18px 72px;
+    border: 1px solid var(--guide-line);
+    border-radius: 16px;
+    background: var(--guide-panel);
+    counter-increment: guide-step;
+  }
+
+  .guide-article__content > ol li::before {
+    position: absolute;
+    left: 18px;
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(26, 115, 232, 0.16);
+    color: #8bc5ff;
+    content: counter(guide-step, decimal-leading-zero);
+    font-size: 0.72rem;
+    font-weight: 700;
   }
 
   .guide-article__content table {
     width: 100%;
-    display: block;
-    overflow-x: auto;
-    border-collapse: collapse;
+    max-width: none;
+    margin: 30px 0;
+    overflow: hidden;
+    border: 1px solid var(--guide-line);
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 20px;
+    background: var(--guide-panel);
   }
 
   .guide-article__content th,
   .guide-article__content td {
-    min-width: 150px;
-    padding: 14px;
-    border: 1px solid #d8d5cf;
+    min-width: 0;
+    padding: 17px 18px;
+    border: 0;
+    border-bottom: 1px solid var(--guide-line);
     text-align: left;
     vertical-align: top;
   }
 
-  .guide-article__cta {
-    display: grid;
-    gap: 24px;
-    margin-top: 64px;
-    padding: 28px;
-    border-radius: 24px;
-    background: var(--c-bg);
+  .guide-article__content th {
+    background: rgba(255, 255, 255, 0.05);
     color: var(--c-paper);
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
-  .guide-article__cta h2 {
-    margin-top: 10px;
-    color: var(--c-paper);
-    font-size: clamp(1.7rem, 5vw, 2.6rem);
-  }
+  .guide-article__content tbody tr:last-child td { border-bottom: 0; }
+  .guide-article__content th + th,
+  .guide-article__content td + td { border-left: 1px solid var(--guide-line); }
 
-  .guide-article__cta p:not(.eyebrow) {
-    max-width: 60ch;
-    margin-top: 14px;
-    color: color-mix(in srgb, var(--c-paper) 70%, transparent);
-  }
-
-  .guide-article__cta .btn {
-    align-self: center;
-  }
-
-  .guide-article__related {
-    margin-top: 56px;
-    padding-top: 32px;
-    border-top: 1px solid #d8d5cf;
-  }
-
-  .guide-article__related h2 {
-    font-size: clamp(1.55rem, 4vw, 2rem);
-  }
-
-  .guide-article__related ul {
+  .guide-product {
     display: grid;
-    gap: 12px;
-    margin: 20px 0 0;
-    padding-left: 1.25rem;
-  }
-
-  .guide-article__related a {
-    min-height: 44px;
-    display: inline-flex;
+    grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(28px, 5vw, 64px);
     align-items: center;
+    margin-top: clamp(80px, 11vw, 140px);
+    padding: clamp(24px, 4vw, 44px);
+    border: 1px solid rgba(26, 115, 232, 0.32);
+    border-radius: 30px;
+    background: radial-gradient(circle at 15% 20%, rgba(26, 115, 232, 0.17), transparent 38%), #121215;
   }
 
-  @media (min-width: 760px) {
-    .guide-article {
-      padding-top: 150px;
-      padding-bottom: 128px;
-    }
-
-    .guide-article__cta {
-      grid-template-columns: 1fr auto;
-      align-items: center;
-      padding: 40px;
-    }
+  .guide-product__media {
+    overflow: hidden;
+    border-radius: 22px;
+    background: #0b0b0d;
   }
 
-  @media (max-width: 560px) {
+  .guide-product__media img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+  .guide-product__copy h2 { margin-top: 12px; color: var(--c-paper); font-size: clamp(1.8rem, 4vw, 3.2rem); }
+  .guide-product__price { margin-top: 16px; color: #9acbff; font-size: 1.22rem; font-weight: 600; }
+  .guide-product__copy ul { display: grid; gap: 9px; margin: 22px 0 28px; padding: 0; list-style: none; }
+  .guide-product__copy li { position: relative; padding-left: 20px; color: var(--guide-muted); }
+  .guide-product__copy li::before { position: absolute; left: 0; top: 0.62em; width: 7px; height: 7px; border-radius: 50%; background: var(--g-green); content: ""; }
+
+  .guide-related {
+    margin-top: clamp(80px, 10vw, 124px);
+  }
+
+  .guide-related__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .guide-related__card {
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--guide-line);
+    border-radius: 22px;
+    background: var(--guide-panel);
+  }
+
+  .guide-related__card a {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 128px 1fr;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .guide-related__visual {
+    min-height: 180px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background: #101012;
+    color: #78bbff;
+  }
+
+  .guide-related__visual--compare { color: var(--g-yellow); }
+  .guide-related__visual--link { color: var(--g-green); }
+  .guide-related__visual img { width: 100%; height: 100%; object-fit: cover; }
+  .guide-related__visual svg { width: 52px; }
+
+  .guide-related__body {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+  }
+
+  .guide-related__body strong { color: var(--c-paper); font-size: 1.15rem; line-height: 1.22; }
+  .guide-related__body > span { margin-top: 10px; color: var(--guide-muted); font-size: 0.9rem; line-height: 1.48; }
+  .guide-related__body em { margin-top: auto; padding-top: 18px; color: #89c6ff; font-size: 0.88rem; font-style: normal; text-decoration: underline; text-underline-offset: 4px; }
+  .guide-related__card a:hover .guide-related__body strong { color: #9acbff; }
+
+  .guide-final {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 36px;
+    align-items: center;
+    margin-top: 64px;
+    padding: clamp(28px, 5vw, 52px);
+    border-radius: 28px;
+    background: var(--g-blue);
+    color: #fff;
+  }
+
+  .guide-final .eyebrow { color: rgba(255, 255, 255, 0.72); }
+  .guide-final h2 { margin-top: 10px; color: #fff; font-size: clamp(1.8rem, 4vw, 3rem); }
+  .guide-final p:not(.eyebrow) { max-width: 55ch; margin-top: 12px; color: rgba(255, 255, 255, 0.8); }
+
+  @media (max-width: 900px) {
+    .guide-hero { grid-template-columns: 1fr; }
+    .guide-hero h1 { max-width: 16ch; }
+    .guide-hero__visual { min-height: 390px; }
+    .guide-reading { grid-template-columns: 210px minmax(0, 1fr); gap: 36px; }
+    .compatibility-row { grid-template-columns: repeat(2, 1fr); }
+    .compatibility-row aside { grid-column: 1 / -1; }
+  }
+
+  @media (max-width: 759px) {
     .guide-article {
-      padding-top: 112px;
-      padding-bottom: 72px;
+      padding-top: 108px;
+      padding-bottom: calc(72px + env(safe-area-inset-bottom));
     }
 
-    .guide-article .container {
-      width: min(100% - 32px, 1240px);
-    }
+    .guide-article .container { width: min(100% - 32px, 1240px); }
+    .guide-article .seo-breadcrumb { margin-bottom: 16px; }
+    .guide-article .seo-breadcrumb li:last-child { display: none; }
+    .guide-hero { gap: 34px; padding-top: 14px; padding-bottom: 56px; }
+    .guide-hero h1 { margin-top: 18px; font-size: clamp(2.25rem, 10vw, 3.35rem); line-height: 1; }
+    .guide-hero__dek { margin-top: 18px; font-size: 1rem; }
+    .guide-hero__meta { margin-top: 20px; font-size: 0.8rem; }
+    .guide-hero__visual { min-height: 330px; border-radius: 24px; }
+    .guide-hero__image { min-height: 330px; }
+    .signal-scene { height: 330px; }
+    .signal-scene__plaque { left: 5%; width: 52%; border-radius: 18px; }
+    .signal-scene__phone { right: 6%; width: 36%; border-radius: 24px; }
+    .signal-scene__waves { width: 110px; height: 110px; }
+    .compare-scene { padding: 16px; }
+    .compare-scene__card { min-height: 240px; padding: 18px; border-radius: 18px; }
+    .compare-scene__card svg { width: 54px; }
+    .link-scene { padding: 18px; }
+    .link-scene__profile { padding: 22px 20px 14px; }
+    .link-scene__action { width: calc(100% - 40px); margin: 0 20px 20px; }
+    .link-scene__url { margin-inline: 8px; }
 
-    .guide-article__cta .btn {
-      width: 100%;
-    }
+    .guide-summary > .guide-essential,
+    .guide-summary > aside { grid-template-columns: 1fr; gap: 22px; padding: 24px; border-radius: 22px; }
+    .guide-summary ul { grid-template-columns: 1fr; gap: 10px; }
+    .guide-feature { margin-bottom: 72px; }
+    .guide-section-heading { margin-bottom: 24px; }
+    .guide-section-heading h2 { font-size: clamp(1.85rem, 8vw, 2.7rem); }
+    .signal-steps,
+    .link-path { grid-template-columns: 1fr; }
+    .signal-steps li,
+    .link-path li { min-height: 0; padding: 22px; }
+    .signal-steps svg,
+    .link-path svg { margin: 28px 0 20px; }
+    .compatibility-row,
+    .technology-cards,
+    .platform-cards { grid-template-columns: 1fr; }
+    .compatibility-row aside { grid-column: auto; }
+    .guide-callout { grid-template-columns: 1fr; gap: 12px; padding: 22px; }
+    .guide-reading { display: block; }
+    .guide-toc { position: static; margin-bottom: 46px; border: 1px solid var(--guide-line); border-radius: 16px; background: rgba(255, 255, 255, 0.03); }
+    .guide-toc summary { min-height: 56px; padding: 0 16px; }
+    .guide-toc ol { padding: 0 10px 12px; }
+    .guide-article__content { font-size: 1rem; line-height: 1.68; }
+    .guide-article__content h2 { max-width: none; margin-top: 2.7em; font-size: clamp(1.75rem, 8vw, 2.45rem); scroll-margin-top: 96px; }
+    .guide-article__content > ul { grid-template-columns: 1fr; }
+    .guide-article__content table,
+    .guide-article__content tbody,
+    .guide-article__content tr,
+    .guide-article__content td { display: block; width: 100%; }
+    .guide-article__content table { overflow: visible; border: 0; background: transparent; }
+    .guide-article__content thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .guide-article__content tr { margin-bottom: 12px; overflow: hidden; border: 1px solid var(--guide-line); border-radius: 16px; background: var(--guide-panel); }
+    .guide-article__content td { position: relative; min-width: 0; padding: 14px 16px 14px 116px; border: 0; border-bottom: 1px solid var(--guide-line); }
+    .guide-article__content td:last-child { border-bottom: 0; }
+    .guide-article__content td:first-child { padding-left: 16px; background: rgba(255, 255, 255, 0.045); color: var(--c-paper); font-weight: 600; }
+    .guide-article__content td:not(:first-child)::before { position: absolute; left: 16px; color: rgba(247, 244, 236, 0.5); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+    .guide-article__content td:nth-child(2)::before { content: "NFC"; }
+    .guide-article__content td:nth-child(3)::before { content: "QR code"; }
+    .guide-product { grid-template-columns: 1fr; margin-top: 80px; padding: 22px; border-radius: 24px; }
+    .guide-product__media { max-width: 360px; }
+    .guide-product .btn { width: 100%; }
+    .guide-related { margin-top: 80px; }
+    .guide-related__grid { grid-template-columns: 1fr; }
+    .guide-related__card a { grid-template-columns: 104px 1fr; }
+    .guide-related__visual { min-height: 190px; }
+    .guide-related__body { padding: 20px; }
+    .guide-final { grid-template-columns: 1fr; gap: 26px; padding: 28px; }
+    .guide-final .btn { width: 100%; }
+  }
+
+  @media (max-width: 360px) {
+    .guide-article .container { width: min(100% - 24px, 1240px); }
+    .guide-badge { padding: 8px 11px; font-size: 0.68rem; }
+    .guide-hero h1 { font-size: 2.15rem; }
+    .guide-hero__visual { min-height: 300px; }
+    .signal-scene { height: 300px; }
+    .compare-scene__card { min-height: 220px; padding: 14px; }
+    .compare-scene__card small { font-size: 0.68rem; }
+    .guide-article__content > ol li { padding-left: 66px; }
+    .guide-related__card a { grid-template-columns: 1fr; }
+    .guide-related__visual { min-height: 150px; }
+  }
+
+  @media (hover: hover) {
+    .guide-related__card { transition: border-color 0.2s ease, transform 0.2s ease; }
+    .guide-related__card:hover { border-color: rgba(127, 192, 255, 0.38); transform: translateY(-2px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .guide-toc summary svg,
+    .guide-related__card { transition: none; }
   }
 {% endstylesheet %}
 
+{% javascript %}
+  document.querySelectorAll('[data-guide-article]').forEach((root) => {
+    const content = root.querySelector('[data-guide-content]');
+    const toc = root.querySelector('[data-guide-toc]');
+    const list = root.querySelector('[data-toc-list]');
+    const time = root.querySelector('[data-reading-time]');
+
+    if (content && time) {
+      const words = content.textContent.trim().split(/\s+/).filter(Boolean).length;
+      time.textContent = String(Math.max(1, Math.ceil(words / 220)));
+    }
+
+    if (content && list) {
+      const used = new Set();
+      content.querySelectorAll('h2').forEach((heading, index) => {
+        let id = heading.id || heading.textContent.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+        if (!id) id = `partie-${index + 1}`;
+        let uniqueId = id;
+        let suffix = 2;
+        while (used.has(uniqueId)) {
+          uniqueId = `${id}-${suffix}`;
+          suffix += 1;
+        }
+        used.add(uniqueId);
+        heading.id = uniqueId;
+        const item = document.createElement('li');
+        const link = document.createElement('a');
+        link.href = `#${uniqueId}`;
+        link.textContent = heading.textContent.trim();
+        item.appendChild(link);
+        list.appendChild(item);
+      });
+    }
+
+    if (toc && window.matchMedia('(max-width: 759px)').matches) toc.removeAttribute('open');
+  });
+{% endjavascript %}
+
 {% schema %}
 {
-  "name": "Article Guide",
+  "name": "Article Guide visuel",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Guide DPA TAP" },
+    { "type": "text", "id": "badge", "label": "Badge", "default": "Guide DPA TAP" },
+    { "type": "textarea", "id": "intro_fallback", "label": "Introduction de secours", "default": "Un guide pratique pour comprendre, choisir et installer votre solution NFC." },
+    { "type": "text", "id": "reading_time_label", "label": "Libellé du temps de lecture", "default": "min de lecture" },
+    { "type": "range", "id": "reading_time_fallback", "label": "Temps de lecture de secours", "min": 1, "max": 30, "step": 1, "default": 8 },
+    { "type": "text", "id": "updated_label", "label": "Libellé de la date", "default": "Mis à jour le" },
+    { "type": "text", "id": "toc_heading", "label": "Titre du sommaire", "default": "Dans ce guide" },
+    { "type": "text", "id": "toc_aria_label", "label": "Libellé accessible du sommaire", "default": "Sommaire du guide" },
     { "type": "product", "id": "product", "label": "Produit lié" },
-    { "type": "text", "id": "cta_eyebrow", "label": "Surtitre du produit", "default": "Prête à l’emploi" },
-    { "type": "text", "id": "cta_heading", "label": "Titre du produit", "default": "Découvrez la plaque NFC pour avis Google" },
-    { "type": "textarea", "id": "cta_text", "label": "Texte du produit", "default": "Votre lien Google est programmé avant l’expédition. La plaque arrive prête à installer, sans abonnement." },
-    { "type": "text", "id": "cta_label", "label": "Libellé du bouton", "default": "Découvrir la plaque NFC" },
-    { "type": "text", "id": "related_heading", "label": "Titre des articles liés", "default": "Guides complémentaires" }
+    { "type": "text", "id": "product_eyebrow", "label": "Surtitre de la carte produit", "default": "La solution DPA TAP" },
+    { "type": "text", "id": "price_prefix", "label": "Préfixe du prix", "default": "À partir de" },
+    { "type": "text", "id": "product_benefit_1", "label": "Avantage 1", "default": "Programmée avant l’expédition" },
+    { "type": "text", "id": "product_benefit_2", "label": "Avantage 2", "default": "Sans abonnement ni application dédiée" },
+    { "type": "text", "id": "product_benefit_3", "label": "Avantage 3", "default": "Disponible en noir, bleu ou pack de deux" },
+    { "type": "text", "id": "product_button", "label": "Bouton de la carte produit", "default": "Découvrir la plaque" },
+    { "type": "text", "id": "related_eyebrow", "label": "Surtitre des guides liés", "default": "Continuer à explorer" },
+    { "type": "text", "id": "related_heading", "label": "Titre des guides liés", "default": "Guides associés" },
+    { "type": "text", "id": "related_link_label", "label": "Lien des guides liés", "default": "Lire ce guide" },
+    { "type": "text", "id": "final_eyebrow", "label": "Surtitre du CTA final", "default": "Prêt à passer au NFC ?" },
+    { "type": "text", "id": "final_heading", "label": "Titre du CTA final", "default": "Un geste simple au bon moment" },
+    { "type": "textarea", "id": "final_text", "label": "Texte du CTA final", "default": "Découvrez la plaque DPA TAP et choisissez le modèle adapté à votre comptoir." },
+    { "type": "text", "id": "final_button", "label": "Bouton du CTA final", "default": "Découvrir la plaque" }
   ],
   "blocks": [
     {
       "type": "related_article",
-      "name": "Article lié",
+      "name": "Guide associé",
       "limit": 3,
       "settings": [
-        { "type": "article", "id": "article", "label": "Article" }
+        { "type": "article", "id": "article", "label": "Article" },
+        { "type": "image_picker", "id": "image", "label": "Image de secours" },
+        { "type": "text", "id": "fallback_title", "label": "Titre de secours" },
+        { "type": "textarea", "id": "fallback_excerpt", "label": "Extrait de secours" },
+        { "type": "url", "id": "fallback_url", "label": "Lien de secours" },
+        { "type": "select", "id": "icon_style", "label": "Couleur de l’icône", "options": [
+          { "value": "signal", "label": "Bleu NFC" },
+          { "value": "compare", "label": "Jaune comparatif" },
+          { "value": "link", "label": "Vert lien" }
+        ], "default": "signal" }
       ]
     }
   ],
