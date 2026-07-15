@@ -3,3 +3,6 @@
 **/*.tmp.*
 *.swp
 *~
+
+# Documentation éditoriale locale — ne pas envoyer au thème Shopify
+docs/**

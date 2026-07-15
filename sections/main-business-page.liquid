@@ -1,0 +1,221 @@
+<section class="business-page">
+  <div class="container">
+    {% render 'seo-breadcrumbs', current_title: page.title %}
+
+    <article class="business-page__layout">
+      <header class="business-page__header">
+        <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+        <h1>{{ page.title }}</h1>
+        {% if section.settings.intro != blank %}<div class="business-page__intro rte">{{ section.settings.intro }}</div>{% endif %}
+      </header>
+
+      {% if page.content != blank %}<div class="business-page__content rte">{{ page.content }}</div>{% endif %}
+
+      <div class="business-page__sections">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'content' %}
+              <section class="business-page__panel" {{ block.shopify_attributes }}>
+                <h2>{{ block.settings.heading }}</h2>
+                <div class="rte">{{ block.settings.body }}</div>
+              </section>
+            {% when 'faq' %}
+              <details class="business-page__faq" {{ block.shopify_attributes }}>
+                <summary><h2>{{ block.settings.question }}</h2><span aria-hidden="true">+</span></summary>
+                <div class="rte">{{ block.settings.answer }}</div>
+              </details>
+          {% endcase %}
+        {% endfor %}
+      </div>
+
+      {% assign featured_product = section.settings.product %}
+      {% if featured_product != blank %}
+        <aside class="business-page__cta">
+          <div>
+            <p class="eyebrow">{{ section.settings.cta_eyebrow }}</p>
+            <h2>{{ section.settings.cta_heading }}</h2>
+            <p>{{ section.settings.cta_text }}</p>
+          </div>
+          <a class="btn btn--blue" href="{{ featured_product.url }}">{{ section.settings.cta_label }}</a>
+        </aside>
+      {% endif %}
+    </article>
+  </div>
+</section>
+
+{% stylesheet %}
+  .business-page {
+    min-height: 100vh;
+    padding: 128px 0 96px;
+    background: var(--c-paper);
+    color: var(--c-ink);
+  }
+
+  .business-page__layout {
+    width: min(100%, 920px);
+    margin-inline: auto;
+  }
+
+  .business-page__header h1 {
+    margin-top: 14px;
+    font-size: clamp(2.35rem, 8vw, 5rem);
+  }
+
+  .business-page__intro {
+    max-width: 65ch;
+    margin-top: 24px;
+    color: #5f5f63;
+    font-size: 1.1rem;
+  }
+
+  .business-page__content,
+  .business-page__panel .rte,
+  .business-page__faq .rte {
+    margin-top: 24px;
+    color: #434347;
+  }
+
+  .business-page__content > * + *,
+  .business-page__panel .rte > * + *,
+  .business-page__faq .rte > * + * {
+    margin-top: 1em;
+  }
+
+  .business-page__content h2,
+  .business-page__panel h2 {
+    margin-top: 2em;
+    font-size: clamp(1.7rem, 5vw, 2.5rem);
+  }
+
+  .business-page__sections {
+    display: grid;
+    gap: 18px;
+    margin-top: 56px;
+  }
+
+  .business-page__panel,
+  .business-page__faq {
+    padding: 26px;
+    border: 1px solid #d8d5cf;
+    border-radius: 20px;
+    background: #fff;
+  }
+
+  .business-page__panel h2,
+  .business-page__faq h2 {
+    margin: 0;
+    font-size: clamp(1.4rem, 4vw, 1.9rem);
+  }
+
+  .business-page__faq summary {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .business-page__faq summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .business-page__faq summary span {
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    color: var(--g-blue);
+    font-size: 1.5rem;
+  }
+
+  .business-page__faq[open] summary span {
+    transform: rotate(45deg);
+  }
+
+  .business-page__cta {
+    display: grid;
+    gap: 24px;
+    margin-top: 56px;
+    padding: 28px;
+    border-radius: 24px;
+    background: var(--c-bg);
+    color: var(--c-paper);
+  }
+
+  .business-page__cta h2 {
+    margin-top: 10px;
+    color: var(--c-paper);
+    font-size: clamp(1.7rem, 5vw, 2.5rem);
+  }
+
+  .business-page__cta p:not(.eyebrow) {
+    max-width: 60ch;
+    margin-top: 14px;
+    color: color-mix(in srgb, var(--c-paper) 70%, transparent);
+  }
+
+  @media (min-width: 760px) {
+    .business-page {
+      padding-top: 150px;
+      padding-bottom: 128px;
+    }
+
+    .business-page__cta {
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      padding: 40px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .business-page {
+      padding-top: 112px;
+      padding-bottom: 72px;
+    }
+
+    .business-page .container {
+      width: min(100% - 32px, 1240px);
+    }
+
+    .business-page__cta .btn {
+      width: 100%;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Page métier",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Solution pour votre établissement" },
+    { "type": "richtext", "id": "intro", "label": "Introduction" },
+    { "type": "product", "id": "product", "label": "Produit lié" },
+    { "type": "text", "id": "cta_eyebrow", "label": "Surtitre du CTA", "default": "DPA TAP" },
+    { "type": "text", "id": "cta_heading", "label": "Titre du CTA", "default": "Une plaque adaptée à votre comptoir" },
+    { "type": "textarea", "id": "cta_text", "label": "Texte du CTA" },
+    { "type": "text", "id": "cta_label", "label": "Libellé du CTA", "default": "Découvrir la plaque NFC" }
+  ],
+  "blocks": [
+    {
+      "type": "content",
+      "name": "Section de contenu",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "H2" },
+        { "type": "richtext", "id": "body", "label": "Contenu" }
+      ]
+    },
+    {
+      "type": "faq",
+      "name": "Question fréquente",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question" },
+        { "type": "richtext", "id": "answer", "label": "Réponse" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Page métier" }]
+}
+{% endschema %}

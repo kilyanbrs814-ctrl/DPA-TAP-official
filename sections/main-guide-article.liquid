@@ -1,0 +1,263 @@
+<section class="guide-article">
+  <div class="container">
+    {% render 'seo-breadcrumbs', current_title: article.title, parent_title: blog.title, parent_url: blog.url %}
+
+    <article class="guide-article__layout">
+      <header class="guide-article__header">
+        <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+        <h1>{{ article.title }}</h1>
+        {% if article.excerpt != blank %}<div class="guide-article__dek">{{ article.excerpt }}</div>{% endif %}
+        <p class="guide-article__meta">
+          {% if article.author != blank %}<span>{{ 'seo.written_by' | t: author: article.author }}</span>{% endif %}
+          {% if article.published_at != blank %}<time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: '%d/%m/%Y' }}</time>{% endif %}
+        </p>
+      </header>
+
+      {% if article.image %}
+        <figure class="guide-article__figure">
+          {{ article.image | image_url: width: 1600 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '360, 540, 760, 1000, 1280, 1600', sizes: '(max-width: 760px) calc(100vw - 32px), 920px', alt: article.image.alt | default: article.title }}
+        </figure>
+      {% endif %}
+
+      <div class="guide-article__content">
+        {{ article.content }}
+      </div>
+
+      {% assign featured_product = section.settings.product %}
+      {% if featured_product != blank %}
+        <aside class="guide-article__cta" aria-label="{{ 'seo.product_link' | t }}">
+          <div>
+            <p class="eyebrow">{{ section.settings.cta_eyebrow }}</p>
+            <h2>{{ section.settings.cta_heading }}</h2>
+            <p>{{ section.settings.cta_text }}</p>
+          </div>
+          <a class="btn btn--blue" href="{{ featured_product.url }}">{{ section.settings.cta_label }}</a>
+        </aside>
+      {% endif %}
+
+      {% assign related_count = 0 %}
+      {% for block in section.blocks %}
+        {% if block.settings.article != blank %}{% assign related_count = related_count | plus: 1 %}{% endif %}
+      {% endfor %}
+      {% if related_count > 0 %}
+        <aside class="guide-article__related">
+          <h2>{{ section.settings.related_heading }}</h2>
+          <ul>
+            {% for block in section.blocks %}
+              {% assign related_article = block.settings.article %}
+              {% if related_article != blank and related_article.id != article.id %}
+                <li {{ block.shopify_attributes }}><a href="{{ related_article.url }}">{{ related_article.title }}</a></li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </aside>
+      {% endif %}
+    </article>
+  </div>
+</section>
+
+<script type="application/ld+json">
+  {{ article | structured_data }}
+</script>
+
+{% stylesheet %}
+  .guide-article {
+    min-height: 100vh;
+    padding: 128px 0 96px;
+    background: var(--c-paper);
+    color: var(--c-ink);
+  }
+
+  .guide-article__layout {
+    width: min(100%, 920px);
+    margin-inline: auto;
+  }
+
+  .guide-article__header h1 {
+    margin-top: 14px;
+    font-size: clamp(2.35rem, 8vw, 5rem);
+  }
+
+  .guide-article__dek {
+    max-width: 65ch;
+    margin-top: 24px;
+    color: #5f5f63;
+    font-size: clamp(1.05rem, 2vw, 1.25rem);
+  }
+
+  .guide-article__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    margin-top: 22px;
+    color: var(--c-grey);
+    font-size: 0.9rem;
+  }
+
+  .guide-article__figure {
+    margin: 42px 0 0;
+  }
+
+  .guide-article__figure img {
+    width: 100%;
+    border-radius: 24px;
+  }
+
+  .guide-article__content {
+    margin-top: 48px;
+    font-size: 1.0625rem;
+  }
+
+  .guide-article__content > * {
+    max-width: 72ch;
+  }
+
+  .guide-article__content > * + * {
+    margin-top: 1.15em;
+  }
+
+  .guide-article__content h2 {
+    margin-top: 2.1em;
+    font-size: clamp(1.75rem, 5vw, 2.6rem);
+  }
+
+  .guide-article__content h3 {
+    margin-top: 1.8em;
+    font-size: clamp(1.25rem, 4vw, 1.65rem);
+    line-height: 1.2;
+  }
+
+  .guide-article__content ul,
+  .guide-article__content ol {
+    padding-left: 1.4rem;
+  }
+
+  .guide-article__content li + li {
+    margin-top: 0.55em;
+  }
+
+  .guide-article__content a,
+  .guide-article__related a {
+    color: #1465d8;
+    text-underline-offset: 4px;
+  }
+
+  .guide-article__content table {
+    width: 100%;
+    display: block;
+    overflow-x: auto;
+    border-collapse: collapse;
+  }
+
+  .guide-article__content th,
+  .guide-article__content td {
+    min-width: 150px;
+    padding: 14px;
+    border: 1px solid #d8d5cf;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .guide-article__cta {
+    display: grid;
+    gap: 24px;
+    margin-top: 64px;
+    padding: 28px;
+    border-radius: 24px;
+    background: var(--c-bg);
+    color: var(--c-paper);
+  }
+
+  .guide-article__cta h2 {
+    margin-top: 10px;
+    color: var(--c-paper);
+    font-size: clamp(1.7rem, 5vw, 2.6rem);
+  }
+
+  .guide-article__cta p:not(.eyebrow) {
+    max-width: 60ch;
+    margin-top: 14px;
+    color: color-mix(in srgb, var(--c-paper) 70%, transparent);
+  }
+
+  .guide-article__cta .btn {
+    align-self: center;
+  }
+
+  .guide-article__related {
+    margin-top: 56px;
+    padding-top: 32px;
+    border-top: 1px solid #d8d5cf;
+  }
+
+  .guide-article__related h2 {
+    font-size: clamp(1.55rem, 4vw, 2rem);
+  }
+
+  .guide-article__related ul {
+    display: grid;
+    gap: 12px;
+    margin: 20px 0 0;
+    padding-left: 1.25rem;
+  }
+
+  .guide-article__related a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  @media (min-width: 760px) {
+    .guide-article {
+      padding-top: 150px;
+      padding-bottom: 128px;
+    }
+
+    .guide-article__cta {
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      padding: 40px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .guide-article {
+      padding-top: 112px;
+      padding-bottom: 72px;
+    }
+
+    .guide-article .container {
+      width: min(100% - 32px, 1240px);
+    }
+
+    .guide-article__cta .btn {
+      width: 100%;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Article Guide",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Guide DPA TAP" },
+    { "type": "product", "id": "product", "label": "Produit lié" },
+    { "type": "text", "id": "cta_eyebrow", "label": "Surtitre du produit", "default": "Prête à l’emploi" },
+    { "type": "text", "id": "cta_heading", "label": "Titre du produit", "default": "Découvrez la plaque NFC pour avis Google" },
+    { "type": "textarea", "id": "cta_text", "label": "Texte du produit", "default": "Votre lien Google est programmé avant l’expédition. La plaque arrive prête à installer, sans abonnement." },
+    { "type": "text", "id": "cta_label", "label": "Libellé du bouton", "default": "Découvrir la plaque NFC" },
+    { "type": "text", "id": "related_heading", "label": "Titre des articles liés", "default": "Guides complémentaires" }
+  ],
+  "blocks": [
+    {
+      "type": "related_article",
+      "name": "Article lié",
+      "limit": 3,
+      "settings": [
+        { "type": "article", "id": "article", "label": "Article" }
+      ]
+    }
+  ],
+  "max_blocks": 3
+}
+{% endschema %}

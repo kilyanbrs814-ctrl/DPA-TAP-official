@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-business-page",
+      "settings": {
+        "eyebrow": "Solution pour votre établissement",
+        "product": "plaque-nfc-avis-google",
+        "cta_eyebrow": "DPA TAP",
+        "cta_heading": "Une plaque adaptée à votre comptoir",
+        "cta_label": "Découvrir la plaque NFC"
+      }
+    }
+  },
+  "order": ["main"]
+}

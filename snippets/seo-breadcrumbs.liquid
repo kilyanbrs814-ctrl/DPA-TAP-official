@@ -1,0 +1,86 @@
+{% doc %}
+Renders an accessible breadcrumb and matching BreadcrumbList structured data.
+
+@param {string} current_title - Label for the current page.
+@param {string} [parent_title] - Optional parent page label.
+@param {string} [parent_url] - Optional parent page URL.
+
+@example
+{% render 'seo-breadcrumbs', current_title: article.title, parent_title: blog.title, parent_url: blog.url %}
+{% enddoc %}
+
+<nav class="seo-breadcrumb" aria-label="{{ 'seo.breadcrumb_label' | t }}">
+  <ol>
+    <li><a href="{{ routes.root_url }}">{{ 'seo.home' | t }}</a></li>
+    {% if parent_title != blank and parent_url != blank %}
+      <li><a href="{{ parent_url }}">{{ parent_title }}</a></li>
+    {% endif %}
+    <li aria-current="page">{{ current_title }}</li>
+  </ol>
+</nav>
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": {{ 'seo.home' | t | json }},
+        "item": {{ shop.url | json }}
+      }{% if parent_title != blank and parent_url != blank %},
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": {{ parent_title | json }},
+        "item": {{ shop.url | append: parent_url | json }}
+      }{% endif %},
+      {
+        "@type": "ListItem",
+        "position": {% if parent_title != blank and parent_url != blank %}3{% else %}2{% endif %},
+        "name": {{ current_title | json }},
+        "item": {{ canonical_url | json }}
+      }
+    ]
+  }
+</script>
+
+{% stylesheet %}
+  .seo-breadcrumb {
+    margin-bottom: 32px;
+    color: var(--c-grey);
+    font-size: 0.875rem;
+  }
+
+  .seo-breadcrumb ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .seo-breadcrumb li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .seo-breadcrumb li:not(:last-child)::after {
+    content: "/";
+    color: color-mix(in srgb, var(--c-grey) 55%, transparent);
+  }
+
+  .seo-breadcrumb a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    text-underline-offset: 3px;
+  }
+
+  .seo-breadcrumb [aria-current="page"] {
+    color: currentColor;
+  }
+{% endstylesheet %}

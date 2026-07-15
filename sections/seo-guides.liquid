@@ -1,0 +1,136 @@
+{% assign guide_count = 0 %}
+{% for block in section.blocks %}
+  {% if block.settings.article != blank %}{% assign guide_count = guide_count | plus: 1 %}{% endif %}
+{% endfor %}
+
+{% if guide_count > 0 %}
+  <section class="seo-guides">
+    <div class="container">
+      <div class="seo-guides__head">
+        <div>
+          <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+          <h2>{{ section.settings.heading }}</h2>
+        </div>
+        {% if section.settings.blog != blank %}
+          <a class="seo-guides__all" href="{{ section.settings.blog.url }}">{{ section.settings.all_label }}</a>
+        {% endif %}
+      </div>
+      <div class="seo-guides__grid">
+        {% for block in section.blocks %}
+          {% assign guide = block.settings.article %}
+          {% if guide != blank %}
+            <article class="seo-guide-card" {{ block.shopify_attributes }}>
+              <p class="eyebrow">{{ 'seo.guide' | t }}</p>
+              <h3><a href="{{ guide.url }}">{{ guide.title }}</a></h3>
+              {% if guide.excerpt != blank %}
+                <p>{{ guide.excerpt | strip_html | truncate: 150 }}</p>
+              {% endif %}
+              <a class="seo-guide-card__link" href="{{ guide.url }}">{{ 'seo.read_guide' | t }}</a>
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endif %}
+
+{% stylesheet %}
+  .seo-guides {
+    padding: 88px 0;
+    background: var(--c-paper);
+    color: var(--c-ink);
+  }
+
+  .seo-guides__head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 36px;
+  }
+
+  .seo-guides__head h2 {
+    margin-top: 10px;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+  }
+
+  .seo-guides__all,
+  .seo-guide-card__link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 600;
+    text-underline-offset: 4px;
+  }
+
+  .seo-guides__grid {
+    display: grid;
+    gap: 16px;
+  }
+
+  .seo-guide-card {
+    min-width: 0;
+    padding: 24px;
+    border: 1px solid color-mix(in srgb, var(--c-ink) 12%, transparent);
+    border-radius: 20px;
+    background: #fff;
+  }
+
+  .seo-guide-card h3 {
+    margin-top: 12px;
+    font-size: 1.35rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .seo-guide-card h3 a {
+    text-decoration: none;
+  }
+
+  .seo-guide-card p:not(.eyebrow) {
+    margin-top: 16px;
+    color: #5f5f63;
+  }
+
+  .seo-guide-card__link {
+    margin-top: 18px;
+  }
+
+  @media (min-width: 760px) {
+    .seo-guides__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 600px) {
+    .seo-guides__head {
+      align-items: start;
+      flex-direction: column;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Nos guides",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Pour aller plus loin" },
+    { "type": "text", "id": "heading", "label": "H2", "default": "Nos guides" },
+    { "type": "blog", "id": "blog", "label": "Blog Guides" },
+    { "type": "text", "id": "all_label", "label": "Libellé du lien vers le blog", "default": "Voir tous les guides" }
+  ],
+  "blocks": [
+    {
+      "type": "guide",
+      "name": "Guide",
+      "limit": 3,
+      "settings": [
+        { "type": "article", "id": "article", "label": "Article" }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [{ "name": "Nos guides" }]
+}
+{% endschema %}

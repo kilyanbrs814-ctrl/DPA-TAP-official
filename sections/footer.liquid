@@ -1,4 +1,7 @@
 <footer class="ftr">
+  {% assign guides_blog = blogs['guides'] %}
+  {% assign guides_url = section.settings.guides_link %}
+  {% if guides_url == blank and guides_blog != blank %}{% assign guides_url = guides_blog.url %}{% endif %}
   <div class="container">
     <div class="ftr-cta">
       <h2>{{ section.settings.cta_title | default: 'Vos clients sont prêts à vous noter.' }}</h2>
@@ -8,6 +11,7 @@
       <a href="{{ section.settings.link_how | default: '/#fonctionnement' }}">Fonctionnement</a>
       <a href="{{ section.settings.link_models | default: '/#modeles' }}">Modèles</a>
       <a href="{{ section.settings.link_faq | default: '/#faq' }}">FAQ</a>
+      {% if guides_url != blank %}<a href="{{ guides_url }}">{{ section.settings.guides_label | default: 'Guides' }}</a>{% endif %}
       <a href="{{ routes.cart_url }}">Panier</a>
       {% for link in linklists[section.settings.menu].links %}
         <a href="{{ link.url }}">{{ link.title }}</a>
@@ -27,6 +31,8 @@
     { "type": "text", "id": "cta_title", "label": "Titre de l’appel à l’action", "default": "Vos clients sont prêts à vous noter." },
     { "type": "text", "id": "cta_label", "label": "Bouton — libellé", "default": "Choisir ma plaque" },
     { "type": "url", "id": "cta_link", "label": "Bouton — lien" },
+    { "type": "text", "id": "guides_label", "label": "Lien Guides — libellé", "default": "Guides" },
+    { "type": "url", "id": "guides_link", "label": "Lien Guides — destination" },
     { "type": "link_list", "id": "menu", "label": "Menu additionnel" },
     { "type": "text", "id": "legal", "label": "Mention", "default": "Plaques NFC pour avis Google." },
     { "type": "text", "id": "note", "label": "Note", "default": "Google est une marque de Google LLC." }

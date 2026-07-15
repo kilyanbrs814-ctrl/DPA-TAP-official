@@ -29,5 +29,15 @@
     "remove": "Retirer",
     "checkout": "Paiement sécurisé",
     "taxes_shipping": "Taxes et livraison calculées au paiement."
+  },
+  "seo": {
+    "breadcrumb_label": "Fil d’Ariane",
+    "home": "Accueil",
+    "guide": "Guide",
+    "read_guide": "Lire le guide",
+    "written_by": "Rédigé par {{ author }}",
+    "product_link": "Découvrir le produit",
+    "product_images": "Images du produit",
+    "show_image": "Afficher {{ title }}"
   }
 }

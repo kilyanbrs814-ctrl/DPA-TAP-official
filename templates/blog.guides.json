@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-guides-blog",
+      "settings": {
+        "eyebrow": "Conseils pratiques",
+        "intro": "<p>Comprendre le NFC, choisir la bonne méthode et préparer le lien d’avis Google de votre établissement.</p>",
+        "empty_text": "Les premiers guides sont en préparation."
+      }
+    }
+  },
+  "order": ["main"]
+}

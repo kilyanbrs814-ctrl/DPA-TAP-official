@@ -1,0 +1,128 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product-seo",
+      "blocks": {
+        "audience": {
+          "type": "content",
+          "settings": {
+            "eyebrow": "Pour les commerces",
+            "heading": "Une plaque pensée pour les établissements qui reçoivent du public",
+            "body": "<p>La plaque s’adresse aux restaurants, cafés, salons, hôtels, boutiques et autres commerces qui souhaitent faciliter une demande d’avis au bon moment. Placée près de la caisse, à l’accueil ou sur un comptoir, elle donne au client un accès simple à la fiche Google de l’établissement.</p><p>Elle convient à un établissement unique comme à plusieurs points de contact. Le pack de deux plaques permet, par exemple, d’équiper deux zones avec le même lien ou deux établissements avec des liens distincts.</p>"
+          }
+        },
+        "operation": {
+          "type": "content",
+          "settings": {
+            "eyebrow": "Fonctionnement",
+            "heading": "Du contact NFC à la page d’avis Google",
+            "body": "<p>Le client approche la zone NFC de son iPhone ou de son téléphone Android compatible. Une notification apparaît : il la touche pour ouvrir le lien programmé dans la plaque. La fiche Google s’affiche alors dans son navigateur ou dans l’application disponible sur son téléphone.</p><p>La plaque ne publie rien à la place du client. Celui-ci reste libre d’ouvrir le lien, de choisir sa note et de rédiger ou non un commentaire.</p>"
+          }
+        },
+        "programming": {
+          "type": "content",
+          "settings": {
+            "eyebrow": "Préparation",
+            "heading": "Votre lien Google est programmé avant l’expédition",
+            "body": "<p>Au moment de la commande, indiquez le nom de l’établissement et son lien direct d’avis Google. DPA TAP enregistre ce lien dans la puce NFC avant l’envoi. Si vous ne retrouvez pas encore le lien, précisez le nom exact de votre fiche : nous vous aidons à l’identifier avant la programmation.</p><p>Il n’y a ni application à installer pour le commerçant, ni abonnement à renouveler. Si le lien change par la suite, la puce peut être reprogrammée avec un smartphone compatible.</p>"
+          }
+        },
+        "formats": {
+          "type": "content",
+          "settings": {
+            "eyebrow": "Formats et modèles",
+            "heading": "10 × 10 cm, en noir ou en bleu",
+            "body": "<p>Chaque plaque mesure 10 × 10 cm. Deux modèles sont proposés : noir et bleu. Vous pouvez commander une plaque ou choisir le pack de deux, avec deux plaques noires, deux plaques bleues ou une de chaque couleur selon les disponibilités affichées.</p><p>L’adhésif 3M au verso est prévu pour une pose sur une surface plane, propre et sèche. Choisissez l’emplacement définitif avant de retirer sa protection.</p>"
+          }
+        },
+        "compatibility": {
+          "type": "content",
+          "settings": {
+            "eyebrow": "Compatibilité et limites",
+            "heading": "Compatible avec la majorité des iPhone et téléphones Android récents",
+            "body": "<p>La lecture NFC est intégrée à la majorité des smartphones récents. Sur certains téléphones Android, le NFC doit être activé dans les réglages. La position de l’antenne varie aussi selon le modèle : le client peut devoir déplacer légèrement le haut ou le dos de son téléphone au-dessus de la plaque.</p><p>Un téléphone ancien, dépourvu de NFC, configuré pour le désactiver ou protégé par une coque très épaisse peut ne pas réagir. La plaque facilite l’accès au formulaire d’avis, mais elle ne garantit ni que chaque client publiera un avis, ni un résultat particulier dans Google.</p>"
+          }
+        },
+        "delivery": {
+          "type": "content",
+          "settings": {
+            "eyebrow": "Installation et livraison",
+            "heading": "Une installation simple après réception",
+            "body": "<p>Avant la pose, nettoyez et séchez la surface. Retirez la protection de l’adhésif, positionnez la plaque puis appuyez uniformément. Évitez de la déplacer après collage afin de préserver l’adhérence.</p><p>La plaque est programmée avant son expédition. Les options, frais et délais de livraison applicables à votre adresse sont présentés dans le panier et au moment du paiement. Testez le lien avec un téléphone compatible dès la réception, avant la pose définitive.</p>"
+          }
+        },
+        "faq_1": {
+          "type": "faq",
+          "settings": {
+            "question": "Faut-il un abonnement pour utiliser la plaque ?",
+            "answer": "<p>Non. L’achat de la plaque n’entraîne aucun abonnement. Le lien enregistré dans la puce reste lisible sans facturation au nombre d’utilisations.</p>"
+          }
+        },
+        "faq_2": {
+          "type": "faq",
+          "settings": {
+            "question": "Le client doit-il installer une application ?",
+            "answer": "<p>Non. Un smartphone compatible lit la puce NFC avec ses fonctions intégrées. Une notification permet ensuite d’ouvrir la fiche Google.</p>"
+          }
+        },
+        "faq_3": {
+          "type": "faq",
+          "settings": {
+            "question": "Que faut-il transmettre pendant la commande ?",
+            "answer": "<p>Indiquez le nom exact de l’établissement et, si vous l’avez, le lien direct qui ouvre son formulaire d’avis Google. Pour un pack destiné à deux établissements, vous pouvez fournir un lien différent pour chaque plaque.</p>"
+          }
+        },
+        "faq_4": {
+          "type": "faq",
+          "settings": {
+            "question": "Puis-je modifier le lien après réception ?",
+            "answer": "<p>Oui, la puce peut être reprogrammée. Contactez DPA TAP si vous changez de fiche ou si vous souhaitez être accompagné dans cette opération.</p>"
+          }
+        },
+        "faq_5": {
+          "type": "faq",
+          "settings": {
+            "question": "Pourquoi un téléphone ne détecte-t-il pas immédiatement la plaque ?",
+            "answer": "<p>Le NFC peut être désactivé, absent sur un ancien appareil ou lu depuis une autre zone selon le modèle. Retirez les accessoires très épais, activez le NFC si nécessaire et déplacez lentement le haut ou le dos du téléphone au-dessus de la plaque.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "audience",
+        "operation",
+        "programming",
+        "formats",
+        "compatibility",
+        "delivery",
+        "faq_1",
+        "faq_2",
+        "faq_3",
+        "faq_4",
+        "faq_5"
+      ],
+      "settings": {
+        "eyebrow": "Plaque NFC professionnelle",
+        "heading": "Plaque NFC Avis Google pour Commerce",
+        "intro": "<p>Collectez des avis Google plus simplement avec une plaque NFC personnalisée pour votre établissement, programmée avant l’expédition, sans abonnement et compatible avec les iPhone et téléphones Android récents.</p>",
+        "faq_eyebrow": "Questions fréquentes",
+        "faq_heading": "Ce qu’il faut savoir avant de commander"
+      }
+    },
+    "guides": {
+      "type": "seo-guides",
+      "blocks": {
+        "guide_1": { "type": "guide", "settings": { "article": "guides/plaque-nfc-avis-google-comment-ca-marche" } },
+        "guide_2": { "type": "guide", "settings": { "article": "guides/nfc-ou-qr-code-avis-google" } },
+        "guide_3": { "type": "guide", "settings": { "article": "guides/comment-obtenir-lien-avis-google" } }
+      },
+      "block_order": ["guide_1", "guide_2", "guide_3"],
+      "settings": {
+        "eyebrow": "Pour aller plus loin",
+        "heading": "Nos guides",
+        "blog": "guides",
+        "all_label": "Voir tous les guides"
+      }
+    }
+  },
+  "order": ["main", "guides"]
+}

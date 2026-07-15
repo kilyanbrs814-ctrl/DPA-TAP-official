@@ -1,0 +1,17 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-guide-article",
+      "settings": {
+        "eyebrow": "Guide DPA TAP",
+        "product": "plaque-nfc-avis-google",
+        "cta_eyebrow": "Prête à l’emploi",
+        "cta_heading": "Découvrez la plaque NFC pour avis Google",
+        "cta_text": "Votre lien Google est programmé avant l’expédition. La plaque arrive prête à installer, sans abonnement.",
+        "cta_label": "Découvrir la plaque NFC",
+        "related_heading": "Guides complémentaires"
+      }
+    }
+  },
+  "order": ["main"]
+}
