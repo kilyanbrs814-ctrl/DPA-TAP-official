@@ -1,3 +1,7 @@
+{%- if section.settings.image == blank and section.settings.image_mobile == blank -%}
+  <link rel="preload" as="image" href="{{ 'hero-banner-mobile.jpg' | asset_url }}" media="(max-width: 900px)">
+  <link rel="preload" as="image" type="image/webp" imagesrcset="{{ 'hero-banner-1100.webp' | asset_url }} 1100w, {{ 'hero-banner-1400.webp' | asset_url }} 1400w, {{ 'hero-banner-1706.webp' | asset_url }} 1706w" imagesizes="100vw" media="(min-width: 901px)">
+{%- endif -%}
 <section class="hero">
   <div class="hero-bg" aria-hidden="true">
     {%- if section.settings.image_mobile != blank or section.settings.image != blank -%}
@@ -8,12 +12,14 @@
         {%- if section.settings.image != blank -%}
           {{ section.settings.image | image_url: width: 2200 | image_tag: widths: '480, 750, 1100, 1600, 2200', sizes: '100vw', alt: '', loading: 'eager', fetchpriority: 'high' }}
         {%- else -%}
+          <source type="image/webp" srcset="{{ 'hero-banner-1100.webp' | asset_url }} 1100w, {{ 'hero-banner-1400.webp' | asset_url }} 1400w, {{ 'hero-banner-1706.webp' | asset_url }} 1706w" sizes="100vw">
           <img src="{{ 'hero-banner.png' | asset_url }}" width="1706" height="922" alt="" fetchpriority="high">
         {%- endif -%}
       </picture>
     {%- else -%}
       <picture>
         <source media="(max-width: 900px)" srcset="{{ 'hero-banner-mobile.jpg' | asset_url }}">
+        <source type="image/webp" srcset="{{ 'hero-banner-1100.webp' | asset_url }} 1100w, {{ 'hero-banner-1400.webp' | asset_url }} 1400w, {{ 'hero-banner-1706.webp' | asset_url }} 1706w" sizes="100vw">
         <img src="{{ 'hero-banner.png' | asset_url }}" width="1706" height="922" alt="" fetchpriority="high">
       </picture>
     {%- endif -%}

@@ -41,7 +41,10 @@
       </div>
     {% else %}
       <div class="buy-grid">
-        <img src="{{ 'plaque-noire.jpg' | asset_url }}" width="1254" height="1254" loading="lazy" alt="Plaque Midnight Black" style="border-radius:26px">
+        <picture style="display:contents">
+          <source type="image/webp" srcset="{{ 'plaque-noire-400.webp' | asset_url }} 400w, {{ 'plaque-noire-800.webp' | asset_url }} 800w" sizes="(max-width: 980px) calc(100vw - 32px), 55vw">
+          <img src="{{ 'plaque-noire.jpg' | asset_url }}" width="1254" height="1254" loading="lazy" alt="Plaque Midnight Black" style="border-radius:26px">
+        </picture>
         <div class="buy-form-col">
           <p class="eyebrow">Configuration requise</p>
           <p style="margin-top:14px;color:var(--c-grey)">Sélectionnez votre produit « Plaque NFC Google » dans les réglages de cette section pour activer l’achat (variantes Noire / Bleue).</p>

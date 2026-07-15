@@ -15,7 +15,10 @@
           {% if section.settings.plaque_image %}
             {{ section.settings.plaque_image | image_url: width: 800 | image_tag: class: 'stage-plaque', loading: 'lazy', widths: '240, 360, 540, 800', sizes: '(max-width: 900px) 56vw, 320px', alt: '' }}
           {% else %}
-            <img class="stage-plaque" src="{{ 'plaque-bleue.jpg' | asset_url }}" width="1254" height="1254" loading="lazy" alt="">
+            <picture style="display:contents">
+              <source type="image/webp" srcset="{{ 'plaque-bleue-400.webp' | asset_url }} 400w, {{ 'plaque-bleue-800.webp' | asset_url }} 800w" sizes="(max-width: 900px) 56vw, 320px">
+              <img class="stage-plaque" src="{{ 'plaque-bleue.jpg' | asset_url }}" width="1254" height="1254" loading="lazy" alt="">
+            </picture>
           {% endif %}
           <div class="nfc-waves"><span></span><span></span><span></span></div>
           <div class="stage-phone">

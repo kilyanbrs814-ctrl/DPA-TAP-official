@@ -47,9 +47,10 @@
       var menu = header.querySelector('.hdr-menu');
       var updateHeader = function () {
         scrollRaf = null;
-        header.classList.toggle('is-scrolled', window.scrollY > 40);
+        var y = window.scrollY;
         var limit = heroEl ? heroEl.offsetTop + heroEl.offsetHeight - 80 : 40;
-        header.classList.toggle('is-visible', !heroEl || window.scrollY > limit);
+        header.classList.toggle('is-scrolled', y > 40);
+        header.classList.toggle('is-visible', !heroEl || y > limit);
       };
       var onScroll = function () {
         if (scrollRaf === null) scrollRaf = requestAnimationFrame(updateHeader);

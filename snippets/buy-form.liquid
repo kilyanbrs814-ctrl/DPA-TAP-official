@@ -37,7 +37,11 @@
         {% if variant.featured_image %}
           {{ variant.featured_image | image_url: width: 800 | image_tag: loading: 'lazy', widths: '400, 800', sizes: '(max-width: 560px) 90vw, 320px', alt: variant.title }}
         {% else %}
-          <img src="{{ fallback_url }}" width="1254" height="1254" loading="lazy" alt="{{ variant.title | escape }}">
+          {% assign fallback_webp_base = fallback_asset | replace: '.jpg', '' %}
+          <picture style="display:contents">
+            <source type="image/webp" srcset="{{ fallback_webp_base | append: '-400.webp' | asset_url }} 400w, {{ fallback_webp_base | append: '-800.webp' | asset_url }} 800w" sizes="(max-width: 560px) 90vw, 320px">
+            <img src="{{ fallback_url }}" width="1254" height="1254" loading="lazy" alt="{{ variant.title | escape }}">
+          </picture>
         {% endif %}
         <span class="vcard-meta">
           <span class="vcard-name">{{ variant.title }}</span>
@@ -75,24 +79,24 @@
     <label class="vcard is-active{% unless v_black.available %} is-disabled{% endunless %}">
       <input type="radio" name="combo-{{ section.id }}" value="noire-noire" data-combo
              data-v1="{{ v_black.id }}" data-v2="{{ v_black.id }}"
-             data-label="2 plaques noires" data-image="{{ 'pack-2-noires.png' | asset_url }}" data-image-mobile="{{ 'pack-2-noires-mobile.jpg' | asset_url }}" checked disabled{% unless v_black.available %} data-unavailable{% endunless %}>
-      <picture><source media="(max-width: 560px)" srcset="{{ 'pack-2-noires-mobile.jpg' | asset_url }}"><img src="{{ 'pack-2-noires.png' | asset_url }}" width="1254" height="1254" loading="lazy" alt="2 plaques noires"></picture>
+             data-label="2 plaques noires" data-image="{{ 'pack-2-noires-1254.webp' | asset_url }}" data-image-mobile="{{ 'pack-2-noires-mobile.jpg' | asset_url }}" checked disabled{% unless v_black.available %} data-unavailable{% endunless %}>
+      <picture><source media="(max-width: 560px)" srcset="{{ 'pack-2-noires-mobile.jpg' | asset_url }}"><source type="image/webp" srcset="{{ 'pack-2-noires-400.webp' | asset_url }} 400w, {{ 'pack-2-noires-800.webp' | asset_url }} 800w" sizes="(max-width: 560px) 90vw, 320px"><img src="{{ 'pack-2-noires.png' | asset_url }}" width="1254" height="1254" loading="lazy" alt="2 plaques noires"></picture>
       <span class="vcard-meta"><span class="vcard-name">2 plaques noires</span>{% unless v_black.available %}<span class="vcard-status">Indisponible</span>{% endunless %}</span>
       <span class="vcard-check" aria-hidden="true">✓</span>
     </label>
     <label class="vcard{% unless v_black.available and v_blue.available %} is-disabled{% endunless %}">
       <input type="radio" name="combo-{{ section.id }}" value="noire-bleue" data-combo
              data-v1="{{ v_black.id }}" data-v2="{{ v_blue.id }}"
-             data-label="1 noire + 1 bleue" data-image="{{ 'pack-noire-bleue.png' | asset_url }}" data-image-mobile="{{ 'pack-noire-bleue-mobile.jpg' | asset_url }}" disabled{% unless v_black.available and v_blue.available %} data-unavailable{% endunless %}>
-      <picture><source media="(max-width: 560px)" srcset="{{ 'pack-noire-bleue-mobile.jpg' | asset_url }}"><img src="{{ 'pack-noire-bleue.png' | asset_url }}" width="1254" height="1254" loading="lazy" alt="1 plaque noire + 1 plaque bleue"></picture>
+             data-label="1 noire + 1 bleue" data-image="{{ 'pack-noire-bleue-1254.webp' | asset_url }}" data-image-mobile="{{ 'pack-noire-bleue-mobile.jpg' | asset_url }}" disabled{% unless v_black.available and v_blue.available %} data-unavailable{% endunless %}>
+      <picture><source media="(max-width: 560px)" srcset="{{ 'pack-noire-bleue-mobile.jpg' | asset_url }}"><source type="image/webp" srcset="{{ 'pack-noire-bleue-400.webp' | asset_url }} 400w, {{ 'pack-noire-bleue-800.webp' | asset_url }} 800w" sizes="(max-width: 560px) 90vw, 320px"><img src="{{ 'pack-noire-bleue.png' | asset_url }}" width="1254" height="1254" loading="lazy" alt="1 plaque noire + 1 plaque bleue"></picture>
       <span class="vcard-meta"><span class="vcard-name">1 noire + 1 bleue</span>{% unless v_black.available and v_blue.available %}<span class="vcard-status">Indisponible</span>{% endunless %}</span>
       <span class="vcard-check" aria-hidden="true">✓</span>
     </label>
     <label class="vcard{% unless v_blue.available %} is-disabled{% endunless %}">
       <input type="radio" name="combo-{{ section.id }}" value="bleue-bleue" data-combo
              data-v1="{{ v_blue.id }}" data-v2="{{ v_blue.id }}"
-             data-label="2 plaques bleues" data-image="{{ 'pack-2-bleues.png' | asset_url }}" data-image-mobile="{{ 'pack-2-bleues-mobile.jpg' | asset_url }}" disabled{% unless v_blue.available %} data-unavailable{% endunless %}>
-      <picture><source media="(max-width: 560px)" srcset="{{ 'pack-2-bleues-mobile.jpg' | asset_url }}"><img src="{{ 'pack-2-bleues.png' | asset_url }}" width="1254" height="1254" loading="lazy" alt="2 plaques bleues"></picture>
+             data-label="2 plaques bleues" data-image="{{ 'pack-2-bleues-1254.webp' | asset_url }}" data-image-mobile="{{ 'pack-2-bleues-mobile.jpg' | asset_url }}" disabled{% unless v_blue.available %} data-unavailable{% endunless %}>
+      <picture><source media="(max-width: 560px)" srcset="{{ 'pack-2-bleues-mobile.jpg' | asset_url }}"><source type="image/webp" srcset="{{ 'pack-2-bleues-400.webp' | asset_url }} 400w, {{ 'pack-2-bleues-800.webp' | asset_url }} 800w" sizes="(max-width: 560px) 90vw, 320px"><img src="{{ 'pack-2-bleues.png' | asset_url }}" width="1254" height="1254" loading="lazy" alt="2 plaques bleues"></picture>
       <span class="vcard-meta"><span class="vcard-name">2 plaques bleues</span>{% unless v_blue.available %}<span class="vcard-status">Indisponible</span>{% endunless %}</span>
       <span class="vcard-check" aria-hidden="true">✓</span>
     </label>

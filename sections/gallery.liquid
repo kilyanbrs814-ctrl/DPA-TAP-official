@@ -14,8 +14,15 @@
           {% else %}
             {% assign fallback_asset = block.settings.fallback | default: 'scene-cafe.png' %}
             {% assign fallback_mobile = fallback_asset | replace: '.png', '-mobile.jpg' %}
+            {% assign fallback_base = fallback_asset | replace: '.png', '' %}
             <picture>
               <source media="(max-width: 760px)" srcset="{{ fallback_mobile | asset_url }}">
+              {%- if fallback_asset == 'scene-salon.png' -%}
+                <source type="image/webp" srcset="{{ 'scene-salon-640.webp' | asset_url }} 640w, {{ 'scene-salon-960.webp' | asset_url }} 960w" sizes="(max-width: 760px) calc(100vw - 32px), 60vw">
+              {%- elsif fallback_asset == 'scene-cafe.png' or fallback_asset == 'scene-boutique.png' or fallback_asset == 'scene-restaurant.png' -%}
+                {%- capture webp_srcset -%}{{ fallback_base | append: '-640.webp' | asset_url }} 640w, {{ fallback_base | append: '-960.webp' | asset_url }} 960w, {{ fallback_base | append: '-1254.webp' | asset_url }} 1254w{%- endcapture -%}
+                <source type="image/webp" srcset="{{ webp_srcset }}" sizes="(max-width: 760px) calc(100vw - 32px), 60vw">
+              {%- endif -%}
               <img src="{{ fallback_asset | asset_url }}" width="1254" height="1254" loading="lazy" alt="{{ block.settings.caption | escape }}">
             </picture>
           {% endif %}
