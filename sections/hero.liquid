@@ -25,9 +25,10 @@
     {%- endif -%}
   </div>
   <div class="container hero-grid">
-    <div>
-      <h1 class="h-display reveal" style="margin-top:22px">{{ section.settings.title_line1 | default: 'Un geste.' }}<br><em>{{ section.settings.title_line2 | default: 'Un avis.' }}</em></h1>
-      <p class="hero-sub reveal">{{ section.settings.subtitle | default: 'Transformez chaque client satisfait en une preuve qui fait grandir votre commerce.' }}</p>
+    <div class="hero-copy">
+      <p class="hero-eyebrow">PLAQUE NFC AVIS GOOGLE</p>
+      <h1 class="h-display reveal">{{ section.settings.title_line1 | default: 'Un geste.' }}<br><em>{{ section.settings.title_line2 | default: 'Un avis.' }}</em></h1>
+      <p class="hero-sub reveal">{{ section.settings.subtitle | default: 'La plaque NFC pour avis Google qui transforme chaque client satisfait en une preuve qui fait grandir votre commerce.' }}</p>
       <div class="hero-cta reveal">
         <a class="btn btn--blue" href="{{ section.settings.cta1_link | default: '#modeles' }}">{{ section.settings.cta1_label | default: 'Choisir ma plaque' }}</a>
         <a class="btn btn--ghost" href="{{ section.settings.cta2_link | default: '#fonctionnement' }}">{{ section.settings.cta2_label | default: 'Voir comment ça marche' }}</a>
@@ -43,7 +44,7 @@
   "settings": [
     { "type": "text", "id": "title_line1", "label": "Titre — ligne 1", "default": "Un geste." },
     { "type": "text", "id": "title_line2", "label": "Titre — ligne 2", "default": "Un avis." },
-    { "type": "textarea", "id": "subtitle", "label": "Sous-titre", "default": "Transformez chaque client satisfait en une preuve qui fait grandir votre commerce." },
+    { "type": "textarea", "id": "subtitle", "label": "Sous-titre", "default": "La plaque NFC pour avis Google qui transforme chaque client satisfait en une preuve qui fait grandir votre commerce." },
     { "type": "text", "id": "cta1_label", "label": "Bouton 1 — libellé", "default": "Choisir ma plaque" },
     { "type": "url", "id": "cta1_link", "label": "Bouton 1 — lien" },
     { "type": "text", "id": "cta2_label", "label": "Bouton 2 — libellé", "default": "Voir comment ça marche" },

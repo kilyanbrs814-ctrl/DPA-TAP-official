@@ -69,6 +69,8 @@ p{margin:0;text-wrap:pretty}
 .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(11,11,12,.92) 0%,rgba(11,11,12,.55) 45%,rgba(11,11,12,0) 70%)}
 .hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:33%;z-index:1;pointer-events:none;background:linear-gradient(to bottom,transparent 0%,rgba(11,11,12,.25) 30%,rgba(11,11,12,.75) 70%,var(--c-bg) 100%)}
 .hero{margin-bottom:0;border:0}
+.hero-copy{min-width:0}
+.hero-eyebrow{max-width:100%;margin-bottom:6px;font-family:"Space Grotesk",sans-serif;font-size:clamp(.72rem,1vw,.9rem);font-weight:600;line-height:1.2;letter-spacing:.24em;text-transform:uppercase;color:var(--g-blue);overflow-wrap:anywhere}
 .hero h1{color:var(--c-paper)}
 .hero h1 em{font-style:normal;color:var(--g-blue)}
 .hero-sub{margin-top:28px;max-width:44ch;font-size:clamp(1.05rem,1.6vw,1.3rem);color:color-mix(in srgb,var(--c-paper) 72%,transparent)}
