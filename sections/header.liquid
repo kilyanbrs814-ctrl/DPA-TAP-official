@@ -1,9 +1,9 @@
 <header class="hdr" data-header>
-  <a class="hdr-logo" href="{{ routes.root_url }}">
-    {{ section.settings.logo_text | default: 'DPA TAP' }}
-    <span class="g-dots" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+  <a class="hdr-logo" href="{{ routes.root_url }}" aria-label="{{ section.settings.logo_text | default: 'DPA TAP' }} — accueil">
+    <img src="{{ 'logo-dpa-tap.png' | asset_url }}" alt="{{ section.settings.logo_text | default: 'DPA TAP' }}" width="414" height="84">
   </a>
   <nav class="hdr-nav" aria-label="Navigation principale">
+    <a href="{{ section.settings.link_product | default: '/products/plaque-nfc-avis-google' }}">{{ section.settings.label_product | default: 'Plaque NFC' }}</a>
     <a href="{{ section.settings.link_how | default: '/#fonctionnement' }}">{{ section.settings.label_how | default: 'Fonctionnement' }}</a>
     <a href="{{ section.settings.link_models | default: '/#modeles' }}">{{ section.settings.label_models | default: 'Modèles' }}</a>
     <a href="{{ section.settings.link_faq | default: '/#faq' }}">{{ section.settings.label_faq | default: 'FAQ' }}</a>
@@ -14,6 +14,7 @@
       <span class="hdr-menu-icon" aria-hidden="true"><span></span><span></span></span>
     </summary>
     <nav class="hdr-menu-nav" aria-label="Navigation mobile">
+      <a href="{{ section.settings.link_product | default: '/products/plaque-nfc-avis-google' }}">{{ section.settings.label_product | default: 'Plaque NFC' }}</a>
       <a href="{{ section.settings.link_how | default: '/#fonctionnement' }}">{{ section.settings.label_how | default: 'Fonctionnement' }}</a>
       <a href="{{ section.settings.link_models | default: '/#modeles' }}">{{ section.settings.label_models | default: 'Modèles' }}</a>
       <a href="{{ section.settings.link_faq | default: '/#faq' }}">{{ section.settings.label_faq | default: 'FAQ' }}</a>
@@ -30,7 +31,9 @@
 {
   "name": "En-tête",
   "settings": [
-    { "type": "text", "id": "logo_text", "label": "Logo (texte)", "default": "DPA TAP" },
+    { "type": "text", "id": "logo_text", "label": "Nom (texte alternatif du logo)", "default": "DPA TAP" },
+    { "type": "text", "id": "label_product", "label": "Libellé — produit", "default": "Plaque NFC" },
+    { "type": "url", "id": "link_product", "label": "Lien — produit" },
     { "type": "text", "id": "label_how", "label": "Libellé — fonctionnement", "default": "Fonctionnement" },
     { "type": "url", "id": "link_how", "label": "Lien — fonctionnement" },
     { "type": "text", "id": "label_models", "label": "Libellé — modèles", "default": "Modèles" },

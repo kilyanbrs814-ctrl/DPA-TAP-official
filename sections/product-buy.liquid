@@ -7,7 +7,7 @@
     {% assign product = section.settings.product %}
     {% if product != blank %}
       <div class="buy-grid" data-buy>
-        <div class="reveal">
+        <div class="reveal buy-media">
           {% assign main_img = product.selected_or_first_available_variant.featured_image | default: product.featured_image %}
           {% if main_img %}
             {{ main_img | image_url: width: 1400 | image_tag: class: 'prod-media-img', loading: 'lazy', widths: '360, 540, 750, 1000, 1400', sizes: '(max-width: 980px) calc(100vw - 32px), 55vw', alt: product.title, data-buy-image: '', style: 'border-radius:26px;width:100%' }}

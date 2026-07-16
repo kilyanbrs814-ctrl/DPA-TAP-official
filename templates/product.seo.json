@@ -78,13 +78,15 @@
           "type": "install",
           "settings": {
             "eyebrow": "Installation et livraison",
-            "heading": "Une installation simple après réception",
-            "step1": "Testez le lien avec un téléphone compatible dès la réception, avant la pose définitive.",
-            "step2": "Nettoyez et séchez la surface choisie.",
-            "step3": "Retirez la protection de l’adhésif, positionnez la plaque puis appuyez uniformément.",
-            "step4": "Évitez de la déplacer après collage afin de préserver l’adhérence.",
+            "heading": "Installée en trente secondes.",
+            "step1_title": "Nettoyez la surface",
+            "step1_text": "Un chiffon sec suffit. Choisissez un endroit plat et visible.",
+            "step2_title": "Retirez la protection 3M",
+            "step2_text": "L’adhésif industriel au verso tient sur bois, verre, métal et stratifié.",
+            "step3_title": "Posez la plaque près de la caisse",
+            "step3_text": "Appuyez trois secondes. Elle est prête à recevoir son premier avis.",
             "shipping_title": "Expédiée déjà programmée",
-            "shipping_lead": "La plaque est programmée avec votre lien d’avis Google avant son expédition.",
+            "shipping_lead": "La plaque est programmée avec votre lien d’avis Google avant son expédition. Testez le lien avec un téléphone compatible dès la réception, avant la pose définitive.",
             "shipping_text": "Les options, frais et délais de livraison applicables à votre adresse sont présentés dans le panier et au moment du paiement."
           }
         },

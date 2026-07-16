@@ -42,15 +42,11 @@
   function initHeader(scope) {
     qsa(scope, '[data-header]').forEach(function (header) {
       if (!guard(header, 'Header')) return;
-      var heroEl = document.querySelector('.hero');
       var scrollRaf = null;
       var menu = header.querySelector('.hdr-menu');
       var updateHeader = function () {
         scrollRaf = null;
-        var y = window.scrollY;
-        var limit = heroEl ? heroEl.offsetTop + heroEl.offsetHeight - 80 : 40;
-        header.classList.toggle('is-scrolled', y > 40);
-        header.classList.toggle('is-visible', !heroEl || y > limit);
+        header.classList.toggle('is-scrolled', window.scrollY > 40);
       };
       var onScroll = function () {
         if (scrollRaf === null) scrollRaf = requestAnimationFrame(updateHeader);
