@@ -40,15 +40,169 @@
       </div>
     </div>
 
-    <div class="seo-product__content">
+    <div class="seo-product__content" data-sp-content>
+      {% assign chapter = 0 %}
       {% for block in section.blocks %}
-        {% if block.type == 'content' %}
-          <section class="seo-product__panel" {{ block.shopify_attributes }}>
-            {% if block.settings.eyebrow != blank %}<p class="eyebrow">{{ block.settings.eyebrow }}</p>{% endif %}
-            <h2>{{ block.settings.heading }}</h2>
-            <div class="seo-prose rte">{{ block.settings.body }}</div>
-          </section>
-        {% endif %}
+        {% case block.type %}
+          {% when 'audience' %}
+            {% assign chapter = chapter | plus: 1 %}
+            <section class="sp-chapter sp-lead" {{ block.shopify_attributes }}>
+              <div class="sp-lead__copy">
+                <p class="eyebrow sp-eyebrow"><span class="sp-index">0{{ chapter }}</span>{{ block.settings.eyebrow }}</p>
+                <h2 class="sp-title">{{ block.settings.heading }}</h2>
+                <p class="sp-lead__text">{{ block.settings.lead }}</p>
+              </div>
+              <div class="sp-lead__aside">
+                {% assign chips = block.settings.chips | split: ',' %}
+                <ul class="sp-chips" role="list">
+                  {% for chip in chips %}<li>{{ chip | strip }}</li>{% endfor %}
+                </ul>
+                <div class="sp-pack">
+                  <b>{{ block.settings.pack_title }}</b>
+                  <p>{{ block.settings.pack_text }}</p>
+                </div>
+              </div>
+            </section>
+
+          {% when 'process' %}
+            {% assign chapter = chapter | plus: 1 %}
+            <section class="sp-chapter sp-process" {{ block.shopify_attributes }}>
+              <div class="sp-head">
+                <p class="eyebrow sp-eyebrow"><span class="sp-index">0{{ chapter }}</span>{{ block.settings.eyebrow }}</p>
+                <h2 class="sp-title">{{ block.settings.heading }}</h2>
+              </div>
+              <ol class="sp-steps" role="list">
+                <li>
+                  <span class="sp-steps__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2.4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M10 18.4h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+                  <div>
+                    <span class="sp-steps__num">Étape 1</span>
+                    <h3>{{ block.settings.step1_title }}</h3>
+                    <p>{{ block.settings.step1_text }}</p>
+                  </div>
+                </li>
+                <li>
+                  <span class="sp-steps__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 15.5c3.2-3.2 3.2-6.8 0-10M10.5 18c4.8-4.8 4.8-10.2 0-15M15 20.5c6.4-6.4 6.4-13.6 0-20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+                  <div>
+                    <span class="sp-steps__num">Étape 2</span>
+                    <h3>{{ block.settings.step2_title }}</h3>
+                    <p>{{ block.settings.step2_text }}</p>
+                  </div>
+                </li>
+                <li>
+                  <span class="sp-steps__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 4 2.2 4.5 5 .72-3.6 3.5.85 4.95L12 15.3l-4.45 2.37.85-4.95-3.6-3.5 5-.72z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span>
+                  <div>
+                    <span class="sp-steps__num">Étape 3</span>
+                    <h3>{{ block.settings.step3_title }}</h3>
+                    <p>{{ block.settings.step3_text }}</p>
+                  </div>
+                </li>
+              </ol>
+              <aside class="sp-note">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 2.8V11c0 4.4-2.9 7.9-7 9.8C7.9 18.9 5 15.4 5 11V5.8z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m9.1 11.6 2 2 3.8-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <p><b>{{ block.settings.note_title }}</b> {{ block.settings.note_text }}</p>
+              </aside>
+            </section>
+
+          {% when 'preparation' %}
+            {% assign chapter = chapter | plus: 1 %}
+            <section class="sp-chapter sp-panel sp-prep" {{ block.shopify_attributes }}>
+              <div class="sp-head">
+                <p class="eyebrow sp-eyebrow"><span class="sp-index">0{{ chapter }}</span>{{ block.settings.eyebrow }}</p>
+                <h2 class="sp-title">{{ block.settings.heading }}</h2>
+              </div>
+              <ol class="sp-timeline" role="list">
+                <li><b>{{ block.settings.step1_title }}</b><p>{{ block.settings.step1_text }}</p></li>
+                <li><b>{{ block.settings.step2_title }}</b><p>{{ block.settings.step2_text }}</p></li>
+                <li><b>{{ block.settings.step3_title }}</b><p>{{ block.settings.step3_text }}</p></li>
+              </ol>
+              <div class="sp-facts">
+                <div><b>{{ block.settings.fact1_value }}</b><span>{{ block.settings.fact1_label }}</span></div>
+                <div><b>{{ block.settings.fact2_value }}</b><span>{{ block.settings.fact2_label }}</span></div>
+              </div>
+              <p class="sp-mini">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0 1 13.6-5.7L20 8.5M20 12a8 8 0 0 1-13.6 5.7L4 15.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M20 4.5v4h-4M4 19.5v-4h4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                {{ block.settings.note_text }}
+              </p>
+            </section>
+
+          {% when 'formats' %}
+            {% assign chapter = chapter | plus: 1 %}
+            <section class="sp-chapter sp-panel sp-formats" {{ block.shopify_attributes }}>
+              <div class="sp-head">
+                <p class="eyebrow sp-eyebrow"><span class="sp-index">0{{ chapter }}</span>{{ block.settings.eyebrow }}</p>
+                <h2 class="sp-title">{{ block.settings.heading }}</h2>
+              </div>
+              <p class="sp-size">{{ block.settings.size_value }}<small>{{ block.settings.size_label }}</small></p>
+              <div class="sp-swatches">
+                <div class="sp-swatch sp-swatch--noir">
+                  <span class="sp-swatch__tile" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 16c2.4-2.4 2.4-5.6 0-8M12.5 18c3.6-3.6 3.6-8.4 0-12M17 20c4.8-4.8 4.8-11.2 0-16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+                  <span>{{ block.settings.color1_label }}</span>
+                </div>
+                <div class="sp-swatch sp-swatch--bleu">
+                  <span class="sp-swatch__tile" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 16c2.4-2.4 2.4-5.6 0-8M12.5 18c3.6-3.6 3.6-8.4 0-12M17 20c4.8-4.8 4.8-11.2 0-16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+                  <span>{{ block.settings.color2_label }}</span>
+                </div>
+              </div>
+              <p class="sp-formats__text">{{ block.settings.pack_text }}</p>
+              <aside class="sp-note">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="10.5" cy="12" r="2.4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M17.5 12H21" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                <p><b>{{ block.settings.adhesive_title }}</b> {{ block.settings.adhesive_text }}</p>
+              </aside>
+            </section>
+
+          {% when 'compatibility' %}
+            {% assign chapter = chapter | plus: 1 %}
+            <section class="sp-chapter sp-compat" {{ block.shopify_attributes }}>
+              <div class="sp-head">
+                <p class="eyebrow sp-eyebrow"><span class="sp-index">0{{ chapter }}</span>{{ block.settings.eyebrow }}</p>
+                <h2 class="sp-title">{{ block.settings.heading }}</h2>
+              </div>
+              <div class="sp-compat-grid">
+                <div class="sp-device">
+                  <b><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2.4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M10.5 5h3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>{{ block.settings.device1_name }}</b>
+                  <p>{{ block.settings.device1_text }}</p>
+                </div>
+                <div class="sp-device">
+                  <b><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2.4" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="18" r="1" fill="currentColor"/></svg>{{ block.settings.device2_name }}</b>
+                  <p>{{ block.settings.device2_text }}</p>
+                </div>
+                <aside class="sp-limits">
+                  <b>{{ block.settings.limits_title }}</b>
+                  <p>{{ block.settings.limits_text }}</p>
+                </aside>
+              </div>
+            </section>
+
+          {% when 'install' %}
+            {% assign chapter = chapter | plus: 1 %}
+            <section class="sp-chapter sp-install" {{ block.shopify_attributes }}>
+              <div class="sp-head">
+                <p class="eyebrow sp-eyebrow"><span class="sp-index">0{{ chapter }}</span>{{ block.settings.eyebrow }}</p>
+                <h2 class="sp-title">{{ block.settings.heading }}</h2>
+              </div>
+              <div class="sp-install__grid">
+                <ol class="sp-checklist" role="list">
+                  <li>{{ block.settings.step1 }}</li>
+                  <li>{{ block.settings.step2 }}</li>
+                  <li>{{ block.settings.step3 }}</li>
+                  <li>{{ block.settings.step4 }}</li>
+                </ol>
+                <aside class="sp-shipping">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 6.5h11v10h-11zM13.5 10h4.2l3.3 3.2v3.3h-7.5z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="6.8" cy="18.6" r="1.9" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="16.8" cy="18.6" r="1.9" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+                  <b>{{ block.settings.shipping_title }}</b>
+                  <p>{{ block.settings.shipping_lead }}</p>
+                  <p>{{ block.settings.shipping_text }}</p>
+                </aside>
+              </div>
+            </section>
+
+          {% when 'content' %}
+            <section class="seo-product__panel" {{ block.shopify_attributes }}>
+              {% if block.settings.eyebrow != blank %}<p class="eyebrow">{{ block.settings.eyebrow }}</p>{% endif %}
+              <h2>{{ block.settings.heading }}</h2>
+              <div class="seo-prose rte">{{ block.settings.body }}</div>
+            </section>
+        {% endcase %}
       {% endfor %}
 
       {% assign has_faq = false %}
@@ -119,12 +273,526 @@
     background: transparent;
   }
 
+  /* ---- Composition éditoriale ---- */
+
   .seo-product__content {
+    --sp-line: rgba(255, 255, 255, 0.11);
+    --sp-panel: #151518;
+    --sp-panel-2: #101012;
+    --sp-muted: rgba(247, 244, 236, 0.68);
+    --sp-blue-soft: #8bc0ff;
     display: grid;
-    gap: 24px;
-    margin-top: 72px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(52px, 9vw, 80px) 20px;
+    margin-top: clamp(72px, 10vw, 104px);
+    font-family: "Space Grotesk", Helvetica, Arial, sans-serif;
   }
 
+  .sp-chapter {
+    min-width: 0;
+  }
+
+  .sp-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .sp-index {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--sp-blue-soft);
+    font-weight: 600;
+  }
+
+  .sp-index::after {
+    width: 26px;
+    height: 1px;
+    background: color-mix(in srgb, var(--g-blue) 55%, transparent);
+    content: "";
+  }
+
+  .sp-title {
+    max-width: 24ch;
+    margin-top: 12px;
+    color: var(--c-paper);
+    font-size: clamp(1.65rem, 5.6vw, 2.6rem);
+    line-height: 1.06;
+    letter-spacing: -0.015em;
+  }
+
+  .sp-panel {
+    padding: clamp(22px, 4.5vw, 40px);
+    border: 1px solid var(--sp-line);
+    border-radius: 26px;
+    background: var(--sp-panel);
+  }
+
+  /* 01 — bloc principal commerces */
+  .sp-lead {
+    display: grid;
+    gap: 30px;
+    padding: clamp(24px, 5vw, 52px);
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--g-blue) 30%, transparent);
+    border-radius: 30px;
+    background:
+      radial-gradient(circle at 10% -10%, color-mix(in srgb, var(--g-blue) 17%, transparent), transparent 46%),
+      #121215;
+  }
+
+  .sp-lead__text {
+    max-width: 52ch;
+    margin-top: 18px;
+    color: var(--sp-muted);
+    font-size: 1.05rem;
+    line-height: 1.62;
+  }
+
+  .sp-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sp-chips li {
+    padding: 9px 14px;
+    border: 1px solid var(--sp-line);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.045);
+    color: var(--c-paper);
+    font-size: 0.86rem;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .sp-pack {
+    display: grid;
+    gap: 8px;
+    margin-top: 18px;
+    padding: 18px 20px;
+    border: 1px solid color-mix(in srgb, var(--g-blue) 38%, transparent);
+    border-radius: 18px;
+    background: color-mix(in srgb, var(--g-blue) 9%, transparent);
+  }
+
+  .sp-pack b {
+    color: var(--sp-blue-soft);
+  }
+
+  .sp-pack p {
+    color: var(--sp-muted);
+    font-size: 0.94rem;
+    line-height: 1.52;
+  }
+
+  /* 02 — étapes NFC */
+  .sp-steps {
+    display: grid;
+    gap: 12px;
+    margin: 28px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sp-steps li {
+    display: grid;
+    grid-template-columns: 46px minmax(0, 1fr);
+    gap: 16px;
+    padding: 20px;
+    border: 1px solid var(--sp-line);
+    border-radius: 20px;
+    background: var(--sp-panel);
+    transition: border-color 0.25s ease, transform 0.25s ease;
+  }
+
+  .sp-steps__icon {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border: 1px solid var(--sp-line);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--sp-blue-soft);
+  }
+
+  .sp-steps__icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .sp-steps__num {
+    color: rgba(247, 244, 236, 0.42);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .sp-steps h3 {
+    margin-top: 6px;
+    color: var(--c-paper);
+    font-size: 1.08rem;
+    line-height: 1.2;
+  }
+
+  .sp-steps p {
+    margin-top: 8px;
+    color: var(--sp-muted);
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .sp-note {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-top: 16px;
+    padding: 18px 20px;
+    border: 1px solid var(--sp-line);
+    border-left: 3px solid var(--g-blue);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .sp-note svg {
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
+    margin-top: 1px;
+    color: var(--sp-blue-soft);
+  }
+
+  .sp-note p {
+    color: var(--sp-muted);
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .sp-note b {
+    color: var(--c-paper);
+  }
+
+  /* 03 — préparation, timeline */
+  .sp-timeline {
+    margin: 26px 0 22px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sp-timeline li {
+    position: relative;
+    padding: 0 0 24px 32px;
+  }
+
+  .sp-timeline li:last-child {
+    padding-bottom: 0;
+  }
+
+  .sp-timeline li::before {
+    position: absolute;
+    left: 8px;
+    top: 10px;
+    bottom: -4px;
+    width: 1px;
+    background: var(--sp-line);
+    content: "";
+  }
+
+  .sp-timeline li:last-child::before {
+    display: none;
+  }
+
+  .sp-timeline li::after {
+    position: absolute;
+    left: 4px;
+    top: 7px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--g-blue);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--g-blue) 22%, transparent);
+    content: "";
+  }
+
+  .sp-timeline b {
+    color: var(--c-paper);
+    font-size: 1.04rem;
+  }
+
+  .sp-timeline p {
+    margin-top: 6px;
+    color: var(--sp-muted);
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .sp-facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .sp-facts > div {
+    padding: 16px 18px;
+    border: 1px solid var(--sp-line);
+    border-radius: 16px;
+    background: var(--sp-panel-2);
+  }
+
+  .sp-facts b {
+    display: block;
+    color: var(--sp-blue-soft);
+    font-size: clamp(1.7rem, 6vw, 2.2rem);
+    line-height: 1;
+  }
+
+  .sp-facts span {
+    display: block;
+    margin-top: 7px;
+    color: var(--sp-muted);
+    font-size: 0.85rem;
+    line-height: 1.35;
+  }
+
+  .sp-mini {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-top: 16px;
+    color: var(--sp-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .sp-mini svg {
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    color: var(--sp-blue-soft);
+  }
+
+  /* 04 — formats */
+  .sp-size {
+    margin: 24px 0 4px;
+    color: var(--c-paper);
+    font-size: clamp(2.5rem, 10vw, 3.4rem);
+    font-weight: 600;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+  }
+
+  .sp-size small {
+    display: block;
+    margin-top: 8px;
+    color: rgba(247, 244, 236, 0.45);
+    font-size: 0.76rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .sp-swatches {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 22px;
+  }
+
+  .sp-swatch {
+    overflow: hidden;
+    border: 1px solid var(--sp-line);
+    border-radius: 18px;
+    background: var(--sp-panel-2);
+    transition: border-color 0.25s ease, transform 0.25s ease;
+  }
+
+  .sp-swatch__tile {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 2 / 1;
+  }
+
+  .sp-swatch__tile svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .sp-swatch--noir .sp-swatch__tile {
+    background: #0a0a0c;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .sp-swatch--bleu .sp-swatch__tile {
+    background: var(--g-blue);
+    color: #fff;
+  }
+
+  .sp-swatch > span:last-child {
+    display: block;
+    padding: 10px 14px;
+    border-top: 1px solid var(--sp-line);
+    color: var(--c-paper);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .sp-formats__text {
+    margin: 18px 0 0;
+    color: var(--sp-muted);
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  /* 05 — compatibilité */
+  .sp-compat-grid {
+    display: grid;
+    gap: 12px;
+    margin-top: 26px;
+  }
+
+  .sp-device {
+    padding: 22px;
+    border: 1px solid var(--sp-line);
+    border-radius: 20px;
+    background: var(--sp-panel-2);
+    transition: border-color 0.25s ease;
+  }
+
+  .sp-device b {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--c-paper);
+    font-size: 1.05rem;
+  }
+
+  .sp-device svg {
+    flex: 0 0 20px;
+    width: 20px;
+    height: 20px;
+    color: var(--sp-blue-soft);
+  }
+
+  .sp-device p {
+    margin-top: 10px;
+    color: var(--sp-muted);
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .sp-limits {
+    padding: 22px;
+    border: 1px solid rgba(251, 188, 4, 0.32);
+    border-radius: 20px;
+    background: rgba(251, 188, 4, 0.07);
+  }
+
+  .sp-limits b {
+    color: var(--c-paper);
+  }
+
+  .sp-limits p {
+    margin-top: 10px;
+    color: var(--sp-muted);
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  /* 06 — installation et livraison */
+  .sp-install__grid {
+    display: grid;
+    gap: 20px;
+    margin-top: 26px;
+  }
+
+  .sp-checklist {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: sp-step;
+  }
+
+  .sp-checklist li {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 64px;
+    padding: 14px 18px 14px 64px;
+    border: 1px solid var(--sp-line);
+    border-radius: 16px;
+    background: var(--sp-panel);
+    color: var(--sp-muted);
+    font-size: 0.97rem;
+    line-height: 1.5;
+    counter-increment: sp-step;
+    transition: border-color 0.25s ease;
+  }
+
+  .sp-checklist li::before {
+    position: absolute;
+    left: 16px;
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--g-blue) 16%, transparent);
+    color: var(--sp-blue-soft);
+    content: counter(sp-step, decimal-leading-zero);
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+
+  .sp-shipping {
+    padding: clamp(22px, 4vw, 32px);
+    border: 1px solid color-mix(in srgb, var(--g-blue) 32%, transparent);
+    border-radius: 22px;
+    background:
+      radial-gradient(circle at 88% 0%, color-mix(in srgb, var(--g-blue) 18%, transparent), transparent 55%),
+      #121215;
+  }
+
+  .sp-shipping svg {
+    width: 30px;
+    height: 30px;
+    color: var(--sp-blue-soft);
+  }
+
+  .sp-shipping b {
+    display: block;
+    margin-top: 14px;
+    color: var(--c-paper);
+    font-size: 1.18rem;
+  }
+
+  .sp-shipping p {
+    margin-top: 10px;
+    color: var(--sp-muted);
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  /* révélation au scroll (classe ajoutée en JS uniquement) */
+  .sp-reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .sp-reveal.is-in {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* panneau générique + FAQ */
   .seo-product__panel,
   .seo-product__faq {
     padding: 28px;
@@ -209,6 +877,21 @@
     padding: 0 0 24px;
   }
 
+  @media (min-width: 640px) {
+    .sp-install__grid {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      align-items: start;
+    }
+
+    .sp-compat-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sp-limits {
+      grid-column: 1 / -1;
+    }
+  }
+
   @media (min-width: 900px) {
     .seo-product {
       padding-top: 150px;
@@ -227,11 +910,55 @@
     }
 
     .seo-product__content {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(12, minmax(0, 1fr));
     }
 
-    .seo-product__faq {
+    .seo-product__content > * {
       grid-column: 1 / -1;
+    }
+
+    .sp-lead {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.92fr);
+      gap: clamp(36px, 5vw, 72px);
+      align-items: center;
+    }
+
+    .sp-steps {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .sp-steps li {
+      grid-template-columns: minmax(0, 1fr);
+      padding: 26px;
+    }
+
+    .sp-steps__icon {
+      margin-bottom: 22px;
+    }
+
+    .sp-steps li:nth-child(2) {
+      margin-top: 26px;
+    }
+
+    .sp-prep {
+      grid-column: 1 / 8;
+    }
+
+    .sp-formats {
+      grid-column: 8 / -1;
+    }
+
+    .sp-compat-grid {
+      grid-template-columns: minmax(0, 0.75fr) minmax(0, 0.75fr) minmax(0, 1.5fr);
+    }
+
+    .sp-limits {
+      grid-column: auto;
+    }
+
+    .sp-note {
+      margin-top: 20px;
     }
   }
 
@@ -250,8 +977,92 @@
       padding: 22px;
       border-radius: 20px;
     }
+
+    .sp-lead {
+      border-radius: 24px;
+    }
+
+    .sp-chips li {
+      padding: 8px 12px;
+      font-size: 0.82rem;
+    }
+
+    .sp-checklist li {
+      padding: 14px 16px 14px 58px;
+    }
+
+    .sp-checklist li::before {
+      left: 14px;
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  @media (max-width: 374px) {
+    .sp-facts,
+    .sp-swatches {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .sp-swatch__tile {
+      aspect-ratio: 3 / 1;
+    }
+  }
+
+  @media (hover: hover) {
+    .sp-steps li:hover,
+    .sp-swatch:hover,
+    .sp-device:hover,
+    .sp-checklist li:hover {
+      border-color: color-mix(in srgb, var(--g-blue) 45%, transparent);
+    }
+
+    .sp-steps li:hover {
+      transform: translateY(-3px);
+    }
+
+    .sp-chips li:hover {
+      border-color: rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.08);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sp-steps li,
+    .sp-swatch,
+    .sp-device,
+    .sp-checklist li,
+    .sp-chips li,
+    .sp-reveal {
+      transition: none;
+    }
   }
 {% endstylesheet %}
+
+{% javascript %}
+  (() => {
+    const root = document.querySelector('[data-sp-content]');
+    if (!root) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!('IntersectionObserver' in window)) return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-in');
+          io.unobserve(entry.target);
+        });
+      },
+      { rootMargin: '0px 0px -8%', threshold: 0.06 }
+    );
+
+    root.querySelectorAll(':scope > *').forEach((el) => {
+      el.classList.add('sp-reveal');
+      io.observe(el);
+    });
+  })();
+{% endjavascript %}
 
 {% schema %}
 {
@@ -264,6 +1075,103 @@
     { "type": "text", "id": "faq_heading", "label": "Titre FAQ", "default": "Ce qu’il faut savoir avant de commander" }
   ],
   "blocks": [
+    {
+      "type": "audience",
+      "name": "01 — Pour les commerces",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Pour les commerces" },
+        { "type": "text", "id": "heading", "label": "H2", "default": "Une plaque pensée pour les établissements qui reçoivent du public" },
+        { "type": "textarea", "id": "lead", "label": "Texte principal", "default": "Placée près de la caisse, à l’accueil ou sur un comptoir, la plaque donne à vos clients un accès simple à la fiche Google de votre établissement, au moment où l’expérience est encore fraîche." },
+        { "type": "text", "id": "chips", "label": "Types de commerces (séparés par des virgules)", "default": "Restaurants, Cafés, Salons & instituts, Hôtels, Boutiques, Commerces de proximité" },
+        { "type": "text", "id": "pack_title", "label": "Titre du pack", "default": "Pack de deux plaques" },
+        { "type": "textarea", "id": "pack_text", "label": "Texte du pack", "default": "Équipez deux zones d’un même établissement avec le même lien, ou deux établissements avec des liens distincts." }
+      ]
+    },
+    {
+      "type": "process",
+      "name": "02 — Fonctionnement",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Fonctionnement" },
+        { "type": "text", "id": "heading", "label": "H2", "default": "Du contact NFC à la page d’avis Google" },
+        { "type": "text", "id": "step1_title", "label": "Étape 1 — titre", "default": "Le client approche son téléphone" },
+        { "type": "textarea", "id": "step1_text", "label": "Étape 1 — texte", "default": "La zone NFC de son iPhone ou de son téléphone Android compatible passe au-dessus de la plaque." },
+        { "type": "text", "id": "step2_title", "label": "Étape 2 — titre", "default": "Une notification apparaît" },
+        { "type": "textarea", "id": "step2_text", "label": "Étape 2 — texte", "default": "Il la touche pour ouvrir le lien d’avis Google programmé dans la puce NFC." },
+        { "type": "text", "id": "step3_title", "label": "Étape 3 — titre", "default": "La fiche Google s’affiche" },
+        { "type": "textarea", "id": "step3_text", "label": "Étape 3 — texte", "default": "Dans son navigateur ou son application : il choisit sa note et rédige, ou non, un commentaire." },
+        { "type": "text", "id": "note_title", "label": "Note — titre", "default": "Aucune publication automatique." },
+        { "type": "textarea", "id": "note_text", "label": "Note — texte", "default": "La plaque ne publie rien à la place du client : il reste libre d’ouvrir le lien, de choisir sa note et de laisser ou non un avis." }
+      ]
+    },
+    {
+      "type": "preparation",
+      "name": "03 — Préparation",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Préparation" },
+        { "type": "text", "id": "heading", "label": "H2", "default": "Votre lien Google est programmé avant l’expédition" },
+        { "type": "text", "id": "step1_title", "label": "Jalon 1 — titre", "default": "Vous commandez" },
+        { "type": "textarea", "id": "step1_text", "label": "Jalon 1 — texte", "default": "Indiquez le nom de l’établissement et son lien direct d’avis Google." },
+        { "type": "text", "id": "step2_title", "label": "Jalon 2 — titre", "default": "DPA TAP programme la puce" },
+        { "type": "textarea", "id": "step2_text", "label": "Jalon 2 — texte", "default": "Le lien est enregistré dans la puce NFC avant l’envoi. Vous ne retrouvez pas encore le lien ? Précisez le nom exact de votre fiche : nous vous aidons à l’identifier avant la programmation." },
+        { "type": "text", "id": "step3_title", "label": "Jalon 3 — titre", "default": "La plaque arrive prête à l’emploi" },
+        { "type": "textarea", "id": "step3_text", "label": "Jalon 3 — texte", "default": "Rien à configurer à la réception." },
+        { "type": "text", "id": "fact1_value", "label": "Chiffre 1", "default": "0" },
+        { "type": "text", "id": "fact1_label", "label": "Libellé 1", "default": "application à installer pour le commerçant" },
+        { "type": "text", "id": "fact2_value", "label": "Chiffre 2", "default": "0" },
+        { "type": "text", "id": "fact2_label", "label": "Libellé 2", "default": "abonnement à renouveler" },
+        { "type": "textarea", "id": "note_text", "label": "Note reprogrammation", "default": "Si le lien change par la suite, la puce peut être reprogrammée avec un smartphone compatible." }
+      ]
+    },
+    {
+      "type": "formats",
+      "name": "04 — Formats et modèles",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Formats et modèles" },
+        { "type": "text", "id": "heading", "label": "H2", "default": "10 × 10 cm, en noir ou en bleu" },
+        { "type": "text", "id": "size_value", "label": "Dimension affichée", "default": "10 × 10" },
+        { "type": "text", "id": "size_label", "label": "Unité", "default": "centimètres" },
+        { "type": "text", "id": "color1_label", "label": "Modèle 1", "default": "Noir" },
+        { "type": "text", "id": "color2_label", "label": "Modèle 2", "default": "Bleu" },
+        { "type": "textarea", "id": "pack_text", "label": "Texte pack", "default": "À l’unité ou en pack de deux : deux plaques noires, deux bleues ou une de chaque couleur, selon les disponibilités affichées." },
+        { "type": "text", "id": "adhesive_title", "label": "Adhésif — titre", "default": "Adhésif 3M au verso." },
+        { "type": "textarea", "id": "adhesive_text", "label": "Adhésif — texte", "default": "Prévu pour une pose sur une surface plane, propre et sèche. Choisissez l’emplacement définitif avant de retirer sa protection." }
+      ]
+    },
+    {
+      "type": "compatibility",
+      "name": "05 — Compatibilité",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Compatibilité et limites" },
+        { "type": "text", "id": "heading", "label": "H2", "default": "Compatible avec la majorité des iPhone et téléphones Android récents" },
+        { "type": "text", "id": "device1_name", "label": "Appareil 1", "default": "iPhone" },
+        { "type": "textarea", "id": "device1_text", "label": "Appareil 1 — texte", "default": "Lecture NFC intégrée : le client approche simplement le haut de son téléphone de la plaque, sans application." },
+        { "type": "text", "id": "device2_name", "label": "Appareil 2", "default": "Android" },
+        { "type": "textarea", "id": "device2_text", "label": "Appareil 2 — texte", "default": "Sur certains modèles, le NFC doit être activé dans les réglages. La position de l’antenne varie : il suffit de déplacer lentement le dos du téléphone au-dessus de la plaque." },
+        { "type": "text", "id": "limits_title", "label": "Limites — titre", "default": "Les limites, en toute transparence" },
+        { "type": "textarea", "id": "limits_text", "label": "Limites — texte", "default": "Un téléphone ancien dépourvu de NFC, un NFC désactivé ou une coque très épaisse peuvent empêcher la lecture. La plaque facilite l’accès au formulaire d’avis, mais elle ne garantit ni que chaque client publiera un avis, ni un résultat particulier dans Google." }
+      ]
+    },
+    {
+      "type": "install",
+      "name": "06 — Installation",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Installation et livraison" },
+        { "type": "text", "id": "heading", "label": "H2", "default": "Une installation simple après réception" },
+        { "type": "textarea", "id": "step1", "label": "Étape 1", "default": "Testez le lien avec un téléphone compatible dès la réception, avant la pose définitive." },
+        { "type": "textarea", "id": "step2", "label": "Étape 2", "default": "Nettoyez et séchez la surface choisie." },
+        { "type": "textarea", "id": "step3", "label": "Étape 3", "default": "Retirez la protection de l’adhésif, positionnez la plaque puis appuyez uniformément." },
+        { "type": "textarea", "id": "step4", "label": "Étape 4", "default": "Évitez de la déplacer après collage afin de préserver l’adhérence." },
+        { "type": "text", "id": "shipping_title", "label": "Livraison — titre", "default": "Expédiée déjà programmée" },
+        { "type": "textarea", "id": "shipping_lead", "label": "Livraison — texte 1", "default": "La plaque est programmée avec votre lien d’avis Google avant son expédition." },
+        { "type": "textarea", "id": "shipping_text", "label": "Livraison — texte 2", "default": "Les options, frais et délais de livraison applicables à votre adresse sont présentés dans le panier et au moment du paiement." }
+      ]
+    },
     {
       "type": "content",
       "name": "Section de contenu",
