@@ -649,7 +649,33 @@
       "nfc_title": "The local initiative",
       "nfc_text": "The customer approaches a compatible phone then taps the displayed notification.",
       "nfc_point_1": "Discrete and reprogrammable support",
-      "nfc_point_2": "Suitable for a counter or reception area"
+      "nfc_point_2": "Suitable for a counter or reception area",
+      "qr_title": "The framing gesture",
+      "qr_text": "The customer opens the camera, frames the code, then taps the detected link.",
+      "qr_point_1": "Very broad compatibility",
+      "qr_point_2": "Relevant on paper or remotely",
+      "choice_label": "Which solution should I choose?",
+      "choice_text": "Choose according to your customers' distance, medium, and habits. No technology guarantees more reviews."
+    },
+    "guide_link": {
+      "hero_alt": "Schematic path to retrieve and then verify a Google review link",
+      "profile": "Your establishment",
+      "business": "Establishment record",
+      "receive": "Get more reviews",
+      "eyebrow": "From profile to verified link",
+      "heading": "Retrieve the correct link without copying the wrong address",
+      "path_1_title": "Open the correct record",
+      "path_1_text": "Log in with the authorized account and verify the name and address.",
+      "path_2_title": "Choose the feedback action",
+      "path_2_text": "Use \"Get more reviews,\" not just sharing the listing.",
+      "path_3_title": "Copy then test",
+      "path_3_text": "Open the link in incognito mode before submitting it for scheduling.",
+      "computer": "On computer",
+      "computer_text": "Search for the exact name of the establishment in Google with the manager account.",
+      "phone": "On the phone",
+      "phone_text": "Go to Google or Google Maps, then open your Business Profile.",
+      "verify_label": "How to check the link?",
+      "verify_text": "A private window must display the correct establishment and allow the user to select a rating, without posting fake reviews."
     }
   }
 }
