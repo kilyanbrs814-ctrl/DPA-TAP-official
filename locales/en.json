@@ -384,8 +384,272 @@
         },
         "location_information_far_away_one_item": {
           "many": "There are %{count} locations with your item"
+        },
+        "location_information_far_away_other_items": {
+          "many": "There are %{count} locations with your items"
+        },
+        "location_nearby_one_item": {
+          "many": "There are %{count} locations nearby with your item"
+        },
+        "location_nearby_other_items": {
+          "many": "There are %{count} nearby locations with your items"
+        },
+        "location_nearby_short_one_item": {
+          "many": "%{count} nearby locations with your item"
+        },
+        "location_nearby_short_other_items": {
+          "many": "%{count} nearby locations with your items"
+        },
+        "location_far_away_one_item": {
+          "many": "%{count} locations with your item"
+        },
+        "location_far_away_other_items": {
+          "many": "%{count} locations with your items"
+        }
+      },
+      "split_delivery": {
+        "inventory_issue_banner": {
+          "heading": {
+            "cannot_be_picked_up": {
+              "many": "Could not retrieve %{count} items"
+            },
+            "cannot_be_shipped": {
+              "many": "%{count} items cannot be shipped"
+            }
+          },
+          "remove_item": {
+            "many": "remove items"
+          },
+          "ship_separately": {
+            "many": "Send them separately"
+          },
+          "pick_them_up_in_store": {
+            "many": "Collect in store"
+          },
+          "remove_item_only": {
+            "many": "Remove items"
+          }
+        },
+        "pickup_items_count": {
+          "many": "Remove %{count} items"
+        },
+        "ship_items_count": {
+          "many": "Ship %{count} items"
+        },
+        "items_count": {
+          "many": "%{count} items"
+        }
+      },
+      "merchandise_unavailable_in_buyer_location": {
+        "remove_items_action": {
+          "many": "remove unavailable items"
+        }
+      },
+      "review_address_modal": {
+        "subtitle": {
+          "many": "This order will be shipped to an address provided by {{merchant}}. Select a shipping address."
+        }
+      },
+      "remote_merchandise_only": {
+        "detail_item_label": {
+          "many": "{{count}} articles"
         }
       }
+    },
+    "notices": {
+      "order": {
+        "cancel_reason": {
+          "many": "Other"
+        }
+      }
+    },
+    "page_titles": {
+      "search_results": {
+        "many": "Search: %{count} results found for \"%{terms}\""
+      }
+    }
+  },
+  "customer_accounts": {
+    "orders": {
+      "order_list": {
+        "items": {
+          "many": "{{count}} articles"
+        }
+      },
+      "order_status": {
+        "delivered_description_gift_card": {
+          "many": "The gift cards have been sent by email."
+        },
+        "gift_card_label": {
+          "many": "Gift cards"
+        },
+        "confirmed_gift_card_additional_description": {
+          "many": "Each gift card will be sent in a separate email."
+        },
+        "delivered_description_gift_card_text": {
+          "many": "The gift cards have been sent by text message."
+        },
+        "confirmed_gift_card_additional_description_text": {
+          "many": "Each gift card will be sent in a separate SMS message."
+        },
+        "gift_resend_success": {
+          "many": "Gift cards resent"
+        },
+        "gift_resend_failure": {
+          "many": "There was a problem resending your gift cards. Please try again or contact us."
+        },
+        "tracking_number": {
+          "many": "Tracking Numbers"
+        },
+        "gift_card_resend_button": {
+          "many": "Resend Gift Cards"
+        }
+      }
+    },
+    "order_details": {
+      "image_gallery": {
+        "load_more_items": {
+          "many": "Show {{count}} more items"
+        }
+      },
+      "subtotal_label_with_quantity": {
+        "many": "Subtotal · {{count}} items"
+      },
+      "discount_order_stacking": {
+        "many": "Discounts on orders"
+      }
+    },
+    "B2B": {
+      "orders": {
+        "draft_order_list": {
+          "pending_tab_accessibility_label": {
+            "pending_orders": {
+              "many": "You have {{count}} pending orders"
+            }
+          }
+        }
+      },
+      "draft_order_details": {
+        "payment_status": {
+          "pending": {
+            "banner_overdue": {
+              "many": "You have a payment delay of {{count}} days"
+            },
+            "banner_due": {
+              "many": "Your payment is due in {{count}} days"
+            },
+            "banner_overdue_for_single_fulfillment": {
+              "many": "The payment of {{amount}} is {{count}} days overdue. {{link}}"
+            }
+          }
+        }
+      }
+    },
+    "errors": {
+      "banner_title": {
+        "many": "There are {{count}} errors"
+      }
+    },
+    "payment_methods": {
+      "add_payment_method": {
+        "subscription_contracts": {
+          "more_items": {
+            "many": "{{count}} more products"
+          },
+          "product_count": {
+            "many": "{{count}} products"
+          }
+        },
+        "updating_contracts": {
+          "many": "Updating {{count}} subscription contracts..."
+        },
+        "contracts_updated": {
+          "many": "{{count}} subscription agreements have been successfully updated"
+        }
+      }
+    },
+    "ui_components": {
+      "autocompleteOptionsAvailable": {
+        "many": "{{count}} articles available"
+      },
+      "mapClusterTitle": {
+        "many": "Cluster of {{number}} markers"
+      }
+    },
+    "date": {
+      "humanize": {
+        "lessThanOneHourAgo": {
+          "many": "There are {{count}} minutes"
+        }
+      }
+    }
+  },
+  "general": {
+    "skip_to_content": "Skip to content",
+    "cart": "Basket",
+    "close": "Close",
+    "menu": "Menu",
+    "search": "Search",
+    "continue_shopping": "Continue shopping"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "adding": "Adding...",
+      "added": "Added to cart",
+      "sold_out": "Sold out",
+      "available": "In stock — ships within 24 hours",
+      "unavailable": "Unavailable",
+      "quantity": "Quantity",
+      "view_cart": "View cart",
+      "checkout": "Proceed to checkout"
+    }
+  },
+  "cart": {
+    "title": "Your cart",
+    "empty": "Your cart is empty.",
+    "subtotal": "Subtotal",
+    "note": "Note for the order",
+    "update": "Update",
+    "remove": "Withdraw",
+    "checkout": "Secure Payment",
+    "taxes_shipping": "Taxes and shipping calculated at checkout."
+  },
+  "seo": {
+    "breadcrumb_label": "Breadcrumb trail",
+    "home": "Home",
+    "guide": "Guide",
+    "read_guide": "Read the guide",
+    "written_by": "Authored by {{ author }}",
+    "product_link": "Discover the product",
+    "product_images": "Product images",
+    "show_image": "Show {{ title }}",
+    "guide_nfc": {
+      "hero_alt": "An NFC tag communicates with a smartphone",
+      "detected": "Link detected",
+      "eyebrow": "The Journey at a Glance",
+      "steps_heading": "Three steps, from gesture to notice page",
+      "step_1_title": "The customer brings their phone closer.",
+      "step_1_text": "The smartphone is placed a few centimeters from the NFC area on the plate.",
+      "step_2_title": "The phone detects the chip",
+      "step_2_text": "A notification offers to open the saved link, without a dedicated application.",
+      "step_3_title": "The Google page opens",
+      "step_3_text": "The customer confirms the opening and is then free to publish their review or not.",
+      "iphone": "Reading is usually done with the upper part of the phone.",
+      "android": "NFC sometimes needs to be enabled, and the antenna may be on the back.",
+      "limit_label": "Actual limits",
+      "limit_text": "The plate simplifies access. It does not publish any notices and does not guarantee any results."
+    },
+    "guide_compare": {
+      "hero_alt": "Visual comparison between NFC tap and QR code scan",
+      "approach": "To approach",
+      "frame": "To frame",
+      "eyebrow": "Two taps, one destination",
+      "heading": "NFC and QR codes are suitable for different contexts.",
+      "nfc_title": "The local initiative",
+      "nfc_text": "The customer approaches a compatible phone then taps the displayed notification.",
+      "nfc_point_1": "Discrete and reprogrammable support",
+      "nfc_point_2": "Suitable for a counter or reception area"
     }
   }
 }
