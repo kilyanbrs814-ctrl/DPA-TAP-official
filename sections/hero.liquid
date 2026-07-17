@@ -27,7 +27,7 @@
   <div class="container hero-grid">
     <div class="hero-copy">
       <p class="hero-eyebrow">PLAQUE NFC AVIS GOOGLE</p>
-      <h1 class="h-display reveal">{{ section.settings.title_line1 | default: 'Un avis Google' }}<br><em>{{ section.settings.title_line2 | default: 'en un geste.' }}</em></h1>
+      <h1 class="h-display reveal"><span class="hero-title-line">{{ section.settings.title_line1 | default: 'Un avis Google' }}</span> <em class="hero-title-line">{{ section.settings.title_line2 | default: 'en un geste.' }}</em></h1>
       <p class="hero-sub reveal">{{ section.settings.subtitle | default: 'La plaque NFC pour avis Google qui transforme chaque client satisfait en une preuve qui fait grandir votre commerce.' }}</p>
       <div class="hero-cta reveal">
         <a class="btn btn--blue" href="{{ section.settings.cta1_link | default: '/products/plaque-nfc-avis-google' }}">{{ section.settings.cta1_label | default: 'Choisir ma plaque' }}</a>

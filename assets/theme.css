@@ -70,6 +70,8 @@ p{margin:0;text-wrap:pretty}
 .hero-copy{min-width:0}
 .hero-eyebrow{max-width:100%;margin-bottom:6px;font-family:"Space Grotesk",sans-serif;font-size:clamp(.72rem,1vw,.9rem);font-weight:600;line-height:1.2;letter-spacing:.24em;text-transform:uppercase;color:var(--g-blue);overflow-wrap:anywhere}
 .hero h1{color:var(--c-paper)}
+.hero h1.h-display{font-size:min(5.5rem,calc(6.6vw - 4px))}
+.hero-title-line{display:block;white-space:nowrap}
 .hero h1 em{font-style:normal;color:var(--g-blue)}
 .hero-sub{margin-top:28px;max-width:44ch;font-size:clamp(1.05rem,1.6vw,1.3rem);color:color-mix(in srgb,var(--c-paper) 72%,transparent)}
 .hero-cta{margin-top:40px;display:flex;flex-wrap:wrap;gap:14px}
@@ -440,6 +442,7 @@ p{margin:0;text-wrap:pretty}
   .pack-mobile-prefix{display:inline}
   .pack-badge{display:inline-flex}
   .hero{min-height:100svh;padding:104px 0 72px}
+  .hero h1.h-display{font-size:clamp(2.1rem,calc(12.5vw - 4px),4.6rem)}
   .hero-grid{gap:18px}
   .hero-bg::after{background:linear-gradient(180deg,rgba(11,11,12,.5),rgba(11,11,12,.78))}
   .hero-bg img{transform:none!important;will-change:auto}
