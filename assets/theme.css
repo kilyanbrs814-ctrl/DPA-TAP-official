@@ -137,6 +137,18 @@ p{margin:0;text-wrap:pretty}
 /* progress rail */
 .scrolly-rail{position:absolute;left:0;top:50%;transform:translateY(-50%);width:2px;height:180px;background:rgba(255,255,255,.12);border-radius:2px;overflow:hidden}
 .scrolly-rail::after{content:"";position:absolute;inset:0;background:var(--g-blue);transform-origin:top;transform:scaleY(var(--p,0))}
+/* scroll hint */
+.scrolly-hint{align-self:flex-start;display:inline-flex;align-items:center;gap:10px;margin:-6px 0 12px;padding:10px 16px;border-radius:999px;background:var(--g-blue);color:#fff;box-shadow:0 10px 28px -8px rgba(66,133,244,.55);font-family:"Space Grotesk",sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;max-width:100%;pointer-events:none;transition:opacity .5s ease,transform .5s ease}
+.scrolly.is-begun .scrolly-hint{opacity:0;transform:translateY(-6px)}
+.scrolly-hint .hint-svg{flex:none;color:#fff}
+.hint-svg--mouse{width:13px;height:20px;display:none}
+.hint-svg--swipe{width:18px;height:18px}
+.hint-svg--chevron{width:12px;height:7px}
+.hint-txt--desktop{display:none}
+@media (hover:hover) and (pointer:fine){
+  .hint-svg--mouse,.hint-txt--desktop{display:block}
+  .hint-svg--swipe,.hint-txt--mobile{display:none}
+}
 /* static fallback */
 .scrolly.is-static .scrolly-track{height:auto}
 .scrolly.is-static .scrolly-sticky{position:static;height:auto;padding:100px 0}
@@ -144,6 +156,7 @@ p{margin:0;text-wrap:pretty}
 .scrolly.is-static .stage-phone{transform:translate(24%,4%) rotateZ(-6deg)}
 .scrolly.is-static .review-ui{opacity:1;transform:none}
 .scrolly.is-static .rv-stars svg{fill:var(--g-yellow);transform:scale(1)}
+.scrolly.is-static .scrolly-hint{display:none}
 @media (max-width:900px){
   .scrolly-grid{grid-template-columns:1fr;gap:12px;align-content:center}
   .scrolly-step{font-size:clamp(1.5rem,6vw,2.2rem)}
@@ -332,6 +345,14 @@ p{margin:0;text-wrap:pretty}
 .hero-scrollhint{animation:hintPulse 2.6s ease-in-out infinite}
 @keyframes hintPulse{0%,100%{opacity:.55;transform:translateX(-50%) translateY(0)}50%{opacity:1;transform:translateX(-50%) translateY(-6px)}}
 
+/* --- Scrollytelling : indication de scroll --- */
+.hint-wheel{animation:hintWheel 1.8s ease-in-out infinite}
+@keyframes hintWheel{0%,100%{transform:translateY(0);opacity:1}50%{transform:translateY(4px);opacity:.35}}
+.hint-svg--swipe{animation:hintSwipe 1.8s ease-in-out infinite}
+@keyframes hintSwipe{0%,100%{transform:translateY(2px)}50%{transform:translateY(-2px)}}
+.hint-svg--chevron{animation:hintChevron 1.8s ease-in-out infinite}
+@keyframes hintChevron{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(3px);opacity:1}}
+
 /* --- Scrollytelling : étapes --- */
 .scrolly-step small{transition:color .5s ease}
 .scrolly-step.is-active small{color:var(--g-blue)}
@@ -399,6 +420,8 @@ p{margin:0;text-wrap:pretty}
 /* --- Mouvement réduit : tout est neutralisé --- */
 @media (prefers-reduced-motion:reduce){
   .hero-scrollhint{animation:none}
+  .hint-wheel,.hint-svg--swipe,.hint-svg--chevron{animation:none}
+  .scrolly-hint{transition:none}
   .hero-bg img{will-change:auto}
   .stage-plaque{transform:translateX(-16%) rotateZ(-3deg)}
   .vcard.is-active .vcard-check,.buy-success:not([hidden]),.buy-error:not([hidden]),.buy-submit.is-shake,.hdr-cart [data-cart-count].is-bump{animation:none}
@@ -452,6 +475,7 @@ p{margin:0;text-wrap:pretty}
   .hero-scrollhint{bottom:max(18px,env(safe-area-inset-bottom))}
   .scrolly-track{height:330svh}
   .scrolly-sticky{height:100svh;padding:72px 0 max(12px,env(safe-area-inset-bottom))}
+  .scrolly-hint{gap:7px;margin:-2px 0 8px;padding:9px 12px;font-size:.6rem;letter-spacing:.1em}
   .scrolly-grid{height:100%;grid-template-rows:auto minmax(0,1fr);gap:10px}
   .scrolly-steps{gap:6px}
   .scrolly-steps .eyebrow{margin-bottom:12px!important}

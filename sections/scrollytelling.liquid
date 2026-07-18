@@ -4,6 +4,23 @@
       <div class="container scrolly-grid">
         <div class="scrolly-steps">
           <h2 class="eyebrow" style="margin-bottom:26px">{{ section.settings.eyebrow | default: 'Comment ça marche' }}</h2>
+          <div class="scrolly-hint" aria-hidden="true">
+            <svg class="hint-svg hint-svg--mouse" viewBox="0 0 20 30" fill="none">
+              <rect x="1.25" y="1.25" width="17.5" height="27.5" rx="8.75" stroke="currentColor" stroke-width="2"/>
+              <line class="hint-wheel" x1="10" y1="7.5" x2="10" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <svg class="hint-svg hint-svg--swipe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 11v-1a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/>
+              <path d="M14 10V9a2 2 0 0 0-2-2a2 2 0 0 0-2 2v1"/>
+              <path d="M10 9.5V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v10"/>
+              <path d="M18 11a2 2 0 1 1 4 0v3a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>
+            </svg>
+            <span class="hint-txt hint-txt--desktop">Faites défiler pour découvrir les étapes</span>
+            <span class="hint-txt hint-txt--mobile">Glissez pour découvrir les étapes</span>
+            <svg class="hint-svg hint-svg--chevron" viewBox="0 0 14 8" fill="none">
+              <path d="M1 1l6 5.5L13 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
           {% for block in section.blocks %}
             <div class="scrolly-step{% if forloop.first %} is-active{% endif %}" data-step {{ block.shopify_attributes }}>
               <small>Étape {{ forloop.index }}</small>

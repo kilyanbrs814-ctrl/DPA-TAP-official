@@ -94,7 +94,7 @@
           "type": "faq",
           "settings": {
             "question": "Faut-il un abonnement pour utiliser la plaque ?",
-            "answer": "<p>Non. L’achat de la plaque n’entraîne aucun abonnement. Le lien enregistré dans la puce reste lisible sans facturation au nombre d’utilisations.</p>"
+            "answer": "<p>Non. L’achat d’une plaque NFC avis Google chez DPA TAP n’entraîne aucun abonnement. Le lien enregistré dans la puce reste lisible sans facturation au nombre d’utilisations.</p>"
           }
         },
         "faq_2": {
@@ -141,8 +141,8 @@
       ],
       "settings": {
         "eyebrow": "Plaque NFC professionnelle",
-        "heading": "Plaque NFC Avis Google pour Commerce",
-        "intro": "<p>Collectez des avis Google plus simplement avec une plaque NFC personnalisée pour votre établissement, programmée avant l’expédition, sans abonnement et compatible avec les iPhone et téléphones Android récents.</p>",
+        "heading": "Plaque Avis Google NFC",
+        "intro": "<p>Collectez des avis Google plus simplement : cette plaque NFC avis Google, personnalisée pour votre établissement, est programmée avant l’expédition, sans abonnement et compatible avec les iPhone et téléphones Android récents.</p>",
         "faq_eyebrow": "Questions fréquentes",
         "faq_heading": "Ce qu’il faut savoir avant de commander"
       }

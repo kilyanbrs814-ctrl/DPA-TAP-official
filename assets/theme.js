@@ -130,6 +130,7 @@
     qsa(scope, '[data-scrolly]').forEach(function (root) {
       if (!guard(root, 'Scrolly')) return;
       if (reduced() || window.matchMedia('(max-width: 900px) and (max-height: 560px)').matches || !('IntersectionObserver' in window)) { root.classList.add('is-static'); return; }
+      root.classList.remove('is-begun');
       var stage = root.querySelector('.scrolly-stage');
       var steps = root.querySelectorAll('[data-step]');
       var track = root.querySelector('.scrolly-track');
@@ -144,6 +145,7 @@
         var v = p.toFixed(4);
         root.style.setProperty('--p', v);
         stage.style.setProperty('--p', v);
+        root.classList.toggle('is-begun', p > 0.05);
         var phase = p < 1 / 3 ? 1 : p < 2 / 3 ? 2 : 3;
         if (stage.dataset.phase !== String(phase)) {
           stage.dataset.phase = phase;
