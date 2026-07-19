@@ -12,13 +12,13 @@
     "hero": {
       "type": "hero",
       "settings": {
-        "title_line1": "Un avis Google",
-        "title_line2": "en un geste.",
-        "subtitle": "La plaque NFC pour avis Google qui transforme chaque client satisfait en une preuve qui fait grandir votre commerce.",
+        "title_line1": "Un geste.",
+        "title_line2": "Un avis.",
+        "subtitle": "Transformez chaque client satisfait en une preuve qui fait grandir votre commerce.",
         "cta1_label": "Choisir ma plaque",
-        "cta1_link": "",
+        "cta1_link": "/#modeles",
         "cta2_label": "Voir comment ça marche",
-        "cta2_link": "",
+        "cta2_link": "/#fonctionnement",
         "scroll_hint": "Faites défiler"
       }
     },
@@ -61,7 +61,7 @@
           "type": "benefit",
           "settings": {
             "title": "Plus d’avis",
-            "text": "Demander un avis devient un réflexe naturel, sans QR code ni discours."
+            "text": "Demander un avis devient un réflexe naturel, sans recherche manuelle ni long discours."
           }
         },
         "b2": {
@@ -74,8 +74,8 @@
         "b3": {
           "type": "benefit",
           "settings": {
-            "title": "Remplacement garanti",
-            "text": "En cas de casse, votre plaque NFC pour avis Google est remplacée par une neuve, afin de continuer à collecter les avis de vos clients sans interruption."
+            "title": "Un geste suffit",
+            "text": "Le client approche son téléphone et accède directement à votre page d’avis Google."
           }
         },
         "b4": {
@@ -154,7 +154,7 @@
       ],
       "settings": {
         "eyebrow": "En situation",
-        "title": "Chez eux, elle travaille déjà."
+        "title": "Exemples d’installation"
       }
     },
     "install": {
@@ -206,7 +206,7 @@
           "type": "qa",
           "settings": {
             "question": "Le client doit-il installer une application ?",
-            "answer": "<p>Non. Le NFC est natif sur tous les smartphones récents, iPhone comme Android. Le client approche son téléphone, la page d’avis s’ouvre, il note. C’est tout.</p>"
+            "answer": "<p>Non. La majorité des smartphones récents, iPhone comme Android, peuvent lire le NFC sans application dédiée. La compatibilité dépend du modèle et des réglages du téléphone.</p>"
           }
         },
         "q3": {

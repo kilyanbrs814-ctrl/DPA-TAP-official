@@ -13,7 +13,9 @@
       <a href="{{ section.settings.link_faq | default: '/#faq' }}">FAQ</a>
       {% if guides_url != blank %}<a href="{{ guides_url }}">{{ section.settings.guides_label | default: 'Guides' }}</a>{% endif %}
       <a href="{{ routes.cart_url }}">Panier</a>
-      {% for link in linklists[section.settings.menu].links %}
+      {% assign additional_menu = linklists[section.settings.menu] %}
+      {% if additional_menu == blank %}{% assign additional_menu = linklists['footer'] %}{% endif %}
+      {% for link in additional_menu.links %}
         <a href="{{ link.url }}">{{ link.title }}</a>
       {% endfor %}
     </nav>
