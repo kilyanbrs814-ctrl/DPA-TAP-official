@@ -160,9 +160,11 @@
       "blocks": {
         "guide_1": { "type": "guide", "settings": { "article": "guides/plaque-nfc-avis-google-comment-ca-marche" } },
         "guide_2": { "type": "guide", "settings": { "article": "guides/nfc-ou-qr-code-avis-google" } },
-        "guide_3": { "type": "guide", "settings": { "article": "guides/comment-obtenir-lien-avis-google" } }
+        "guide_3": { "type": "guide", "settings": { "article": "guides/comment-obtenir-lien-avis-google" } },
+        "guide_4": { "type": "guide", "settings": { "article": "guides/prix-plaque-nfc-avis-google" } },
+        "guide_5": { "type": "guide", "settings": { "article": "guides/plaque-avis-google-est-ce-que-ca-marche" } }
       },
-      "block_order": ["guide_1", "guide_2", "guide_3"],
+      "block_order": ["guide_1", "guide_2", "guide_3", "guide_4", "guide_5"],
       "settings": {
         "eyebrow": "Pour aller plus loin",
         "heading": "Nos guides",
