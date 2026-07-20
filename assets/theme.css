@@ -920,3 +920,13 @@ p{margin:0;text-wrap:pretty}
     grid-row: 3 !important;
   }
 }
+/* Centrage bannière cookies — PC uniquement */
+
+@media (min-width: 601px) {
+  #shopify-pc__banner {
+    right: auto !important;
+    bottom: 20px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+}
