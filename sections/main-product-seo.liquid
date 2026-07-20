@@ -37,6 +37,12 @@
         <h1 class="h-lg">{{ section.settings.heading }}</h1>
         <div class="seo-product__intro rte">{{ section.settings.intro }}</div>
         {% render 'buy-form', product: product %}
+        <ul class="seo-product__trust">
+          <li><a href="/pages/a-propos">Qui vend cette plaque</a></li>
+          <li><a href="/pages/contact">Nous contacter</a></li>
+          <li><a href="/policies/shipping-policy">Expédition</a></li>
+          <li><a href="/policies/refund-policy">Retours et remboursement</a></li>
+        </ul>
       </div>
     </div>
 
@@ -294,6 +300,30 @@
     padding: 0;
     border: 0;
     background: transparent;
+  }
+
+  .seo-product__trust {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 22px;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.11);
+    list-style: none;
+  }
+
+  .seo-product__trust a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    color: color-mix(in srgb, var(--c-paper) 62%, transparent);
+    font-size: 0.86rem;
+    text-underline-offset: 4px;
+  }
+
+  .seo-product__trust a:hover,
+  .seo-product__trust a:focus-visible {
+    color: var(--c-paper);
   }
 
   /* ---- Composition éditoriale ---- */
