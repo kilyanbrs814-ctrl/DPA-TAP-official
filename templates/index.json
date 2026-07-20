@@ -230,6 +230,13 @@
             "question": "Sur quelles surfaces tient l’adhésif ?",
             "answer": "<p>L’adhésif 3M au verso tient sur bois, verre, métal, carrelage et stratifié. Format 10 × 10 cm, résistant aux nettoyages quotidiens.</p>"
           }
+        },
+        "q6": {
+          "type": "qa",
+          "settings": {
+            "question": "La plaque convient-elle à mon type de commerce ?",
+            "answer": "<p>Elle est pensée pour les établissements qui reçoivent du public et encaissent sur place : restaurants, cafés, salons, instituts, boutiques, hôtels. L’emplacement et le bon moment changent selon le métier — voir nos pages dédiées aux <a href=\"/pages/plaque-avis-google-restaurant\">restaurants</a> et aux <a href=\"/pages/plaque-avis-google-coiffeur\">salons de coiffure</a>.</p>"
+          }
         }
       },
       "block_order": [
@@ -237,7 +244,8 @@
         "q2",
         "q3",
         "q4",
-        "q5"
+        "q5",
+        "q6"
       ],
       "settings": {
         "eyebrow": "FAQ",

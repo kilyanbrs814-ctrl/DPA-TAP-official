@@ -124,6 +124,13 @@
             "question": "Pourquoi un téléphone ne détecte-t-il pas immédiatement la plaque ?",
             "answer": "<p>Le NFC peut être désactivé, absent sur un ancien appareil ou lu depuis une autre zone selon le modèle. Retirez les accessoires très épais, activez le NFC si nécessaire et déplacez lentement le haut ou le dos du téléphone au-dessus de la plaque.</p>"
           }
+        },
+        "faq_6": {
+          "type": "faq",
+          "settings": {
+            "question": "Où faut-il la poser dans mon établissement ?",
+            "answer": "<p>Au point où le client s’arrête et règle : comptoir de caisse, terminal de paiement ou accueil. Le bon emplacement et le bon moment dépendent du métier — nous les détaillons pour les <a href=\"/pages/plaque-avis-google-restaurant\">restaurants</a> et pour les <a href=\"/pages/plaque-avis-google-coiffeur\">salons de coiffure</a>.</p>"
+          }
         }
       },
       "block_order": [
@@ -137,7 +144,8 @@
         "faq_2",
         "faq_3",
         "faq_4",
-        "faq_5"
+        "faq_5",
+        "faq_6"
       ],
       "settings": {
         "eyebrow": "Plaque avis Google pour commerce",
