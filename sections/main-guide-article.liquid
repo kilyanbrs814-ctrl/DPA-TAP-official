@@ -1,10 +1,12 @@
 {% liquid
   assign featured_product = section.settings.product
-  assign article_kind = 'link'
+  assign article_kind = 'plain'
   if article.handle contains 'comment-ca-marche'
     assign article_kind = 'nfc'
   elsif article.handle contains 'nfc-ou-qr-code'
     assign article_kind = 'compare'
+  elsif article.handle contains 'comment-obtenir-lien'
+    assign article_kind = 'link'
   endif
 
   assign content_marker = '<!--guide-body-->'
@@ -70,7 +72,7 @@
                 <small>{{ 'seo.guide_compare.frame' | t }}</small>
               </div>
             </div>
-          {% else %}
+          {% elsif article_kind == 'link' %}
             <div class="link-scene" role="img" aria-label="{{ 'seo.guide_link.hero_alt' | t }}">
               <div class="link-scene__browser" aria-hidden="true">
                 <div class="link-scene__browserbar"><span></span><span></span><span></span></div>
@@ -120,7 +122,7 @@
             </div>
             <aside class="guide-callout"><span>{{ 'seo.guide_compare.choice_label' | t }}</span><p>{{ 'seo.guide_compare.choice_text' | t }}</p></aside>
           </section>
-        {% else %}
+        {% when 'link' %}
           <section class="guide-feature guide-feature--link" aria-labelledby="guide-link-heading">
             <div class="guide-section-heading">
               <p class="eyebrow">{{ 'seo.guide_link.eyebrow' | t }}</p>
