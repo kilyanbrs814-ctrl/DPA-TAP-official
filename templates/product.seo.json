@@ -18,7 +18,7 @@
           "type": "process",
           "settings": {
             "eyebrow": "Fonctionnement",
-            "heading": "Du contact NFC à la page d’avis Google",
+            "heading": "Du geste du client à l’avis publié",
             "step1_title": "Le client approche son téléphone",
             "step1_text": "La zone NFC de son iPhone ou de son téléphone Android compatible passe au-dessus de la plaque.",
             "step2_title": "Une notification apparaît",
@@ -140,9 +140,9 @@
         "faq_5"
       ],
       "settings": {
-        "eyebrow": "Plaque NFC professionnelle",
-        "heading": "Plaque Avis Google NFC",
-        "intro": "<p>Collectez des avis Google plus simplement : cette plaque NFC avis Google, personnalisée pour votre établissement, est programmée avant l’expédition, sans abonnement et compatible avec les iPhone et téléphones Android récents.</p>",
+        "eyebrow": "Plaque avis Google pour commerce",
+        "heading": "Plaque NFC Avis Google pour commerce",
+        "intro": "<p>Vos clients laissent leur avis Google pendant qu’ils sont encore chez vous : ils approchent leur téléphone de la plaque posée sur le comptoir, votre fiche s’ouvre, ils notent. La puce NFC est programmée avec le lien de votre établissement avant l’expédition. Aucun abonnement, aucune application à installer.</p>",
         "faq_eyebrow": "Questions fréquentes",
         "faq_heading": "Ce qu’il faut savoir avant de commander"
       }

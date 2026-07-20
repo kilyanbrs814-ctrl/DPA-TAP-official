@@ -12,9 +12,9 @@
     "hero": {
       "type": "hero",
       "settings": {
-        "title_line1": "Un avis Google",
-        "title_line2": "en un geste.",
-        "subtitle": "La plaque NFC pour avis Google qui transforme chaque client satisfait en une preuve qui fait grandir votre commerce.",
+        "title_line1": "Plus d’avis",
+        "title_line2": "Google.",
+        "subtitle": "Vos clients laissent leur avis Google en approchant leur téléphone. Plaque programmée avec votre lien avant l’envoi, sans abonnement ni application.",
         "cta1_label": "Choisir ma plaque",
         "cta1_link": "/#modeles",
         "cta2_label": "Voir comment ça marche",
@@ -62,7 +62,7 @@
           "type": "benefit",
           "settings": {
             "title": "Plus d’avis",
-            "text": "Demander un avis devient un réflexe naturel, sans recherche manuelle ni long discours."
+            "text": "Demander un avis devient un réflexe au moment de l’encaissement, sans recherche ni long discours."
           }
         },
         "b2": {
@@ -89,8 +89,8 @@
         "b5": {
           "type": "benefit",
           "settings": {
-            "title": "Prête à l’emploi",
-            "text": "NFC programmé avec votre lien Google avant expédition. Posez-la, c’est tout."
+            "title": "Sans abonnement",
+            "text": "Vous achetez la plaque une fois. Programmée avec votre lien Google avant l’envoi, elle est prête à poser."
           }
         }
       },
@@ -103,15 +103,15 @@
       ],
       "settings": {
         "eyebrow": "Bénéfices",
-        "title": "Ce que la plaque change, concrètement."
+        "title": "Ce que vous y gagnez, concrètement."
       }
     },
     "buy": {
       "type": "product-buy",
       "settings": {
-        "title_line1": "Deux designs.",
-        "title_line2": "Un même impact.",
-        "text": "Midnight Black pour les comptoirs affirmés, Google Blue pour les enseignes lumineuses. Les deux embarquent la même puce NFC, programmée pour vous.",
+        "title_line1": "Noir ou bleu.",
+        "title_line2": "Prête à poser.",
+        "text": "Les deux modèles embarquent la même puce NFC, programmée avec le lien d’avis de votre établissement avant l’envoi. À l’unité ou en pack de deux.",
         "product": "plaque-nfc-avis-google"
       }
     },
