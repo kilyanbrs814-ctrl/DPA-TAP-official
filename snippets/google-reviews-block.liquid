@@ -31,7 +31,12 @@
   endunless
   assign gr_avg_txt = gr_avg_txt | replace: '.', ','
 -%}
-
+{%- comment -%}
+  Sans synchronisation Google réussie depuis 30 jours, la section entière
+  disparaît plutôt que d'exposer des avis périmés.
+{%- endcomment -%}
+{%- capture gr_fresh -%}{%- render 'google-data-fresh' -%}{%- endcapture -%}
+{%- if gr_fresh == '1' -%}
 <div class="g-reviews" id="avis-google" data-g-reviews>
   <header class="g-reviews__head">
     <p class="eyebrow">Avis Google</p>
@@ -136,3 +141,4 @@
     </p>
   {%- endif -%}
 </div>
+{%- endif -%}

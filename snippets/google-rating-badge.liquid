@@ -19,7 +19,12 @@
   assign gb_avg = shop.metafields.dpa_google.rating_avg.value
   assign gb_count = shop.metafields.dpa_google.rating_count.value | plus: 0
 -%}
-{%- if gb_avg != blank and gb_count > 0 -%}
+{%- comment -%}
+  Sans synchronisation Google réussie depuis 30 jours, le badge disparaît
+  plutôt que d'afficher une note périmée.
+{%- endcomment -%}
+{%- capture gb_fresh -%}{%- render 'google-data-fresh' -%}{%- endcapture -%}
+{%- if gb_fresh == '1' and gb_avg != blank and gb_count > 0 -%}
   {%- liquid
     # `append: ''` force la conversion en chaîne : sur un nombre Liquid,
     # `contains` renvoie toujours false et ajouterait un « .0 » en trop.

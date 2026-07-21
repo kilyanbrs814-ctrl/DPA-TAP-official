@@ -1,0 +1,28 @@
+{%- comment -%}
+  Fraîcheur des données Google — garde-fou unique des 5 emplacements.
+
+  Politique Google Business Profile API : sans synchronisation réussie depuis
+  30 jours, on n'affiche plus rien plutôt que des données périmées.
+
+  Ce contrôle est volontairement dupliqué côté thème alors que le connecteur
+  purge déjà le cache : si le Worker cesse de tourner, plus personne ne purge,
+  et c'est justement le cas où l'affichage deviendrait mensonger. Le thème doit
+  donc pouvoir décider seul.
+
+  Sortie : « 1 » si les données sont exploitables, chaîne vide sinon.
+  Usage :
+    {%- capture gb_fresh -%}{%- render 'google-data-fresh' -%}{%- endcapture -%}
+    {%- if gb_fresh == '1' -%} ... {%- endif -%}
+{%- endcomment -%}
+{%- liquid
+  assign gdf_last = shop.metafields.dpa_google.last_sync.value
+  if gdf_last != blank
+    assign gdf_now = 'now' | date: '%s' | plus: 0
+    assign gdf_then = gdf_last | date: '%s' | plus: 0
+    assign gdf_age = gdf_now | minus: gdf_then
+    # 2 592 000 secondes = 30 jours
+    if gdf_age <= 2592000 and gdf_age >= 0
+      echo '1'
+    endif
+  endif
+-%}
