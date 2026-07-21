@@ -4,10 +4,17 @@
   Politique Google Business Profile API : sans synchronisation réussie depuis
   30 jours, on n'affiche plus rien plutôt que des données périmées.
 
-  Ce contrôle est volontairement dupliqué côté thème alors que le connecteur
-  purge déjà le cache : si le Worker cesse de tourner, plus personne ne purge,
-  et c'est justement le cas où l'affichage deviendrait mensonger. Le thème doit
-  donc pouvoir décider seul.
+  ATTENTION — ce snippet MASQUE, il ne SUPPRIME PAS.
+
+  La suppression effective des données Google (métaobjets d'avis + métachamps
+  rating_avg, rating_count et reviews) est faite par le connecteur, dans sa
+  fonction purge(), au passage quotidien suivant le dépassement des 30 jours.
+  Ce contrôle côté thème n'en est que le filet : il garantit qu'aucune donnée
+  périmée n'est affichée dans l'intervalle entre la péremption et le passage du
+  Worker, et surtout si le Worker cesse complètement de tourner — cas où plus
+  personne ne purgerait, et où l'affichage deviendrait mensonger.
+
+  Autrement dit : masquer ici n'exonère jamais le connecteur de purger.
 
   Sortie : « 1 » si les données sont exploitables, chaîne vide sinon.
   Usage :
