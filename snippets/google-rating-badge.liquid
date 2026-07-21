@@ -21,7 +21,7 @@
 -%}
 {%- if gb_avg != blank and gb_count > 0 -%}
   {%- liquid
-# `append: ''` force la conversion en chaîne : sur un nombre Liquid,
+    # `append: ''` force la conversion en chaîne : sur un nombre Liquid,
     # `contains` renvoie toujours false et ajouterait un « .0 » en trop.
     assign gb_avg_txt = gb_avg | round: 1 | append: ''
     unless gb_avg_txt contains '.'

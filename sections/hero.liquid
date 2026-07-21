@@ -33,9 +33,14 @@
         <a class="btn btn--blue" href="{{ section.settings.cta1_link | default: '/products/plaque-nfc-avis-google' }}">{{ section.settings.cta1_label | default: 'Choisir ma plaque' }}</a>
         <a class="btn btn--ghost" href="{{ section.settings.cta2_link | default: '#fonctionnement' }}">{{ section.settings.cta2_label | default: 'Voir comment ça marche' }}</a>
       </div>
-      {%- comment -%} Emplacement 1 — badge de confiance sous le CTA. {%- endcomment -%}
+      {%- comment -%}
+        Emplacement 1 — badge de confiance sous le CTA.
+        Le carrousel complet ne vit que sur la fiche produit : le lien pointe
+        donc vers l'ancre de cette page, pas vers une ancre locale.
+      {%- endcomment -%}
       <div class="reveal">
-        {%- render 'google-rating-badge', variant: 'hero', href: '#avis-google' -%}
+        {%- assign hero_reviews_link = section.settings.reviews_link | default: '/products/plaque-nfc-avis-google' | append: '#avis-google' -%}
+        {%- render 'google-rating-badge', variant: 'hero', href: hero_reviews_link -%}
       </div>
     </div>
   </div>
@@ -55,7 +60,8 @@
     { "type": "url", "id": "cta2_link", "label": "Bouton 2 — lien" },
     { "type": "image_picker", "id": "image", "label": "Image de fond (ordinateur)" },
     { "type": "image_picker", "id": "image_mobile", "label": "Image de fond (mobile)" },
-    { "type": "text", "id": "scroll_hint", "label": "Indication de défilement", "default": "Faites défiler" }
+    { "type": "text", "id": "scroll_hint", "label": "Indication de défilement", "default": "Faites défiler" },
+    { "type": "url", "id": "reviews_link", "label": "Lien du badge d’avis", "info": "Page portant le carrousel d’avis. L’ancre #avis-google est ajoutée automatiquement." }
   ],
   "presets": [{ "name": "Hero immersif" }]
 }

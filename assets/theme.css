@@ -933,10 +933,14 @@ p{margin:0;text-wrap:pretty}
 
 /* ===================== AVIS GOOGLE ===================== */
 
-/* Texte réservé aux lecteurs d'écran, scopé aux composants d'avis.
-   NB : le thème utilise déjà `.visually-hidden` dans main-cart.liquid sans
-   jamais la définir — bug préexistant laissé intact, hors périmètre. */
-.g-vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+/* Texte réservé aux lecteurs d'écran.
+   `.visually-hidden` était utilisée dans main-cart.liquid sans jamais être
+   définie : les libellés « Retirer » et « Quantité », destinés aux seuls
+   lecteurs d'écran, s'affichaient à l'écran. La technique ci-dessous les
+   retire du rendu visuel sans les sortir de l'arbre d'accessibilité et sans
+   décaler la mise en page (élément hors flux, dimensions nulles). */
+.g-vh,
+.visually-hidden{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
 
 /* Étoiles : la largeur dorée suit la note réelle, donc étoile partielle
    dès que la moyenne n'est plus un entier. */
