@@ -36,6 +36,8 @@
         </div>
         <div class="buy-form-col reveal">
           <h3 class="buy-title">{{ product.title }}</h3>
+          {%- comment -%} Emplacement 2 — sous le nom du produit, avant le prix (rendu par buy-form). {%- endcomment -%}
+          {%- render 'google-rating-badge', variant: 'home_product', href: '#avis-google' -%}
           {% render 'buy-form', product: product %}
         </div>
       </div>

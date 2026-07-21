@@ -33,6 +33,10 @@
         <a class="btn btn--blue" href="{{ section.settings.cta1_link | default: '/products/plaque-nfc-avis-google' }}">{{ section.settings.cta1_label | default: 'Choisir ma plaque' }}</a>
         <a class="btn btn--ghost" href="{{ section.settings.cta2_link | default: '#fonctionnement' }}">{{ section.settings.cta2_label | default: 'Voir comment ça marche' }}</a>
       </div>
+      {%- comment -%} Emplacement 1 — badge de confiance sous le CTA. {%- endcomment -%}
+      <div class="reveal">
+        {%- render 'google-rating-badge', variant: 'hero', href: '#avis-google' -%}
+      </div>
     </div>
   </div>
   <p class="hero-scrollhint">{{ section.settings.scroll_hint | default: 'Faites défiler' }}</p>

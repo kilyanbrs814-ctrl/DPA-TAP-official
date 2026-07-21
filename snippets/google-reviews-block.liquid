@@ -1,0 +1,136 @@
+{%- comment -%}
+  Corps de la section avis Google — partagé entre la section d'accueil
+  (sections/google-reviews.liquid) et la fiche produit (main-product-seo.liquid),
+  pour qu'il n'existe qu'un seul rendu à maintenir.
+
+  Les avis proviennent du métachamp boutique `dpa_google.reviews` (liste de
+  métaobjets `google_review`) alimenté par la synchronisation Google Business
+  Profile. Le contenu est rendu tel quel : ni le nom, ni le texte, ni la date,
+  ni la note ne sont retouchés. Aucune mention « achat vérifié » n'est ajoutée,
+  Google ne fournissant pas cette information.
+
+  Rendu intégralement côté serveur : pas de SDK tiers, pas d'appel réseau au
+  chargement, donc pas de CLS et rien à charger à l'approche du viewport.
+  Le comportement du carrousel vit dans theme.js (chargé une seule fois).
+
+  Paramètres : title, source_note, google_link, initial_count
+{%- endcomment -%}
+{%- liquid
+  assign gr_all = shop.metafields.dpa_google.reviews.value
+  assign gr_avg = shop.metafields.dpa_google.rating_avg.value
+  assign gr_count = shop.metafields.dpa_google.rating_count.value | plus: 0
+  assign gr_profile = shop.metafields.dpa_google.profile_url.value | default: google_link
+  assign gr_shown = gr_all.size | default: 0
+  assign gr_initial = initial_count | default: 6
+
+  assign gr_avg_txt = gr_avg | round: 1
+  unless gr_avg_txt contains '.'
+    assign gr_avg_txt = gr_avg_txt | append: '.0'
+  endunless
+  assign gr_avg_txt = gr_avg_txt | replace: '.', ','
+-%}
+
+<div class="g-reviews" id="avis-google" data-g-reviews>
+  <header class="g-reviews__head">
+    <p class="eyebrow">Avis Google</p>
+    <h2 class="h-lg">{{ title | default: 'Les clients parlent de nos plaques' }}</h2>
+
+    {%- if gr_count > 0 -%}
+      <p class="g-reviews__score">
+        {%- render 'google-stars', rating: gr_avg -%}
+        <span aria-hidden="true">{{ gr_avg_txt }}/5 sur Google — {{ gr_count }} avis clients</span>
+        <span class="g-vh">Note de {{ gr_avg_txt }} sur 5 basée sur {{ gr_count }} avis Google.</span>
+      </p>
+    {%- endif -%}
+
+    <p class="g-reviews__source">
+      {{ source_note | default: "Avis publiés sur la fiche Google de Digital Project Agency, l’entreprise à l’origine de DPA TAP." }}
+    </p>
+  </header>
+
+  {%- if gr_shown > 0 -%}
+    <div class="g-reviews__carousel">
+      <ul class="g-reviews__track" data-g-track role="list">
+        {%- for r in gr_all -%}
+          {%- liquid
+            assign r_rating = r.rating.value | plus: 0
+            assign r_hidden = false
+            if forloop.index > gr_initial
+              assign r_hidden = true
+            endif
+          -%}
+          <li class="g-review"{% if r_hidden %} data-g-extra hidden{% endif %}>
+            <article class="g-review__card">
+              <header class="g-review__top">
+                <div class="g-review__who">
+                  <span class="g-review__avatar" aria-hidden="true">{{ r.author.value | slice: 0 | upcase }}</span>
+                  <div>
+                    <p class="g-review__author">{{ r.author.value }}</p>
+                    <p class="g-review__date">
+                      <time datetime="{{ r.published_at.value | date: '%Y-%m-%d' }}">{{ r.published_at.value | date: '%d/%m/%Y' }}</time>
+                    </p>
+                  </div>
+                </div>
+                <span class="g-review__g" aria-hidden="true" title="Avis publié sur Google">G</span>
+              </header>
+
+              <p class="g-review__stars">
+                {%- render 'google-stars', rating: r_rating -%}
+                <span class="g-vh">Note de {{ r_rating }} sur 5. Avis publié sur Google.</span>
+              </p>
+
+              {%- if r.body.value != blank -%}
+                <p class="g-review__body">{{ r.body.value }}</p>
+              {%- endif -%}
+
+              {%- if r.reply.value != blank -%}
+                <div class="g-review__reply">
+                  <p class="g-review__reply-label">Réponse de DPA TAP</p>
+                  <p>{{ r.reply.value }}</p>
+                </div>
+              {%- endif -%}
+            </article>
+          </li>
+        {%- endfor -%}
+      </ul>
+
+      <div class="g-reviews__nav">
+        <button type="button" class="g-reviews__arrow" data-g-prev aria-label="Avis précédents">←</button>
+        <button type="button" class="g-reviews__arrow" data-g-next aria-label="Avis suivants">→</button>
+      </div>
+    </div>
+
+    <div class="g-reviews__foot">
+      {%- if gr_shown > gr_initial -%}
+        <button type="button" class="btn btn--ghost g-reviews__more" data-g-more aria-expanded="false">
+          Afficher les {{ gr_shown | minus: gr_initial }} autres avis
+        </button>
+      {%- endif -%}
+
+      {%- if gr_profile != blank -%}
+        <a class="g-reviews__link" href="{{ gr_profile }}" target="_blank" rel="noopener nofollow">
+          Voir tous les avis sur Google
+        </a>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%}
+      Honnêteté sur la couverture : si la synchronisation n'a pas ramené autant
+      d'avis que Google en compte, on l'indique au lieu de laisser croire que
+      la liste est exhaustive.
+    {%- endcomment -%}
+    {%- if gr_count > gr_shown -%}
+      <p class="g-reviews__partial">
+        {{ gr_shown }} avis affichés sur les {{ gr_count }} publiés sur notre fiche Google.
+        {%- if gr_profile != blank %} <a href="{{ gr_profile }}" target="_blank" rel="noopener nofollow">Consulter la totalité sur Google</a>.{% endif -%}
+      </p>
+    {%- endif -%}
+
+  {%- else -%}
+    {%- comment -%} Aucun avis renvoyé : on n'invente rien, on renvoie vers Google. {%- endcomment -%}
+    <p class="g-reviews__empty">
+      Les avis sont momentanément indisponibles.
+      {%- if gr_profile != blank %} <a href="{{ gr_profile }}" target="_blank" rel="noopener nofollow">Consultez-les directement sur notre fiche Google</a>.{% endif -%}
+    </p>
+  {%- endif -%}
+</div>

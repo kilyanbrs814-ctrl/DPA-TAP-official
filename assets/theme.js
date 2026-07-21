@@ -456,6 +456,7 @@
 
       form.addEventListener('submit', function (ev) {
         ev.preventDefault();
+        var redirecting = false;
         if (errEl) errEl.hidden = true;
         if (okEl) okEl.hidden = true;
         if (!form.checkValidity()) {
@@ -513,6 +514,17 @@
         }).then(function (cart) {
           setCount(cart.item_count);
           if (okEl) { okEl.hidden = false; }
+          /* Redirection vers la page panier, uniquement après que Shopify a
+             confirmé l'ajout ET que /cart.js montre bien une ligne : en cas
+             d'erreur le catch prend la main et on reste sur la page.
+             `routes.cart` vient de routes.cart_url (theme.liquid), jamais d'une
+             URL codée en dur. Le bouton reste désactivé pendant la navigation,
+             ce qui empêche tout second ajout. */
+          if (cart && cart.item_count > 0) {
+            redirecting = true;
+            window.location.assign(routes.cart);
+            return;
+          }
           if (btn) {
             btn.classList.add('is-added');
             if (addedTimer) clearTimeout(addedTimer);
@@ -530,6 +542,9 @@
             btn.classList.add('is-shake');
           }
         }).finally(function () {
+          /* Pendant la navigation vers /cart, on laisse le bouton verrouillé :
+             le réactiver rouvrirait une fenêtre de double ajout. */
+          if (redirecting) return;
           if (btn) {
             btn.classList.remove('is-loading');
             btn.removeAttribute('aria-busy');
@@ -537,6 +552,50 @@
           refresh();
         });
       });
+    });
+  }
+
+  /* ---------- Avis Google (carrousel) ---------- */
+  /* Le défilement tactile est assuré par scroll-snap en CSS : ce script ne gère
+     que les flèches et le bouton « Afficher plus ». Aucun listener touch, donc
+     aucun risque d'entrer en conflit avec le scroll vertical de la page. */
+  function initGoogleReviews(scope) {
+    qsa(scope, '[data-g-reviews]').forEach(function (root) {
+      if (!guard(root, 'GReviews')) return;
+      var track = root.querySelector('[data-g-track]');
+      var prev = root.querySelector('[data-g-prev]');
+      var next = root.querySelector('[data-g-next]');
+      var more = root.querySelector('[data-g-more]');
+      if (!track) return;
+
+      function step() {
+        var card = track.querySelector('.g-review:not([hidden])');
+        return card ? card.getBoundingClientRect().width + 18 : track.clientWidth;
+      }
+      function sync() {
+        var max = track.scrollWidth - track.clientWidth - 2;
+        if (prev) prev.disabled = track.scrollLeft <= 2;
+        if (next) next.disabled = track.scrollLeft >= max;
+      }
+      function go(dir) {
+        track.scrollBy({ left: dir * step(), behavior: reduced() ? 'auto' : 'smooth' });
+      }
+
+      if (prev) prev.addEventListener('click', function () { go(-1); });
+      if (next) next.addEventListener('click', function () { go(1); });
+      track.addEventListener('scroll', sync, { passive: true });
+      window.addEventListener('resize', sync);
+      onCleanup(root, function () { window.removeEventListener('resize', sync); });
+
+      if (more) {
+        more.addEventListener('click', function () {
+          qsa(root, '[data-g-extra]').forEach(function (el) { el.hidden = false; });
+          more.setAttribute('aria-expanded', 'true');
+          more.remove();
+          sync();
+        });
+      }
+      sync();
     });
   }
 
@@ -549,6 +608,7 @@
     initSpotlight(scope);
     initFaq(scope);
     initBuyForms(scope);
+    initGoogleReviews(scope);
   }
   initAll(document);
   if (typeof DPA.cartCount === 'number') setCount(DPA.cartCount, true);

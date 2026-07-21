@@ -193,6 +193,13 @@
         "title": "Installée en trente secondes."
       }
     },
+    "reviews": {
+      "type": "google-reviews",
+      "settings": {
+        "title": "Les clients parlent de nos plaques",
+        "initial_count": 6
+      }
+    },
     "faq": {
       "type": "faq",
       "blocks": {
@@ -260,6 +267,7 @@
     "buy",
     "install",
     "gallery",
+    "reviews",
     "faq"
   ]
 }
