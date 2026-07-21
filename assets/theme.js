@@ -572,13 +572,21 @@
         var card = track.querySelector('.g-review:not([hidden])');
         return card ? card.getBoundingClientRect().width + 18 : track.clientWidth;
       }
-      function sync() {
+      function syncFrom(pos) {
         var max = track.scrollWidth - track.clientWidth - 2;
-        if (prev) prev.disabled = track.scrollLeft <= 2;
-        if (next) next.disabled = track.scrollLeft >= max;
+        if (prev) prev.disabled = pos <= 2;
+        if (next) next.disabled = pos >= max;
       }
+      function sync() { syncFrom(track.scrollLeft); }
+      /* Cible absolue et bornée via scrollTo. L'état des flèches est recalculé
+         depuis la cible sans attendre l'évènement `scroll` : celui-ci est
+         étranglé par le navigateur et laissait le bouton précédent désactivé
+         après un défilement animé. */
       function go(dir) {
-        track.scrollBy({ left: dir * step(), behavior: reduced() ? 'auto' : 'smooth' });
+        var max = track.scrollWidth - track.clientWidth;
+        var target = Math.max(0, Math.min(max, track.scrollLeft + dir * step()));
+        track.scrollTo({ left: target, behavior: reduced() ? 'auto' : 'smooth' });
+        syncFrom(target);
       }
 
       if (prev) prev.addEventListener('click', function () { go(-1); });
