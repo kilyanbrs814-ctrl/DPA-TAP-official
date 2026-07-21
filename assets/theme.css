@@ -504,6 +504,23 @@ p{margin:0;text-wrap:pretty}
   .scrolly.is-static .stage-plaque{transform:translate(-72%,-50%) rotateZ(-3deg)}
 }
 
+/* Fond Hero mobile dédié (image portrait dpa-hero-mobile-1080x1920.webp).
+   Sous 768 px uniquement — le desktop n'est pas concerné et reste inchangé.
+
+   L'image est ancrée en bas, à hauteur naturelle (aucune déformation, pleine
+   largeur) : le téléphone, la main et la plaque occupent le bas. Le haut noir
+   de l'image se fond dans le fond sombre du Hero et accueille le texte et les
+   boutons — aucun ne masque le produit. Le contenu est aligné en haut, alors
+   que le desktop reste centré verticalement.
+   Placé après le bloc 900 px pour primer sur son overlay. */
+@media (max-width:767px){
+  .hero{align-items:start}
+  .hero-bg{inset:auto 0 0 0;height:auto}
+  .hero-bg picture{height:auto}
+  .hero-bg img{position:static;width:100%;height:auto;transform:none!important}
+  .hero-bg::after{background:linear-gradient(180deg,rgba(11,11,12,.6) 0%,rgba(11,11,12,0) 22%)}
+}
+
 @media (max-width:760px){
   .h-display{font-size:clamp(2.55rem,14vw,4.6rem)}
   .h-xl{font-size:clamp(2rem,10vw,3rem)}
