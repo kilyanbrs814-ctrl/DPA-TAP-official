@@ -1,0 +1,35 @@
+{%- comment -%}
+  Fraîcheur des données Google — garde-fou unique des 5 emplacements.
+
+  Politique Google Business Profile API : sans synchronisation réussie depuis
+  30 jours, on n'affiche plus rien plutôt que des données périmées.
+
+  ATTENTION — ce snippet MASQUE, il ne SUPPRIME PAS.
+
+  La suppression effective des données Google (métaobjets d'avis + métachamps
+  rating_avg, rating_count et reviews) est faite par le connecteur, dans sa
+  fonction purge(), au passage quotidien suivant le dépassement des 30 jours.
+  Ce contrôle côté thème n'en est que le filet : il garantit qu'aucune donnée
+  périmée n'est affichée dans l'intervalle entre la péremption et le passage du
+  Worker, et surtout si le Worker cesse complètement de tourner — cas où plus
+  personne ne purgerait, et où l'affichage deviendrait mensonger.
+
+  Autrement dit : masquer ici n'exonère jamais le connecteur de purger.
+
+  Sortie : « 1 » si les données sont exploitables, chaîne vide sinon.
+  Usage :
+    {%- capture gb_fresh -%}{%- render 'google-data-fresh' -%}{%- endcapture -%}
+    {%- if gb_fresh == '1' -%} ... {%- endif -%}
+{%- endcomment -%}
+{%- liquid
+  assign gdf_last = shop.metafields.dpa_google.last_sync.value
+  if gdf_last != blank
+    assign gdf_now = 'now' | date: '%s' | plus: 0
+    assign gdf_then = gdf_last | date: '%s' | plus: 0
+    assign gdf_age = gdf_now | minus: gdf_then
+    # 2 592 000 secondes = 30 jours
+    if gdf_age <= 2592000 and gdf_age >= 0
+      echo '1'
+    endif
+  endif
+-%}

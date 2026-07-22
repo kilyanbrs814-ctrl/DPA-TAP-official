@@ -1,0 +1,29 @@
+{%- comment -%}
+  Section « Avis Google » — enveloppe fine autour du snippet partagé.
+  Le rendu réel vit dans snippets/google-reviews-block.liquid, réutilisé tel
+  quel par la fiche produit, pour qu'il n'existe qu'un seul balisage à maintenir.
+{%- endcomment -%}
+<section class="g-reviews-sec">
+  <div class="container">
+    {%- render 'google-reviews-block',
+      title: section.settings.title,
+      source_note: section.settings.source_note,
+      google_link: section.settings.google_link,
+      initial_count: section.settings.initial_count
+    -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Avis Google",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Titre", "default": "Les clients parlent de nos plaques" },
+    { "type": "textarea", "id": "source_note", "label": "Mention de source", "default": "Avis publiés sur la fiche Google de Digital Project Agency, l’entreprise à l’origine de DPA TAP." },
+    { "type": "url", "id": "google_link", "label": "Lien de secours vers la fiche Google", "info": "Utilisé uniquement si le métachamp dpa_google.profile_url est vide." },
+    { "type": "range", "id": "initial_count", "label": "Avis affichés au chargement", "min": 3, "max": 12, "step": 1, "default": 6 }
+  ],
+  "presets": [{ "name": "Avis Google" }]
+}
+{% endschema %}

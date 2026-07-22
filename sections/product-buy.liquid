@@ -36,6 +36,12 @@
         </div>
         <div class="buy-form-col reveal">
           <h3 class="buy-title">{{ product.title }}</h3>
+          {%- comment -%}
+            Emplacement 2 — sous le nom du produit, avant le prix (rendu par buy-form).
+            Renvoie vers le carrousel de la fiche produit, seul endroit où il existe.
+          {%- endcomment -%}
+          {%- assign buy_reviews_link = product.url | append: '#avis-google' -%}
+          {%- render 'google-rating-badge', variant: 'home_product', href: buy_reviews_link -%}
           {% render 'buy-form', product: product %}
         </div>
       </div>

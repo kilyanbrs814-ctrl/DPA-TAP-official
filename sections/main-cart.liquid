@@ -49,6 +49,12 @@
           <div class="cart-summary">
             <div class="row"><span>Sous-total</span><span>{{ cart.total_price | money }}</span></div>
             <p class="small">Taxes et livraison calculées au paiement.</p>
+            {%- comment -%}
+              Emplacement 5 — réassurance agrégée entre le sous-total et le
+              bouton de paiement. Badge seul : aucune liste d'avis n'est
+              rechargée ici, aucun widget tiers n'est injecté.
+            {%- endcomment -%}
+            {%- render 'google-rating-badge', variant: 'cart' -%}
             <button type="submit" name="checkout" class="btn btn--blue">Paiement sécurisé</button>
           </div>
         </div>

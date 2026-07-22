@@ -1,0 +1,63 @@
+{%- comment -%}
+  Badge de note agrégée — SOURCE UNIQUE des 5 emplacements.
+
+  Toutes les valeurs proviennent des métachamps boutique `dpa_google`, alimentés
+  par la synchronisation Google Business Profile. Aucune note ni aucun nombre
+  n'est écrit en dur ici ni ailleurs dans le thème : si Google passe de 24 à 25
+  avis ou de 5,0 à 4,9, les 5 emplacements suivent automatiquement.
+
+  Rendu 100 % côté serveur : aucun script, aucun SDK tiers, aucun CLS.
+
+  Paramètres :
+    variant  hero | home_product | pdp | cart   (formulation et style)
+    href     lien de destination (facultatif ; sans lien, rendu non cliquable)
+
+  Si la synchronisation n'a rien renvoyé, le badge ne s'affiche pas du tout
+  plutôt que d'afficher une note fausse ou un squelette vide.
+{%- endcomment -%}
+{%- liquid
+  assign gb_avg = shop.metafields.dpa_google.rating_avg.value
+  assign gb_count = shop.metafields.dpa_google.rating_count.value | plus: 0
+-%}
+{%- comment -%}
+  Sans synchronisation Google réussie depuis 30 jours, le badge disparaît
+  plutôt que d'afficher une note périmée.
+{%- endcomment -%}
+{%- capture gb_fresh -%}{%- render 'google-data-fresh' -%}{%- endcapture -%}
+{%- if gb_fresh == '1' and gb_avg != blank and gb_count > 0 -%}
+  {%- liquid
+    # `append: ''` force la conversion en chaîne : sur un nombre Liquid,
+    # `contains` renvoie toujours false et ajouterait un « .0 » en trop.
+    assign gb_avg_txt = gb_avg | round: 1 | append: ''
+    unless gb_avg_txt contains '.'
+      assign gb_avg_txt = gb_avg_txt | append: '.0'
+    endunless
+    assign gb_avg_txt = gb_avg_txt | replace: '.', ','
+
+    case variant
+      when 'hero'
+        assign gb_text = gb_avg_txt | append: '/5 sur Google · ' | append: gb_count | append: ' avis'
+      when 'home_product'
+        assign gb_text = 'Noté ' | append: gb_avg_txt | append: '/5 sur Google — ' | append: gb_count | append: ' avis'
+      when 'pdp'
+        assign gb_text = gb_avg_txt | append: '/5 sur Google — ' | append: gb_count | append: ' avis clients'
+      when 'cart'
+        assign gb_text = 'Entreprise notée ' | append: gb_avg_txt | append: '/5 sur Google par ' | append: gb_count | append: ' clients'
+      else
+        assign gb_text = gb_avg_txt | append: '/5 sur Google — ' | append: gb_count | append: ' avis'
+    endcase
+
+    assign gb_label = 'Note de ' | append: gb_avg_txt | append: ' sur 5 basée sur ' | append: gb_count | append: ' avis Google'
+    assign gb_tag = 'span'
+    if href != blank
+      assign gb_tag = 'a'
+      assign gb_label = gb_label | append: '. Voir les avis.'
+    endif
+  -%}
+  <{{ gb_tag }} class="g-badge g-badge--{{ variant | default: 'pdp' }}"
+    {% if href != blank %}href="{{ href }}" data-g-badge-link{% endif %}
+    aria-label="{{ gb_label | escape }}">
+    {%- render 'google-stars', rating: gb_avg -%}
+    <span class="g-badge__text" aria-hidden="true">{{ gb_text }}</span>
+  </{{ gb_tag }}>
+{%- endif -%}

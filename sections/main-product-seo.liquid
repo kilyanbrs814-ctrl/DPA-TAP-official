@@ -35,6 +35,8 @@
       <div class="seo-product__purchase">
         <p class="eyebrow">{{ section.settings.eyebrow }}</p>
         <h1 class="h-lg">{{ section.settings.heading }}</h1>
+        {%- comment -%} Emplacement 3 — sous le H1, avant le prix (rendu par buy-form). {%- endcomment -%}
+        {%- render 'google-rating-badge', variant: 'pdp', href: '#avis-google' -%}
         <div class="seo-product__intro rte">{{ section.settings.intro }}</div>
         {% render 'buy-form', product: product %}
         <ul class="seo-product__trust">
@@ -233,6 +235,12 @@
             </section>
         {% endcase %}
       {% endfor %}
+
+      {%- comment -%}
+        Emplacement 4 — section complète des avis, juste avant la FAQ.
+        Même snippet que la section d'accueil : un seul balisage à maintenir.
+      {%- endcomment -%}
+      {%- render 'google-reviews-block' -%}
 
       {% assign has_faq = false %}
       {% for block in section.blocks %}

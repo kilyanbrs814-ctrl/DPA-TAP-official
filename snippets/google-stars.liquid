@@ -1,0 +1,23 @@
+{%- comment -%}
+  Étoiles fidèles à la note réelle.
+
+  Rendu purement décoratif : aria-hidden empêche les lecteurs d'écran d'énoncer
+  cinq caractères « étoile ». L'information accessible est portée par le
+  aria-label de l'élément appelant (voir google-rating-badge.liquid).
+
+  Le remplissage est proportionnel : une moyenne de 4,6 affiche 92 % de largeur
+  dorée, donc une étoile partielle. Jamais cinq étoiles pleines par défaut.
+
+  Paramètre : rating (nombre)
+{%- endcomment -%}
+{%- liquid
+  assign gs_rating = rating | times: 1.0
+  if gs_rating > 5
+    assign gs_rating = 5
+  endif
+  if gs_rating < 0
+    assign gs_rating = 0
+  endif
+  assign gs_fill = gs_rating | divided_by: 5.0 | times: 100
+-%}
+<span class="g-stars" style="--g-stars-fill:{{ gs_fill }}%" aria-hidden="true">★★★★★<span class="g-stars__on">★★★★★</span></span>
