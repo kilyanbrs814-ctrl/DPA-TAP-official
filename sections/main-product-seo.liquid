@@ -278,9 +278,27 @@
     color: var(--c-paper);
   }
 
+  {%- comment -%}
+    La piste implicite d'une grille est `auto` : elle ne descend jamais sous le
+    min-content de ses items. `.prod-thumbs` est un conteneur flex dont les
+    miniatures sont inflexibles (`flex:0 0 58/72px`), ce qui lui donne un
+    min-content de ~404 px ; il remontait tel quel jusqu'ici et élargissait
+    toute la page sous ~415 px de large (bande blanche à droite).
+
+    Piste explicite `minmax(0, 1fr)` + `min-width: 0` sur les items : la colonne
+    peut désormais rétrécir sous le min-content de son contenu. Les miniatures
+    gardent leur propre `overflow-x: auto` et défilent toujours à l'intérieur de
+    leur cadre — elles ne peuvent simplement plus pousser le document.
+  {%- endcomment -%}
   .seo-product__hero {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 32px;
+  }
+
+  .seo-product__media,
+  .seo-product__purchase {
+    min-width: 0;
   }
 
   .seo-product__image,

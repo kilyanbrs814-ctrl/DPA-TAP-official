@@ -1,6 +1,11 @@
 /* ============ DPA TAP — theme.css ============ */
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth}
+/* Filet anti-débordement horizontal. `clip` et non `hidden` : il ne crée pas de
+   conteneur de défilement, donc l'en-tête fixe et les éléments sticky continuent
+   de fonctionner. Posé sur html ET body : sur body seul, la valeur se propage au
+   viewport et body redevient `visible`, ce qui laissait passer le débordement.
+   Ce n'est qu'un filet — la cause doit toujours être corrigée à la source. */
+html{scroll-behavior:smooth;overflow-x:clip}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{margin:0;background:var(--c-paper);color:var(--c-ink);
   font:400 16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
