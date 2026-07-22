@@ -1,14 +1,14 @@
 {% comment %}
   Formulaire d'achat connecté aux variantes — utilisé sur l'accueil et la page produit.
   « Pack 2 plaques » : ajoute 2 lignes au panier, avec couleur, nom d'établissement et lien
-  Google propres à chaque plaque. Le prix pack (2 × prix unitaire − 9,50 €) et la livraison
+  Google propres à chaque plaque. Le prix pack (2 × prix unitaire − 14,50 €) et la livraison
   offerte doivent être portés au checkout par deux réductions automatiques Shopify combinables
-  (minimum 2 articles) : « 9,50 € de remise » + « livraison gratuite ». Le montant 950 ci-dessous
+  (minimum 2 articles) : « 14,50 € de remise » + « livraison gratuite ». Le montant 1450 ci-dessous
   doit rester aligné avec PACK_DISCOUNT dans theme.js et avec la réduction automatique.
 {% endcomment %}
 {% assign current = product.selected_or_first_available_variant | default: product.variants.first %}
 {% assign pack_full_price = current.price | times: 2 %}
-{% assign pack_price = pack_full_price | minus: 950 %}
+{% assign pack_price = pack_full_price | minus: 1450 %}
 {% assign v_black = blank %}
 {% assign v_blue = blank %}
 {% for variant in product.variants %}
