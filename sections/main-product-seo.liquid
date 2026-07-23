@@ -168,17 +168,64 @@
                 <p class="eyebrow sp-eyebrow"><span class="sp-index">0{{ chapter }}</span>{{ block.settings.eyebrow }}</p>
                 <h2 class="sp-title">{{ block.settings.heading }}</h2>
               </div>
+              {%- comment -%}
+                Les deux pastilles ne sont plus des aplats CSS : ce sont les
+                photos réelles des plaques. Le lien avec les variantes est
+                conservé — chaque vignette pointe vers la variante Noir / Bleu
+                correspondante, retrouvée par son titre, avec repli sur la fiche
+                produit si aucune correspondance n'existe.
+              {%- endcomment -%}
+              {%- liquid
+                assign sp_variant_noir = blank
+                assign sp_variant_bleu = blank
+                for sp_variant in product.variants
+                  if sp_variant.title == block.settings.color1_label
+                    assign sp_variant_noir = sp_variant
+                  endif
+                  if sp_variant.title == block.settings.color2_label
+                    assign sp_variant_bleu = sp_variant
+                  endif
+                endfor
+                assign sp_url_noir = product.url
+                if sp_variant_noir != blank
+                  assign sp_url_noir = product.url | append: '?variant=' | append: sp_variant_noir.id
+                endif
+                assign sp_url_bleu = product.url
+                if sp_variant_bleu != blank
+                  assign sp_url_bleu = product.url | append: '?variant=' | append: sp_variant_bleu.id
+                endif
+                assign sp_swatch_sizes = '(min-width: 900px) 16vw, calc(50vw - 32px)'
+              -%}
               <p class="sp-size">{{ block.settings.size_value }}<small>{{ block.settings.size_label }}</small></p>
               <div class="sp-swatches">
-                <div class="sp-swatch sp-swatch--noir">
-                  <span class="sp-swatch__tile" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 16c2.4-2.4 2.4-5.6 0-8M12.5 18c3.6-3.6 3.6-8.4 0-12M17 20c4.8-4.8 4.8-11.2 0-16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+                <a class="sp-swatch sp-swatch--noir" href="{{ sp_url_noir }}">
+                  {%- render 'sp-media',
+                    image: block.settings.color1_image,
+                    fallback_url: 'https://cdn.shopify.com/s/files/1/1058/4378/6073/files/ChatGPT_Image_13_juil._2026_13_55_19_1.png?v=1783943744',
+                    alt: 'Plaque NFC avis Google, modèle noir',
+                    sizes: sp_swatch_sizes,
+                    class: 'sp-swatch__media'
+                  -%}
                   <span>{{ block.settings.color1_label }}</span>
-                </div>
-                <div class="sp-swatch sp-swatch--bleu">
-                  <span class="sp-swatch__tile" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 16c2.4-2.4 2.4-5.6 0-8M12.5 18c3.6-3.6 3.6-8.4 0-12M17 20c4.8-4.8 4.8-11.2 0-16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+                </a>
+                <a class="sp-swatch sp-swatch--bleu" href="{{ sp_url_bleu }}">
+                  {%- render 'sp-media',
+                    image: block.settings.color2_image,
+                    fallback_url: 'https://cdn.shopify.com/s/files/1/1058/4378/6073/files/ChatGPT_Image_13_juil._2026_13_55_19_2.png?v=1783943744',
+                    alt: 'Plaque NFC avis Google, modèle bleu',
+                    sizes: sp_swatch_sizes,
+                    class: 'sp-swatch__media'
+                  -%}
                   <span>{{ block.settings.color2_label }}</span>
-                </div>
+                </a>
               </div>
+              {%- render 'sp-media',
+                image: block.settings.size_image,
+                fallback_url: 'https://cdn.shopify.com/s/files/1/1058/4378/6073/files/ChatGPT_Image_13_juil._2026_14_05_28_4.png?v=1783944354',
+                alt: 'Plaque NFC avis Google au format 10 × 10 cm',
+                sizes: '(min-width: 900px) 34vw, calc(100vw - 48px)',
+                class: 'sp-size-visual'
+              -%}
               <p class="sp-formats__text">{{ block.settings.pack_text }}</p>
               <aside class="sp-note">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="10.5" cy="12" r="2.4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M17.5 12H21" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
@@ -736,33 +783,51 @@
     margin-top: 22px;
   }
 
+  {%- comment -%}
+    Les pastilles ne sont plus des aplats de couleur : chacune porte la photo
+    réelle du modèle et pointe vers sa variante. `display:block` + `color:inherit`
+    neutralisent le style de lien hérité (a:hover passait en bleu).
+  {%- endcomment -%}
   .sp-swatch {
+    display: block;
     overflow: hidden;
     border: 1px solid var(--sp-line);
     border-radius: 18px;
     background: var(--sp-panel-2);
+    color: inherit;
+    text-decoration: none;
     transition: border-color 0.25s ease, transform 0.25s ease;
   }
 
-  .sp-swatch__tile {
-    display: grid;
-    place-items: center;
-    aspect-ratio: 2 / 1;
+  .sp-swatch:hover {
+    color: inherit;
+    border-color: var(--g-blue);
   }
 
-  .sp-swatch__tile svg {
-    width: 30px;
-    height: 30px;
-  }
-
-  .sp-swatch--noir .sp-swatch__tile {
+  .sp-swatch__media {
+    aspect-ratio: 1 / 1;
     background: #0a0a0c;
-    color: rgba(255, 255, 255, 0.75);
   }
 
-  .sp-swatch--bleu .sp-swatch__tile {
-    background: var(--g-blue);
-    color: #fff;
+  .sp-swatch__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .sp-size-visual {
+    margin-top: 18px;
+    overflow: hidden;
+    border: 1px solid var(--sp-line);
+    border-radius: 18px;
+    background: var(--sp-panel-2);
+    aspect-ratio: 1 / 1;
+  }
+
+  .sp-size-visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .sp-swatch > span:last-child {
@@ -1116,8 +1181,14 @@
       grid-template-columns: minmax(0, 1fr);
     }
 
-    .sp-swatch__tile {
-      aspect-ratio: 3 / 1;
+    /* Une seule colonne sous 375 px : la photo s'aplatit pour ne pas occuper
+       tout l'écran à elle seule. */
+    .sp-swatch__media {
+      aspect-ratio: 16 / 9;
+    }
+
+    .sp-size-visual {
+      aspect-ratio: 16 / 10;
     }
   }
 
@@ -1247,8 +1318,11 @@
         { "type": "text", "id": "heading", "label": "H2", "default": "10 × 10 cm, en noir ou en bleu" },
         { "type": "text", "id": "size_value", "label": "Dimension affichée", "default": "10 × 10" },
         { "type": "text", "id": "size_label", "label": "Unité", "default": "centimètres" },
-        { "type": "text", "id": "color1_label", "label": "Modèle 1", "default": "Noir" },
-        { "type": "text", "id": "color2_label", "label": "Modèle 2", "default": "Bleu" },
+        { "type": "image_picker", "id": "size_image", "label": "Visuel du format 10 × 10 cm", "info": "Laisser vide pour garder la photo cotée par défaut." },
+        { "type": "text", "id": "color1_label", "label": "Modèle 1", "info": "Doit correspondre au nom exact de la variante pour que la vignette pointe dessus.", "default": "Noir" },
+        { "type": "image_picker", "id": "color1_image", "label": "Modèle 1 — photo", "info": "Laisser vide pour garder la photo de la plaque noire." },
+        { "type": "text", "id": "color2_label", "label": "Modèle 2", "info": "Doit correspondre au nom exact de la variante pour que la vignette pointe dessus.", "default": "Bleu" },
+        { "type": "image_picker", "id": "color2_image", "label": "Modèle 2 — photo", "info": "Laisser vide pour garder la photo de la plaque bleue." },
         { "type": "textarea", "id": "pack_text", "label": "Texte pack", "default": "À l’unité ou en pack de deux : deux plaques noires, deux bleues ou une de chaque couleur, selon les disponibilités affichées." },
         { "type": "text", "id": "adhesive_title", "label": "Adhésif — titre", "default": "Adhésif 3M au verso." },
         { "type": "textarea", "id": "adhesive_text", "label": "Adhésif — texte", "default": "Prévu pour une pose sur une surface plane, propre et sèche. Choisissez l’emplacement définitif avant de retirer sa protection." }
