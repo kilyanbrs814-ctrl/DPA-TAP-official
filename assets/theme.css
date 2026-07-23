@@ -508,7 +508,7 @@ p{margin:0;text-wrap:pretty}
   /* Sous 760 px la ligne la plus longue du H1 occupe déjà presque toute la
      largeur utile (container = 100vw - 48px) : la marge de manœuvre est faible,
      la borne fluide reste donc juste sous le point de débordement. */
-  .hero h1.h-display{font-size:clamp(2.2rem,calc(10.8vw - 4px),3.9rem)}
+  .hero h1.h-display{font-size:clamp(2rem,calc(10.8vw - 4px),3.9rem)}
   .hero-grid{gap:22px}
   .hero-sub{margin-top:20px;max-width:36ch;font-size:1rem;line-height:1.55}
   .hero-cta{margin-top:28px;gap:10px}
