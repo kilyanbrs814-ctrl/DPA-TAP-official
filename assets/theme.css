@@ -528,6 +528,18 @@ p{margin:0;text-wrap:pretty}
   .stage-plaque{left:50%;top:50%;margin-left:var(--shift);width:min(clamp(210px,64vw,290px),40svh);transform:translate(-70%,-50%) rotateZ(-3deg) translateY(calc(var(--p,0)*-10px))}
   .stage-phone{--pw:min(clamp(150px,46vw,196px),23.5svh);left:50%;top:50%;margin-left:var(--shift);width:var(--pw);transform:translate(calc(-50% + 14vw - min(var(--p),.38)*24vw),calc(-50% + 1.4svh - min(var(--p),.38)*4.5svh)) rotateZ(calc(7deg - min(var(--p),.38)*18deg))}
   .nfc-waves{width:min(58vw,210px);height:min(58vw,210px);margin-left:var(--shift);transform:translate(-8%,-4%)}
+  /* Le badge d'aide passait a opacity:0 mais gardait ses 38px de hauteur et ses
+     marges : d'ou le vide entre le sur-titre et l'etape 1. On le replie en meme
+     temps qu'il s'efface, sans supprimer ni le badge ni sa transition. */
+  .scrolly-hint{overflow:hidden;max-height:64px;transition:opacity .45s ease,transform .45s ease,max-height .45s ease,margin .45s ease,padding .45s ease}
+  .scrolly.is-begun .scrolly-hint{max-height:0;margin-top:0;margin-bottom:0;padding-top:0;padding-bottom:0}
+  /* La plaque et le telephone etaient dimensionnes sur la hauteur du viewport
+     (svh) alors qu'ils doivent tenir dans le stage, dont la hauteur est le 1fr
+     restant de la grille. On plafonne donc sur la hauteur reelle du stage via
+     les unites de conteneur : plus aucun rognage par overflow:clip. */
+  .scrolly-stage{container-type:size}
+  .stage-plaque{width:min(clamp(210px,64vw,290px),40svh,60cqh)}
+  .stage-phone{--pw:min(clamp(150px,46vw,196px),23.5svh,43cqh)}
   @keyframes wave{0%{width:32px;height:32px;opacity:1}68%{opacity:.82}88%{opacity:.34}100%{width:min(58vw,210px);height:min(58vw,210px);opacity:0}}
   .nfc-banner{top:calc(var(--pw)*.09);left:calc(var(--pw)*.045);right:calc(var(--pw)*.045);gap:calc(var(--pw)*.032);padding:calc(var(--pw)*.032) calc(var(--pw)*.045);border-radius:calc(var(--pw)*.075)}
   .nfc-ico{width:calc(var(--pw)*.125);height:calc(var(--pw)*.125);border-radius:calc(var(--pw)*.034);font-size:calc(var(--pw)*.044)}
