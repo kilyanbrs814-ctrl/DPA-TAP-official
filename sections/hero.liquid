@@ -49,7 +49,6 @@
       </div>
     </div>
   </div>
-  <p class="hero-scrollhint">{{ section.settings.scroll_hint | default: 'Faites défiler' }}</p>
 </section>
 
 {% schema %}
@@ -64,7 +63,6 @@
     { "type": "text", "id": "cta2_label", "label": "Bouton 2 — libellé", "default": "Voir comment ça marche" },
     { "type": "url", "id": "cta2_link", "label": "Bouton 2 — lien" },
     { "type": "image_picker", "id": "image", "label": "Image du Hero (carré)", "info": "Affichée à droite du texte. Format carré recommandé — le cadre recadre en 1:1 sans déformer. Le texte alternatif se règle dans la bibliothèque de contenus." },
-    { "type": "text", "id": "scroll_hint", "label": "Indication de défilement", "default": "Faites défiler" },
     { "type": "url", "id": "reviews_link", "label": "Lien du badge d’avis", "info": "Page portant le carrousel d’avis. L’ancre #avis-google est ajoutée automatiquement." }
   ],
   "presets": [{ "name": "Hero immersif" }]

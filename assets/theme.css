@@ -78,7 +78,10 @@ p{margin:0;text-wrap:pretty}
 .hero-media-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .hero-eyebrow{max-width:100%;margin-bottom:6px;font-family:"Space Grotesk",sans-serif;font-size:clamp(.72rem,1vw,.9rem);font-weight:600;line-height:1.2;letter-spacing:.24em;text-transform:uppercase;color:var(--g-blue);overflow-wrap:anywhere}
 .hero h1{color:var(--c-paper)}
-.hero h1.h-display{font-size:clamp(2.4rem,3.9vw,3.9rem)}
+/* Chaque ligne du H1 est un bloc en `nowrap` : la borne haute du clamp est donc
+   plafonnee pour que la ligne la plus longue tienne dans .hero-copy (~617 px de
+   colonne a partir de 1240 px de container) sans jamais deborder. */
+.hero h1.h-display{font-size:clamp(2.6rem,4.6vw,4.2rem)}
 .hero-title-line{display:block;white-space:nowrap}
 .hero h1 em{font-style:normal;color:var(--g-blue)}
 .hero-sub{margin-top:28px;max-width:44ch;font-size:clamp(1.05rem,1.6vw,1.3rem);color:color-mix(in srgb,var(--c-paper) 72%,transparent)}
@@ -89,7 +92,6 @@ p{margin:0;text-wrap:pretty}
 .hero-plaque-wrap{position:relative;z-index:1}
 @keyframes heroFloat{0%,100%{transform:rotateX(8deg) rotateZ(-4deg) translateY(0)}50%{transform:rotateX(8deg) rotateZ(-4deg) translateY(-16px)}}
 @media (prefers-reduced-motion:reduce){.hero-plaque{animation:none}}
-.hero-scrollhint{position:absolute;z-index:2;bottom:26px;left:50%;transform:translateX(-50%);color:color-mix(in srgb,var(--c-paper) 45%,transparent);font-size:.8rem;letter-spacing:.18em;text-transform:uppercase}
 /* Petits écrans d'ordinateur : on élargit un peu la colonne de texte pour que
    les deux boutons tiennent sur une seule ligne. */
 @media (min-width:901px) and (max-width:1000px){.hero-grid{grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr)}}
@@ -367,8 +369,6 @@ p{margin:0;text-wrap:pretty}
 .hero h1.reveal{transition-delay:.08s}
 .hero .hero-sub.reveal{transition-delay:.22s}
 .hero .hero-cta.reveal{transition-delay:.36s}
-.hero-scrollhint{animation:hintPulse 2.6s ease-in-out infinite}
-@keyframes hintPulse{0%,100%{opacity:.55;transform:translateX(-50%) translateY(0)}50%{opacity:1;transform:translateX(-50%) translateY(-6px)}}
 
 /* --- Scrollytelling : indication de scroll --- */
 .hint-wheel{animation:hintWheel 1.8s ease-in-out infinite}
@@ -444,7 +444,6 @@ p{margin:0;text-wrap:pretty}
 
 /* --- Mouvement réduit : tout est neutralisé --- */
 @media (prefers-reduced-motion:reduce){
-  .hero-scrollhint{animation:none}
   .hint-wheel,.hint-svg--swipe,.hint-svg--chevron{animation:none}
   .scrolly-hint{transition:none}
   .stage-plaque{transform:translateX(-16%) rotateZ(-3deg)}
@@ -489,12 +488,14 @@ p{margin:0;text-wrap:pretty}
   .pack-mobile-prefix{display:inline}
   .pack-badge{display:inline-flex}
   .hero{padding:104px 0 72px}
-  .hero h1.h-display{font-size:clamp(2.1rem,calc(10.5vw - 4px),3.6rem)}
+  /* Sous 760 px la ligne la plus longue du H1 occupe deja presque toute la
+     largeur utile (container = 100vw - 48px) : la marge de manoeuvre est faible,
+     la borne fluide reste donc juste sous le point de debordement. */
+  .hero h1.h-display{font-size:clamp(2.2rem,calc(10.8vw - 4px),3.9rem)}
   .hero-grid{gap:22px}
   .hero-sub{margin-top:20px;max-width:36ch;font-size:1rem;line-height:1.55}
   .hero-cta{margin-top:28px;gap:10px}
   .hero-cta .btn{flex:1 1 100%;width:100%;padding:14px 20px;min-height:52px}
-  .hero-scrollhint{bottom:max(18px,env(safe-area-inset-bottom))}
   .scrolly-track{height:330svh}
   .scrolly-sticky{height:100svh;padding:72px 0 max(12px,env(safe-area-inset-bottom))}
   .scrolly-hint{gap:7px;margin:-2px 0 8px;padding:9px 12px;font-size:.6rem;letter-spacing:.1em}
@@ -630,10 +631,6 @@ p{margin:0;text-wrap:pretty}
   .buy-form-col{padding:16px}
   .pack{padding-inline:12px}
   .ftr-links{grid-template-columns:1fr}
-}
-
-@media (max-width:900px) and (max-height:640px){
-  .hero-scrollhint{display:none}
 }
 
 @media (hover:none) and (pointer:coarse){
