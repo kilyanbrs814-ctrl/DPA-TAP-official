@@ -114,9 +114,13 @@
         background: currentColor;
       }
 
+      /* La piste contient 5 groupes identiques : un cycle translate exactement
+         un groupe (-20%), et les 4 groupes restants garantissent que la piste
+         couvre toujours la largeur du viewport, même en très grand écran.
+         Aucun vide, donc aucun saut au redémarrage. */
       @keyframes dpa-mq-scroll{
         from{ transform: translate3d(0,0,0); }
-        to{ transform: translate3d(-50%,0,0); }
+        to{ transform: translate3d(-20%,0,0); }
       }
 
       @media (hover: hover) and (pointer: fine){
@@ -146,6 +150,9 @@
     <div class="dpa-mq" role="region" aria-label="{{ s.aria_label | default: 'Avantages DPA TAP' | escape }}">
       <div class="dpa-mq__track">
         <div class="dpa-mq__group">{{ mq_group }}</div>
+        <div class="dpa-mq__group" aria-hidden="true">{{ mq_group }}</div>
+        <div class="dpa-mq__group" aria-hidden="true">{{ mq_group }}</div>
+        <div class="dpa-mq__group" aria-hidden="true">{{ mq_group }}</div>
         <div class="dpa-mq__group" aria-hidden="true">{{ mq_group }}</div>
       </div>
     </div>
