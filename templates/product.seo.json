@@ -162,11 +162,15 @@
         "faq_6"
       ],
       "settings": {
-        "eyebrow": "Plaque avis Google NFC",
-        "heading": "Obtenez plus d’avis Google.",
+        "eyebrow": "Obtenez plus d’avis Google.",
+        "heading": "Plaque avis Google NFC",
         "intro": "<p>Vos clients approchent leur téléphone, votre fiche Google s’ouvre et ils laissent leur avis en quelques secondes. La plaque arrive déjà programmée avec votre établissement : aucun abonnement, aucune application à installer.</p>",
         "faq_eyebrow": "Questions fréquentes",
-        "faq_heading": "Ce qu’il faut savoir avant de commander"
+        "faq_heading": "Ce qu’il faut savoir avant de commander",
+        "reviews_title": "Ce qu’ils pensent de la plaque",
+        "reviews_source_note": "Avis de clients ayant testé la plaque NFC DPA TAP. Témoignages initialement publiés sur notre fiche Google.",
+        "reviews_google_link": "",
+        "reviews_initial_count": 6
       }
     },
     "guides": {
