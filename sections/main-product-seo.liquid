@@ -1111,22 +1111,39 @@
       align-items: center;
     }
 
+    /* Les trois cartes forment une rangée strictement alignée : une seule piste
+       de grille (`grid-auto-rows: 1fr`) dont la hauteur est celle de la carte la
+       plus haute, et des items étirés dessus. Aucune hauteur en dur : elle reste
+       dictée par le contenu le plus long.
+
+       La carte 2 portait un `margin-top: 26px` décoratif. Comme la marge est
+       prise dans la zone de grille, elle la descendait de 26 px ET lui retirait
+       26 px de hauteur — d'où les bords hauts et bas désalignés. Elle est
+       supprimée ; `margin: 0` verrouille le comportement. */
     .sp-steps {
       grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-auto-rows: 1fr;
+      align-items: stretch;
       gap: 16px;
     }
 
+    /* `align-content: start` : la hauteur excédentaire de la carte reste en bas
+       au lieu d'être répartie sur les pistes. Sans cela, le `stretch` par défaut
+       étirerait la piste du visuel — dont la hauteur découle d'un
+       `aspect-ratio` — et les trois images n'auraient plus la même hauteur.
+       Ici le visuel, l'icône, « Étape N » et le titre restent à l'identique
+       d'une carte à l'autre ; seul le vide sous le paragraphe varie. */
     .sp-steps li {
       grid-template-columns: minmax(0, 1fr);
+      align-content: start;
       padding: 26px;
+      margin: 0;
+      height: 100%;
+      align-self: stretch;
     }
 
     .sp-steps__icon {
       margin-bottom: 22px;
-    }
-
-    .sp-steps li:nth-child(2) {
-      margin-top: 26px;
     }
 
     .sp-prep {
