@@ -50,7 +50,7 @@
         "separator": "dot",
         "separator_opacity": 30,
         "color_background": "#0b0b0c",
-        "color_text": "#4285F4",
+        "color_text": "#4285f4",
         "text_size_desktop": 19,
         "text_size_mobile": 14,
         "pad_desktop": 38,
@@ -100,7 +100,7 @@
       "type": "product-buy",
       "settings": {
         "title_line1": "Doublez vos avis Google",
-        "title_line2": "en un geste.",
+        "title_line2": "en un seul geste.",
         "text": "Les deux modèles embarquent la même puce NFC, programmée avec le lien d’avis de votre établissement avant l’envoi. À l’unité ou en pack de deux.",
         "product": "plaque-nfc-avis-google"
       }
