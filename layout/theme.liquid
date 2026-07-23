@@ -87,6 +87,7 @@
 </head>
 <body class="template-{{ template | split: '.' | first }}">
   <a class="skip-link" href="#main">Aller au contenu</a>
+  {% section 'announcement-marquee' %}
   {% section 'header' %}
   <main id="main">{{ content_for_layout }}</main>
   {% section 'footer' %}

@@ -1,0 +1,308 @@
+{%- comment -%}
+  DPA TAP — Bandeau de réassurance défilant (marquee CSS).
+  Placé au-dessus du header dans layout/theme.liquid, visible sur toutes les pages.
+  Aucun JavaScript, aucune bibliothèque externe.
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+  assign icon_size = s.icon_size | default: 16
+  assign fs_desktop = s.text_size_desktop | default: 12
+  assign fs_mobile = s.text_size_mobile | default: 11
+  assign speed = s.speed | default: 45
+-%}
+
+{%- if s.enabled -%}
+
+  {%- capture mq_group -%}
+    {%- for i in (1..5) -%}
+      {%- liquid
+        assign k_on = 'item_' | append: i | append: '_enabled'
+        assign k_text = 'item_' | append: i | append: '_text'
+        assign k_icon = 'item_' | append: i | append: '_icon'
+        assign item_on = s[k_on]
+        assign item_text = s[k_text] | strip
+      -%}
+      {%- if item_on and item_text != blank -%}
+        <span class="dpa-mq__item">
+          {%- if s.show_icons -%}{%- render 'dpa-marquee-icon', name: s[k_icon] -%}{%- endif -%}
+          <span class="dpa-mq__label">{{ item_text | escape }}</span>
+        </span>
+        {%- if s.separator != 'none' -%}
+          <span class="dpa-mq__sep dpa-mq__sep--{{ s.separator }}" aria-hidden="true">
+            {%- if s.separator == 'dot' -%}&bull;{%- elsif s.separator == 'star' -%}&#10022;{%- endif -%}
+          </span>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+
+  {%- if mq_group != blank -%}
+    <style>
+      :root{
+        --dpa-mq-fs: {{ fs_desktop }}px;
+        --dpa-mq-icon: {{ icon_size }}px;
+        --dpa-mq-pad: 9px;
+        --dpa-mq-gap: 22px;
+        --dpa-mq-h: calc(max(var(--dpa-mq-fs) * 1.35, var(--dpa-mq-icon)) + var(--dpa-mq-pad) * 2);
+      }
+      html{ scroll-padding-top: var(--dpa-mq-h); }
+      body{ padding-top: var(--dpa-mq-h); }
+      .hdr{ top: calc(var(--dpa-mq-h) + 14px); }
+      /* Élément collant du scrollytelling : décalé pour ne pas passer sous la bannière. */
+      .scrolly-sticky{ top: var(--dpa-mq-h); height: calc(100svh - var(--dpa-mq-h)); }
+
+      .dpa-mq{
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        z-index: 101;
+        height: var(--dpa-mq-h);
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        background: {{ s.color_background }};
+        color: {{ s.color_text }};
+        border-bottom: 1px solid rgba(255,255,255,.07);
+        contain: content;
+      }
+      .dpa-mq__track{
+        display: flex;
+        width: max-content;
+        will-change: transform;
+        animation: dpa-mq-scroll {{ speed }}s linear infinite;
+      }
+      .dpa-mq__group{
+        display: flex;
+        align-items: center;
+        gap: var(--dpa-mq-gap);
+        padding-right: var(--dpa-mq-gap);
+        flex: 0 0 auto;
+      }
+      .dpa-mq__item{
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+        font-family: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        font-weight: 600;
+        font-size: var(--dpa-mq-fs);
+        line-height: 1.2;
+        letter-spacing: .09em;
+        text-transform: uppercase;
+      }
+      .dpa-mq__label{ display: inline-block; }
+      .dpa-mq__icon{
+        width: var(--dpa-mq-icon);
+        height: var(--dpa-mq-icon);
+        flex: 0 0 auto;
+        display: block;
+        color: currentColor;
+      }
+      .dpa-mq__sep{
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        opacity: .42;
+        font-size: calc(var(--dpa-mq-fs) * .9);
+        line-height: 1;
+        user-select: none;
+      }
+      .dpa-mq__sep--bar{
+        width: 1px;
+        height: calc(var(--dpa-mq-fs) * 1.25);
+        background: currentColor;
+      }
+
+      @keyframes dpa-mq-scroll{
+        from{ transform: translate3d(0,0,0); }
+        to{ transform: translate3d(-50%,0,0); }
+      }
+
+      @media (hover: hover) and (pointer: fine){
+        .dpa-mq:hover .dpa-mq__track{ animation-play-state: paused; }
+      }
+
+      @media (max-width: 900px){
+        :root{
+          --dpa-mq-fs: {{ fs_mobile }}px;
+          --dpa-mq-icon: {{ icon_size | minus: 2 }}px;
+          --dpa-mq-pad: 8px;
+          --dpa-mq-gap: 16px;
+        }
+        .hdr{ top: calc(var(--dpa-mq-h) + max(8px, env(safe-area-inset-top))); }
+        .dpa-mq__item{ gap: 7px; letter-spacing: .07em; }
+      }
+
+      @media (prefers-reduced-motion: reduce){
+        .dpa-mq{ overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        .dpa-mq::-webkit-scrollbar{ display: none; }
+        .dpa-mq__track{ animation: none; will-change: auto; }
+        .dpa-mq__track > [aria-hidden="true"]{ display: none; }
+        .dpa-mq__group{ padding-left: var(--dpa-mq-gap); }
+      }
+    </style>
+
+    <div class="dpa-mq" role="region" aria-label="{{ s.aria_label | default: 'Avantages DPA TAP' | escape }}">
+      <div class="dpa-mq__track">
+        <div class="dpa-mq__group">{{ mq_group }}</div>
+        <div class="dpa-mq__group" aria-hidden="true">{{ mq_group }}</div>
+      </div>
+    </div>
+  {%- endif -%}
+
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Bandeau défilant",
+  "settings": [
+    { "type": "checkbox", "id": "enabled", "label": "Afficher la bannière", "default": true },
+    { "type": "text", "id": "aria_label", "label": "Libellé d'accessibilité", "default": "Avantages DPA TAP" },
+
+    { "type": "header", "content": "Mention 1" },
+    { "type": "checkbox", "id": "item_1_enabled", "label": "Afficher", "default": true },
+    { "type": "text", "id": "item_1_text", "label": "Texte", "default": "Livraison gratuite en France" },
+    {
+      "type": "select", "id": "item_1_icon", "label": "Icône", "default": "truck",
+      "options": [
+        { "value": "truck", "label": "Camion" },
+        { "value": "package", "label": "Colis" },
+        { "value": "shield", "label": "Bouclier" },
+        { "value": "infinity", "label": "Infini" },
+        { "value": "badge", "label": "Badge" },
+        { "value": "no-card", "label": "Carte barrée" },
+        { "value": "calendar-off", "label": "Calendrier barré" },
+        { "value": "wallet", "label": "Portefeuille" },
+        { "value": "stopwatch", "label": "Chronomètre" },
+        { "value": "bolt", "label": "Éclair" },
+        { "value": "phone", "label": "Smartphone" },
+        { "value": "check", "label": "Validé" },
+        { "value": "star", "label": "Étoile" },
+        { "value": "lock", "label": "Cadenas" },
+        { "value": "globe", "label": "Globe" }
+      ]
+    },
+
+    { "type": "header", "content": "Mention 2" },
+    { "type": "checkbox", "id": "item_2_enabled", "label": "Afficher", "default": true },
+    { "type": "text", "id": "item_2_text", "label": "Texte", "default": "Garantie gratuite à vie" },
+    {
+      "type": "select", "id": "item_2_icon", "label": "Icône", "default": "shield",
+      "options": [
+        { "value": "truck", "label": "Camion" },
+        { "value": "package", "label": "Colis" },
+        { "value": "shield", "label": "Bouclier" },
+        { "value": "infinity", "label": "Infini" },
+        { "value": "badge", "label": "Badge" },
+        { "value": "no-card", "label": "Carte barrée" },
+        { "value": "calendar-off", "label": "Calendrier barré" },
+        { "value": "wallet", "label": "Portefeuille" },
+        { "value": "stopwatch", "label": "Chronomètre" },
+        { "value": "bolt", "label": "Éclair" },
+        { "value": "phone", "label": "Smartphone" },
+        { "value": "check", "label": "Validé" },
+        { "value": "star", "label": "Étoile" },
+        { "value": "lock", "label": "Cadenas" },
+        { "value": "globe", "label": "Globe" }
+      ]
+    },
+
+    { "type": "header", "content": "Mention 3" },
+    { "type": "checkbox", "id": "item_3_enabled", "label": "Afficher", "default": true },
+    { "type": "text", "id": "item_3_text", "label": "Texte", "default": "Sans abonnement" },
+    {
+      "type": "select", "id": "item_3_icon", "label": "Icône", "default": "no-card",
+      "options": [
+        { "value": "truck", "label": "Camion" },
+        { "value": "package", "label": "Colis" },
+        { "value": "shield", "label": "Bouclier" },
+        { "value": "infinity", "label": "Infini" },
+        { "value": "badge", "label": "Badge" },
+        { "value": "no-card", "label": "Carte barrée" },
+        { "value": "calendar-off", "label": "Calendrier barré" },
+        { "value": "wallet", "label": "Portefeuille" },
+        { "value": "stopwatch", "label": "Chronomètre" },
+        { "value": "bolt", "label": "Éclair" },
+        { "value": "phone", "label": "Smartphone" },
+        { "value": "check", "label": "Validé" },
+        { "value": "star", "label": "Étoile" },
+        { "value": "lock", "label": "Cadenas" },
+        { "value": "globe", "label": "Globe" }
+      ]
+    },
+
+    { "type": "header", "content": "Mention 4" },
+    { "type": "checkbox", "id": "item_4_enabled", "label": "Afficher", "default": true },
+    { "type": "text", "id": "item_4_text", "label": "Texte", "default": "Installation en 30 secondes" },
+    {
+      "type": "select", "id": "item_4_icon", "label": "Icône", "default": "stopwatch",
+      "options": [
+        { "value": "truck", "label": "Camion" },
+        { "value": "package", "label": "Colis" },
+        { "value": "shield", "label": "Bouclier" },
+        { "value": "infinity", "label": "Infini" },
+        { "value": "badge", "label": "Badge" },
+        { "value": "no-card", "label": "Carte barrée" },
+        { "value": "calendar-off", "label": "Calendrier barré" },
+        { "value": "wallet", "label": "Portefeuille" },
+        { "value": "stopwatch", "label": "Chronomètre" },
+        { "value": "bolt", "label": "Éclair" },
+        { "value": "phone", "label": "Smartphone" },
+        { "value": "check", "label": "Validé" },
+        { "value": "star", "label": "Étoile" },
+        { "value": "lock", "label": "Cadenas" },
+        { "value": "globe", "label": "Globe" }
+      ]
+    },
+
+    { "type": "header", "content": "Mention 5" },
+    { "type": "checkbox", "id": "item_5_enabled", "label": "Afficher", "default": true },
+    { "type": "text", "id": "item_5_text", "label": "Texte", "default": "Compatible iPhone & Android" },
+    {
+      "type": "select", "id": "item_5_icon", "label": "Icône", "default": "phone",
+      "options": [
+        { "value": "truck", "label": "Camion" },
+        { "value": "package", "label": "Colis" },
+        { "value": "shield", "label": "Bouclier" },
+        { "value": "infinity", "label": "Infini" },
+        { "value": "badge", "label": "Badge" },
+        { "value": "no-card", "label": "Carte barrée" },
+        { "value": "calendar-off", "label": "Calendrier barré" },
+        { "value": "wallet", "label": "Portefeuille" },
+        { "value": "stopwatch", "label": "Chronomètre" },
+        { "value": "bolt", "label": "Éclair" },
+        { "value": "phone", "label": "Smartphone" },
+        { "value": "check", "label": "Validé" },
+        { "value": "star", "label": "Étoile" },
+        { "value": "lock", "label": "Cadenas" },
+        { "value": "globe", "label": "Globe" }
+      ]
+    },
+
+    { "type": "header", "content": "Icônes" },
+    { "type": "checkbox", "id": "show_icons", "label": "Afficher les icônes", "default": true },
+    { "type": "range", "id": "icon_size", "label": "Taille des icônes", "unit": "px", "min": 12, "max": 24, "step": 1, "default": 16 },
+
+    { "type": "header", "content": "Séparateur" },
+    {
+      "type": "select", "id": "separator", "label": "Type de séparateur", "default": "dot",
+      "options": [
+        { "value": "dot", "label": "Point" },
+        { "value": "star", "label": "Étoile minimaliste" },
+        { "value": "bar", "label": "Barre verticale fine" },
+        { "value": "none", "label": "Aucun" }
+      ]
+    },
+
+    { "type": "header", "content": "Apparence" },
+    { "type": "color", "id": "color_background", "label": "Couleur de fond", "default": "#0b0b0c" },
+    { "type": "color", "id": "color_text", "label": "Couleur du texte et des icônes", "default": "#f4f2ed" },
+    { "type": "range", "id": "text_size_desktop", "label": "Taille du texte — ordinateur", "unit": "px", "min": 10, "max": 18, "step": 1, "default": 12 },
+    { "type": "range", "id": "text_size_mobile", "label": "Taille du texte — mobile", "unit": "px", "min": 9, "max": 16, "step": 1, "default": 11 },
+
+    { "type": "header", "content": "Animation" },
+    { "type": "range", "id": "speed", "label": "Durée d'un cycle (plus grand = plus lent)", "unit": "s", "min": 20, "max": 150, "step": 5, "default": 45 }
+  ]
+}
+{% endschema %}
