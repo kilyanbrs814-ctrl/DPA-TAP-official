@@ -24,6 +24,48 @@
         "reviews_link": ""
       }
     },
+    "reassurance_marquee": {
+      "type": "announcement-marquee",
+      "settings": {
+        "enabled": true,
+        "variant": "feature",
+        "aria_label": "Avantages DPA TAP",
+        "item_1_enabled": true,
+        "item_1_text": "Livraison gratuite en France",
+        "item_1_icon": "truck",
+        "item_2_enabled": true,
+        "item_2_text": "Garantie gratuite à vie",
+        "item_2_icon": "shield",
+        "item_3_enabled": true,
+        "item_3_text": "Sans abonnement",
+        "item_3_icon": "no-card",
+        "item_4_enabled": true,
+        "item_4_text": "Installation en 30 secondes",
+        "item_4_icon": "stopwatch",
+        "item_5_enabled": true,
+        "item_5_text": "Compatible iPhone & Android",
+        "item_5_icon": "phone",
+        "show_icons": true,
+        "icon_size": 26,
+        "icon_size_mobile": 22,
+        "separator": "dot",
+        "separator_opacity": 30,
+        "color_background": "#0b0b0c",
+        "color_text": "#4285F4",
+        "text_size_desktop": 19,
+        "text_size_mobile": 14,
+        "pad_desktop": 38,
+        "pad_mobile": 26,
+        "gap_desktop": 56,
+        "gap_mobile": 30,
+        "speed": 60,
+        "tighten_neighbours": true,
+        "space_above": 28,
+        "space_above_mobile": 20,
+        "space_below": 56,
+        "space_below_mobile": 32
+      }
+    },
     "scrolly": {
       "type": "scrollytelling",
       "blocks": {
@@ -256,6 +298,7 @@
   },
   "order": [
     "hero",
+    "reassurance_marquee",
     "scrolly",
     "buy",
     "install",

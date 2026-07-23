@@ -87,7 +87,12 @@
 </head>
 <body class="template-{{ template | split: '.' | first }}">
   <a class="skip-link" href="#main">Aller au contenu</a>
-  {% section 'announcement-marquee' %}
+  {%- comment -%}
+    Barre fine en haut sur toutes les pages sauf l'accueil : sur l'accueil, la
+    bannière est posée en grand format entre le hero et « Comment ça marche »
+    via templates/index.json.
+  {%- endcomment -%}
+  {%- unless template.name == 'index' -%}{% section 'announcement-marquee' %}{%- endunless -%}
   {% section 'header' %}
   <main id="main">{{ content_for_layout }}</main>
   {% section 'footer' %}

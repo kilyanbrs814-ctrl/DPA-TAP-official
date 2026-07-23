@@ -1,15 +1,30 @@
 {%- comment -%}
   DPA TAP — Bandeau de réassurance défilant (marquee CSS).
-  Placé au-dessus du header dans layout/theme.liquid, visible sur toutes les pages.
-  Aucun JavaScript, aucune bibliothèque externe.
+
+  Deux variantes servies par la même section, aucun doublon de code :
+  - "topbar"  : barre fine fixée en haut, rendue par layout/theme.liquid sur
+                toutes les pages SAUF l'accueil.
+  - "feature" : grand bandeau dans le flux, inséré via templates/index.json
+                entre le hero et le scrollytelling « Comment ça marche ».
+
+  Le CSS est scopé sur l'id unique de la section, donc les deux variantes
+  peuvent coexister sans collision. Aucun JavaScript, aucune librairie externe.
 {%- endcomment -%}
 
 {%- liquid
   assign s = section.settings
-  assign icon_size = s.icon_size | default: 16
-  assign fs_desktop = s.text_size_desktop | default: 12
-  assign fs_mobile = s.text_size_mobile | default: 11
+  assign variant = s.variant | default: 'topbar'
+  assign uid = 'dpa-mq-' | append: section.id
+  assign icon_d = s.icon_size | default: 16
+  assign icon_m = s.icon_size_mobile | default: 14
+  assign fs_d = s.text_size_desktop | default: 12
+  assign fs_m = s.text_size_mobile | default: 11
+  assign pad_d = s.pad_desktop | default: 9
+  assign pad_m = s.pad_mobile | default: 8
+  assign gap_d = s.gap_desktop | default: 22
+  assign gap_m = s.gap_mobile | default: 16
   assign speed = s.speed | default: 45
+  assign sep_op = s.separator_opacity | default: 42
 -%}
 
 {%- if s.enabled -%}
@@ -39,49 +54,100 @@
 
   {%- if mq_group != blank -%}
     <style>
+      {%- if variant == 'topbar' -%}
+      /* Variante barre fine : position fixe, donc le reste de la page doit être
+         décalé de la hauteur exacte de la barre. Une seule instance par page. */
       :root{
-        --dpa-mq-fs: {{ fs_desktop }}px;
-        --dpa-mq-icon: {{ icon_size }}px;
-        --dpa-mq-pad: 9px;
-        --dpa-mq-gap: 22px;
+        --dpa-mq-fs: {{ fs_d }}px;
+        --dpa-mq-icon: {{ icon_d }}px;
+        --dpa-mq-pad: {{ pad_d }}px;
+        --dpa-mq-gap: {{ gap_d }}px;
         --dpa-mq-h: calc(max(var(--dpa-mq-fs) * 1.35, var(--dpa-mq-icon)) + var(--dpa-mq-pad) * 2);
       }
       html{ scroll-padding-top: var(--dpa-mq-h); }
       body{ padding-top: var(--dpa-mq-h); }
       .hdr{ top: calc(var(--dpa-mq-h) + 14px); }
-      /* Élément collant du scrollytelling : décalé pour ne pas passer sous la bannière. */
+      /* Élément collant du scrollytelling : décalé pour ne pas passer sous la barre. */
       .scrolly-sticky{ top: var(--dpa-mq-h); height: calc(100svh - var(--dpa-mq-h)); }
 
-      .dpa-mq{
+      #{{ uid }}{
         position: fixed;
         top: 0; left: 0; right: 0;
         z-index: 101;
         height: var(--dpa-mq-h);
+        border-bottom: 1px solid rgba(255,255,255,.07);
+      }
+      @media (max-width: 900px){
+        :root{
+          --dpa-mq-fs: {{ fs_m }}px;
+          --dpa-mq-icon: {{ icon_m }}px;
+          --dpa-mq-pad: {{ pad_m }}px;
+          --dpa-mq-gap: {{ gap_m }}px;
+        }
+        .hdr{ top: calc(var(--dpa-mq-h) + max(8px, env(safe-area-inset-top))); }
+      }
+      {%- else -%}
+      /* Variante grand bandeau : dans le flux, aucune compensation de layout.
+         Les variables restent locales à la section. */
+      #{{ uid }}{
+        --dpa-mq-fs: {{ fs_d }}px;
+        --dpa-mq-icon: {{ icon_d }}px;
+        --dpa-mq-pad: {{ pad_d }}px;
+        --dpa-mq-gap: {{ gap_d }}px;
+        --dpa-mq-h: calc(max(var(--dpa-mq-fs) * 1.35, var(--dpa-mq-icon)) + var(--dpa-mq-pad) * 2);
+        position: relative;
+        width: 100%;
+        height: var(--dpa-mq-h);
+        border-top: 1px solid color-mix(in srgb, {{ s.color_text }} 16%, transparent);
+        border-bottom: 1px solid color-mix(in srgb, {{ s.color_text }} 16%, transparent);
+      }
+      @media (max-width: 900px){
+        #{{ uid }}{
+          --dpa-mq-fs: {{ fs_m }}px;
+          --dpa-mq-icon: {{ icon_m }}px;
+          --dpa-mq-pad: {{ pad_m }}px;
+          --dpa-mq-gap: {{ gap_m }}px;
+        }
+      }
+      {%- if s.tighten_neighbours -%}
+      /* Resserre l'enchaînement hero → bandeau → « Comment ça marche ».
+         Ces règles ne sont émises que si la variante grand bandeau est posée
+         entre les deux sections, et disparaissent avec elle. */
+      .hero{ padding-bottom: {{ s.space_above | default: 28 }}px; }
+      .scrolly-sticky{ align-content: start; padding-top: {{ s.space_below | default: 56 }}px; }
+      @media (max-width: 900px){
+        .hero{ padding-bottom: {{ s.space_above_mobile | default: 20 }}px; }
+        .scrolly-sticky{ padding-top: {{ s.space_below_mobile | default: 32 }}px; }
+      }
+      {%- endif -%}
+      {%- endif -%}
+
+      /* ---- Règles communes aux deux variantes ---- */
+      #{{ uid }}{
         display: flex;
         align-items: center;
         overflow: hidden;
         background: {{ s.color_background }};
         color: {{ s.color_text }};
-        border-bottom: 1px solid rgba(255,255,255,.07);
         contain: content;
       }
-      .dpa-mq__track{
+      #{{ uid }} .dpa-mq__track{
         display: flex;
         width: max-content;
         will-change: transform;
         animation: dpa-mq-scroll {{ speed }}s linear infinite;
       }
-      .dpa-mq__group{
+      #{{ uid }} .dpa-mq__group{
         display: flex;
         align-items: center;
         gap: var(--dpa-mq-gap);
         padding-right: var(--dpa-mq-gap);
         flex: 0 0 auto;
       }
-      .dpa-mq__item{
+      #{{ uid }} .dpa-mq__item{
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: calc(var(--dpa-mq-fs) * .5);
         white-space: nowrap;
         font-family: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
         font-weight: 600;
@@ -90,28 +156,31 @@
         letter-spacing: .09em;
         text-transform: uppercase;
       }
-      .dpa-mq__label{ display: inline-block; }
-      .dpa-mq__icon{
+      #{{ uid }} .dpa-mq__label{ display: inline-block; }
+      #{{ uid }} .dpa-mq__icon{
         width: var(--dpa-mq-icon);
         height: var(--dpa-mq-icon);
         flex: 0 0 auto;
         display: block;
         color: currentColor;
       }
-      .dpa-mq__sep{
+      #{{ uid }} .dpa-mq__sep{
         flex: 0 0 auto;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        opacity: .42;
+        opacity: {{ sep_op | divided_by: 100.0 }};
         font-size: calc(var(--dpa-mq-fs) * .9);
         line-height: 1;
         user-select: none;
       }
-      .dpa-mq__sep--bar{
+      #{{ uid }} .dpa-mq__sep--bar{
         width: 1px;
         height: calc(var(--dpa-mq-fs) * 1.25);
         background: currentColor;
+      }
+      @media (max-width: 900px){
+        #{{ uid }} .dpa-mq__item{ letter-spacing: .07em; }
       }
 
       /* La piste contient 5 groupes identiques : un cycle translate exactement
@@ -124,30 +193,19 @@
       }
 
       @media (hover: hover) and (pointer: fine){
-        .dpa-mq:hover .dpa-mq__track{ animation-play-state: paused; }
-      }
-
-      @media (max-width: 900px){
-        :root{
-          --dpa-mq-fs: {{ fs_mobile }}px;
-          --dpa-mq-icon: {{ icon_size | minus: 2 }}px;
-          --dpa-mq-pad: 8px;
-          --dpa-mq-gap: 16px;
-        }
-        .hdr{ top: calc(var(--dpa-mq-h) + max(8px, env(safe-area-inset-top))); }
-        .dpa-mq__item{ gap: 7px; letter-spacing: .07em; }
+        #{{ uid }}:hover .dpa-mq__track{ animation-play-state: paused; }
       }
 
       @media (prefers-reduced-motion: reduce){
-        .dpa-mq{ overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-        .dpa-mq::-webkit-scrollbar{ display: none; }
-        .dpa-mq__track{ animation: none; will-change: auto; }
-        .dpa-mq__track > [aria-hidden="true"]{ display: none; }
-        .dpa-mq__group{ padding-left: var(--dpa-mq-gap); }
+        #{{ uid }}{ overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        #{{ uid }}::-webkit-scrollbar{ display: none; }
+        #{{ uid }} .dpa-mq__track{ animation: none; will-change: auto; }
+        #{{ uid }} .dpa-mq__track > [aria-hidden="true"]{ display: none; }
+        #{{ uid }} .dpa-mq__group{ padding-left: var(--dpa-mq-gap); }
       }
     </style>
 
-    <div class="dpa-mq" role="region" aria-label="{{ s.aria_label | default: 'Avantages DPA TAP' | escape }}">
+    <div id="{{ uid }}" class="dpa-mq dpa-mq--{{ variant }}" role="region" aria-label="{{ s.aria_label | default: 'Avantages DPA TAP' | escape }}">
       <div class="dpa-mq__track">
         <div class="dpa-mq__group">{{ mq_group }}</div>
         <div class="dpa-mq__group" aria-hidden="true">{{ mq_group }}</div>
@@ -165,6 +223,14 @@
   "name": "Bandeau défilant",
   "settings": [
     { "type": "checkbox", "id": "enabled", "label": "Afficher la bannière", "default": true },
+    {
+      "type": "select", "id": "variant", "label": "Format", "default": "topbar",
+      "info": "Barre fine = fixée en haut du site. Grand bandeau = dans le flux de la page.",
+      "options": [
+        { "value": "topbar", "label": "Barre fine fixée en haut" },
+        { "value": "feature", "label": "Grand bandeau dans la page" }
+      ]
+    },
     { "type": "text", "id": "aria_label", "label": "Libellé d'accessibilité", "default": "Avantages DPA TAP" },
 
     { "type": "header", "content": "Mention 1" },
@@ -289,7 +355,8 @@
 
     { "type": "header", "content": "Icônes" },
     { "type": "checkbox", "id": "show_icons", "label": "Afficher les icônes", "default": true },
-    { "type": "range", "id": "icon_size", "label": "Taille des icônes", "unit": "px", "min": 12, "max": 24, "step": 1, "default": 16 },
+    { "type": "range", "id": "icon_size", "label": "Taille des icônes — ordinateur", "unit": "px", "min": 12, "max": 40, "step": 1, "default": 16 },
+    { "type": "range", "id": "icon_size_mobile", "label": "Taille des icônes — mobile", "unit": "px", "min": 10, "max": 32, "step": 1, "default": 14 },
 
     { "type": "header", "content": "Séparateur" },
     {
@@ -301,15 +368,27 @@
         { "value": "none", "label": "Aucun" }
       ]
     },
+    { "type": "range", "id": "separator_opacity", "label": "Opacité du séparateur", "unit": "%", "min": 10, "max": 100, "step": 5, "default": 40 },
 
     { "type": "header", "content": "Apparence" },
     { "type": "color", "id": "color_background", "label": "Couleur de fond", "default": "#0b0b0c" },
     { "type": "color", "id": "color_text", "label": "Couleur du texte et des icônes", "default": "#f4f2ed" },
-    { "type": "range", "id": "text_size_desktop", "label": "Taille du texte — ordinateur", "unit": "px", "min": 10, "max": 18, "step": 1, "default": 12 },
-    { "type": "range", "id": "text_size_mobile", "label": "Taille du texte — mobile", "unit": "px", "min": 9, "max": 16, "step": 1, "default": 11 },
+    { "type": "range", "id": "text_size_desktop", "label": "Taille du texte — ordinateur", "unit": "px", "min": 10, "max": 28, "step": 1, "default": 12 },
+    { "type": "range", "id": "text_size_mobile", "label": "Taille du texte — mobile", "unit": "px", "min": 9, "max": 22, "step": 1, "default": 11 },
+    { "type": "range", "id": "pad_desktop", "label": "Espace vertical — ordinateur", "unit": "px", "min": 4, "max": 60, "step": 1, "default": 9 },
+    { "type": "range", "id": "pad_mobile", "label": "Espace vertical — mobile", "unit": "px", "min": 4, "max": 44, "step": 1, "default": 8 },
+    { "type": "range", "id": "gap_desktop", "label": "Espace entre les mentions — ordinateur", "unit": "px", "min": 12, "max": 96, "step": 2, "default": 22 },
+    { "type": "range", "id": "gap_mobile", "label": "Espace entre les mentions — mobile", "unit": "px", "min": 8, "max": 64, "step": 2, "default": 16 },
 
     { "type": "header", "content": "Animation" },
-    { "type": "range", "id": "speed", "label": "Durée d'un cycle (plus grand = plus lent)", "unit": "s", "min": 20, "max": 150, "step": 5, "default": 45 }
+    { "type": "range", "id": "speed", "label": "Durée d'un cycle (plus grand = plus lent)", "unit": "s", "min": 20, "max": 180, "step": 5, "default": 45 },
+
+    { "type": "header", "content": "Espacements voisins (grand bandeau)" },
+    { "type": "checkbox", "id": "tighten_neighbours", "label": "Resserrer le hero et la section suivante", "default": false, "info": "À activer uniquement pour le grand bandeau placé entre le hero et « Comment ça marche »." },
+    { "type": "range", "id": "space_above", "label": "Bas du hero — ordinateur", "unit": "px", "min": 0, "max": 120, "step": 4, "default": 28 },
+    { "type": "range", "id": "space_above_mobile", "label": "Bas du hero — mobile", "unit": "px", "min": 0, "max": 96, "step": 4, "default": 20 },
+    { "type": "range", "id": "space_below", "label": "Haut de « Comment ça marche » — ordinateur", "unit": "px", "min": 0, "max": 160, "step": 4, "default": 56 },
+    { "type": "range", "id": "space_below_mobile", "label": "Haut de « Comment ça marche » — mobile", "unit": "px", "min": 0, "max": 120, "step": 4, "default": 32 }
   ]
 }
 {% endschema %}
