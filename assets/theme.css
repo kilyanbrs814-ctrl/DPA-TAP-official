@@ -79,8 +79,8 @@ p{margin:0;text-wrap:pretty}
 .hero-eyebrow{max-width:100%;margin-bottom:6px;font-family:"Space Grotesk",sans-serif;font-size:clamp(.72rem,1vw,.9rem);font-weight:600;line-height:1.2;letter-spacing:.24em;text-transform:uppercase;color:var(--g-blue);overflow-wrap:anywhere}
 .hero h1{color:var(--c-paper)}
 /* Chaque ligne du H1 est un bloc en `nowrap` : la borne haute du clamp est donc
-   plafonnee pour que la ligne la plus longue tienne dans .hero-copy (~617 px de
-   colonne a partir de 1240 px de container) sans jamais deborder. */
+   plafonnée pour que la ligne la plus longue tienne dans .hero-copy (~617 px de
+   colonne à partir de 1240 px de container) sans jamais déborder. */
 .hero h1.h-display{font-size:clamp(2.6rem,4.6vw,4.2rem)}
 .hero-title-line{display:block;white-space:nowrap}
 .hero h1 em{font-style:normal;color:var(--g-blue)}
@@ -505,9 +505,9 @@ p{margin:0;text-wrap:pretty}
   .pack-mobile-prefix{display:inline}
   .pack-badge{display:inline-flex}
   .hero{padding:104px 0 72px}
-  /* Sous 760 px la ligne la plus longue du H1 occupe deja presque toute la
-     largeur utile (container = 100vw - 48px) : la marge de manoeuvre est faible,
-     la borne fluide reste donc juste sous le point de debordement. */
+  /* Sous 760 px la ligne la plus longue du H1 occupe déjà presque toute la
+     largeur utile (container = 100vw - 48px) : la marge de manœuvre est faible,
+     la borne fluide reste donc juste sous le point de débordement. */
   .hero h1.h-display{font-size:clamp(2.2rem,calc(10.8vw - 4px),3.9rem)}
   .hero-grid{gap:22px}
   .hero-sub{margin-top:20px;max-width:36ch;font-size:1rem;line-height:1.55}
