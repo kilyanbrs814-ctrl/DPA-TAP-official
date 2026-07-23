@@ -64,7 +64,13 @@
   <{{ gb_tag }} class="g-badge g-badge--{{ variant | default: 'pdp' }}"
     {% if href != blank %}href="{{ href }}" data-g-badge-link{% endif %}
     aria-label="{{ gb_label | escape }}">
-    {%- render 'google-stars', rating: gb_avg -%}
+    {%- comment -%}
+      Les variantes « hero » et « home_product » sont des rappels-texte discrets
+      (ligne de preuve sociale), sans étoiles : seul le libellé est affiché.
+    {%- endcomment -%}
+    {%- unless variant == 'hero' or variant == 'home_product' -%}
+      {%- render 'google-stars', rating: gb_avg -%}
+    {%- endunless -%}
     <span class="g-badge__text" aria-hidden="true">{{ gb_text }}</span>
   </{{ gb_tag }}>
 {%- endif -%}

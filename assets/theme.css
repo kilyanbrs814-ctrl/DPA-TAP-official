@@ -1017,6 +1017,13 @@ a.g-badge:hover{color:inherit;border-color:color-mix(in srgb,currentColor 34%,tr
 .g-badge--pdp{margin:14px 0 18px}
 .g-badge--cart{display:flex;width:100%;justify-content:center;margin:14px 0;text-align:center}
 
+/* Rappels d'avis « hero » et « home_product » : plus de capsule ni d'étoiles,
+   simple ligne de preuve sociale intégrée à la section (fond/bordure/ombre
+   retirés). La variante « pdp » et les autres conservent leur badge. */
+.g-badge--hero,.g-badge--home_product{width:fit-content;max-width:100%;min-height:0;gap:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;font-size:.9rem;color:color-mix(in srgb,currentColor 80%,transparent)}
+a.g-badge--hero:hover,a.g-badge--home_product:hover{background:transparent;border-color:transparent;box-shadow:none;transform:none;color:inherit;text-decoration:underline;text-underline-offset:3px}
+@media (prefers-reduced-motion:reduce){a.g-badge--hero:hover,a.g-badge--home_product:hover{transform:none}}
+
 /* Section complète. `.g-reviews-sec` porte le fond (accueil) ; `.g-reviews`
    est le bloc réutilisable, inséré tel quel dans la fiche produit déjà sombre. */
 .g-reviews-sec{background:var(--c-bg);color:var(--c-paper);padding:96px 0}
