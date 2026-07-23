@@ -215,6 +215,12 @@ p{margin:0;text-wrap:pretty}
 .buy-sec{background:var(--c-bg);color:var(--c-paper);padding:130px 0}
 .buy-sec h2{color:var(--c-paper)}
 .buy-head{margin-bottom:64px;max-width:800px}
+/* Titre de la section produit : les deux réglages « ligne 1 » / « ligne 2 »
+   gardent chacun leur propre ligne (block + nowrap). La taille est donc pilotée
+   par un clamp dédié, dimensionné pour que la plus longue des deux lignes tienne
+   dans .buy-head (800 px max) comme dans le container mobile (100vw - 48px). */
+.buy-title-line{display:block;white-space:nowrap}
+.buy-head h2.h-xl{font-size:clamp(1.35rem,5.2vw,4rem)}
 .buy-head p{margin-top:20px;color:color-mix(in srgb,var(--c-paper) 65%,transparent);font-size:1.1rem}
 .buy-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:64px;align-items:start}
 @media (min-width:981px){
@@ -246,10 +252,13 @@ p{margin:0;text-wrap:pretty}
    leur largeur naturelle (`nowrap` : aucune formulation n'est coupée) et
    repassent à la ligne d'eux-mêmes quand la colonne se resserre — une seule
    ligne dès que la place le permet. */
-.prod-reassure{display:flex;flex-wrap:wrap;gap:12px 24px;margin:18px 0 20px;padding:14px 0;list-style:none;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}
-.prod-reassure li{display:flex;align-items:center;gap:9px}
+/* Réassurance : une seule rangée horizontale sur écran large (nowrap + items
+   non compressibles), empilée verticalement sous 760 px. La taille de police est
+   fluide pour absorber la largeur variable de la colonne d'achat. */
+.prod-reassure{display:flex;flex-direction:row;flex-wrap:nowrap;align-items:center;justify-content:space-between;gap:clamp(10px,1.4vw,20px);margin:18px 0 20px;padding:14px 0;list-style:none;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}
+.prod-reassure li{display:flex;align-items:center;gap:8px;flex:0 1 auto;min-width:0}
 .prod-reassure__ico{flex:none;width:18px;height:18px;color:var(--g-blue)}
-.prod-reassure span{font-family:"Space Grotesk",sans-serif;font-weight:500;font-size:.85rem;line-height:1.25;white-space:nowrap;color:color-mix(in srgb,var(--c-paper) 82%,transparent)}
+.prod-reassure span{font-family:"Space Grotesk",sans-serif;font-weight:500;font-size:clamp(.72rem,.92vw,.85rem);line-height:1.25;white-space:nowrap;color:color-mix(in srgb,var(--c-paper) 82%,transparent)}
 .buy-title:has(+ .prod-reassure){margin-bottom:0}
 .buy-price-row{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
 .buy-price{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:2.4rem;letter-spacing:-.02em}
@@ -557,9 +566,10 @@ p{margin:0;text-wrap:pretty}
   .prod-thumbs--mobile{display:flex}
   .buy-form-col{border-radius:20px;padding:20px}
   .buy-title{font-size:1.35rem;margin-bottom:22px}
-  .prod-reassure{gap:11px 16px;margin:16px 0 18px;padding:12px 0}
-  .prod-reassure li{gap:8px}
-  .prod-reassure span{font-size:.82rem}
+  /* Mobile : empilement vertical. */
+  .prod-reassure{flex-direction:column;flex-wrap:nowrap;align-items:flex-start;justify-content:flex-start;gap:11px;margin:16px 0 18px;padding:12px 0}
+  .prod-reassure li{gap:8px;flex:0 0 auto}
+  .prod-reassure span{font-size:.82rem;white-space:normal}
   .buy-field{margin-top:18px}
   .buy-field input,.buy-field textarea{min-height:50px;font-size:16px;padding:13px 14px}
   .buy-submit{position:sticky;z-index:20;bottom:max(8px,env(safe-area-inset-bottom));min-height:56px;margin-top:24px;box-shadow:0 14px 34px rgba(0,0,0,.36)}

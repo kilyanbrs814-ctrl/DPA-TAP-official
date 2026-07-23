@@ -1,7 +1,12 @@
 <section class="buy-sec" id="modeles">
   <div class="container">
     <div class="buy-head">
-      <h2 class="h-xl reveal">{{ section.settings.title_line1 | default: 'Deux designs.' }}<br>{{ section.settings.title_line2 | default: 'Un même impact.' }}</h2>
+      {%- comment -%}
+        Une ligne = un réglage = un bloc. Le <br> est remplacé par deux <span>
+        en `display:block; white-space:nowrap` (cf. .buy-title-line dans
+        theme.css) : chaque ligne garde la sienne et ne se replie jamais.
+      {%- endcomment -%}
+      <h2 class="h-xl reveal"><span class="buy-title-line">{{ section.settings.title_line1 | default: 'Deux designs.' }}</span><span class="buy-title-line">{{ section.settings.title_line2 | default: 'Un même impact.' }}</span></h2>
       <p class="reveal">{{ section.settings.text | default: 'Midnight Black pour les comptoirs affirmés, Google Blue pour les enseignes lumineuses. Les deux embarquent la même puce NFC, programmée pour vous.' }}</p>
     </div>
     {% assign product = section.settings.product %}
