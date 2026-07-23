@@ -313,7 +313,12 @@
         Emplacement 4 — section complète des avis, juste avant la FAQ.
         Même snippet que la section d'accueil : un seul balisage à maintenir.
       {%- endcomment -%}
-      {%- render 'google-reviews-block' -%}
+      {%- render 'google-reviews-block',
+        title: section.settings.reviews_title,
+        source_note: section.settings.reviews_source_note,
+        google_link: section.settings.reviews_google_link,
+        initial_count: section.settings.reviews_initial_count
+      -%}
 
       {% assign has_faq = false %}
       {% for block in section.blocks %}
@@ -1263,7 +1268,12 @@
     { "type": "text", "id": "heading", "label": "H1", "default": "Plaque NFC Avis Google pour Commerce" },
     { "type": "richtext", "id": "intro", "label": "Introduction", "default": "<p>Une plaque NFC prête à l’emploi pour ouvrir directement la page d’avis Google de votre établissement depuis un smartphone compatible. Personnalisation, programmation et achat sans abonnement.</p>" },
     { "type": "text", "id": "faq_eyebrow", "label": "Surtitre FAQ", "default": "Questions fréquentes" },
-    { "type": "text", "id": "faq_heading", "label": "Titre FAQ", "default": "Ce qu’il faut savoir avant de commander" }
+    { "type": "text", "id": "faq_heading", "label": "Titre FAQ", "default": "Ce qu’il faut savoir avant de commander" },
+    { "type": "header", "content": "Avis Google" },
+    { "type": "text", "id": "reviews_title", "label": "Titre de la section avis", "default": "Ils font confiance à DPA" },
+    { "type": "textarea", "id": "reviews_source_note", "label": "Mention de source", "default": "Avis publiés sur la fiche Google de Digital Project Agency, l’entreprise à l’origine de DPA TAP. Ces avis concernent l’expérience globale avec DPA et ne portent pas tous spécifiquement sur cette plaque." },
+    { "type": "url", "id": "reviews_google_link", "label": "Lien de secours vers la fiche Google", "info": "Utilisé uniquement si le métachamp dpa_google.profile_url est vide." },
+    { "type": "range", "id": "reviews_initial_count", "label": "Avis affichés au chargement", "min": 3, "max": 12, "step": 1, "default": 6 }
   ],
   "blocks": [
     {
