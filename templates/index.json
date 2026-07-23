@@ -191,6 +191,15 @@
         "title": "Ce que vous perdez chaque jour"
       }
     },
+    "google_reviews": {
+      "type": "google-reviews",
+      "settings": {
+        "title": "Ils font confiance à DPA",
+        "source_note": "Avis publiés sur la fiche Google de Digital Project Agency, l’entreprise à l’origine de DPA TAP. Ces avis concernent l’expérience globale avec DPA et ne portent pas tous spécifiquement sur cette plaque.",
+        "google_link": "https://maps.app.goo.gl/u9165oouL2iRPFfRA",
+        "initial_count": 6
+      }
+    },
     "faq": {
       "type": "faq",
       "blocks": {
@@ -301,6 +310,7 @@
     "buy",
     "install",
     "benefits",
+    "google_reviews",
     "faq",
     "gallery"
   ]
