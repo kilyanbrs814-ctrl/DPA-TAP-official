@@ -40,18 +40,18 @@
 <div class="g-reviews" id="avis-google" data-g-reviews>
   <header class="g-reviews__head">
     <p class="eyebrow">Avis Google</p>
-    <h2 class="h-lg">{{ title | default: 'Les clients parlent de nos plaques' }}</h2>
+    <h2 class="h-lg">{{ title | default: 'Ils font confiance à DPA' }}</h2>
 
     {%- if gr_count > 0 -%}
       <p class="g-reviews__score">
         {%- render 'google-stars', rating: gr_avg -%}
-        <span aria-hidden="true">{{ gr_avg_txt }}/5 sur Google — {{ gr_count }} avis clients</span>
-        <span class="g-vh">Note de {{ gr_avg_txt }} sur 5 basée sur {{ gr_count }} avis Google.</span>
+        <span aria-hidden="true">DPA est notée {{ gr_avg_txt }}/5 sur Google — {{ gr_count }} avis</span>
+        <span class="g-vh">Digital Project Agency est notée {{ gr_avg_txt }} sur 5 sur Google, sur la base de {{ gr_count }} avis.</span>
       </p>
     {%- endif -%}
 
     <p class="g-reviews__source">
-      {{ source_note | default: "Avis publiés sur la fiche Google de Digital Project Agency, l’entreprise à l’origine de DPA TAP." }}
+      {{ source_note | default: "Avis publiés sur la fiche Google de Digital Project Agency, l’entreprise à l’origine de DPA TAP. Ces avis concernent l’expérience globale avec DPA et ne portent pas tous spécifiquement sur cette plaque." }}
     </p>
   </header>
 
@@ -92,7 +92,7 @@
 
               {%- if r.reply.value != blank -%}
                 <div class="g-review__reply">
-                  <p class="g-review__reply-label">Réponse de DPA TAP</p>
+                  <p class="g-review__reply-label">Réponse de DPA</p>
                   <p>{{ r.reply.value }}</p>
                 </div>
               {%- endif -%}

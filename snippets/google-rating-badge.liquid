@@ -1,10 +1,15 @@
 {%- comment -%}
-  Badge de note agrégée — SOURCE UNIQUE des 5 emplacements.
+  Badge de note agrégée — SOURCE UNIQUE de tous les emplacements.
 
-  Toutes les valeurs proviennent des métachamps boutique `dpa_google`, alimentés
-  par la synchronisation Google Business Profile. Aucune note ni aucun nombre
-  n'est écrit en dur ici ni ailleurs dans le thème : si Google passe de 24 à 25
-  avis ou de 5,0 à 4,9, les 5 emplacements suivent automatiquement.
+  Toutes les valeurs proviennent des métachamps boutique `dpa_google`, aujourd'hui
+  saisis manuellement depuis la fiche Google de Digital Project Agency, demain
+  alimentés par la synchronisation Google Business Profile (voir
+  google-data-fresh.liquid). Aucune note ni aucun nombre n'est écrit en dur ici
+  ni ailleurs dans le thème : si Google passe de 32 à 33 avis ou de 5,0 à 4,9,
+  tous les emplacements suivent en changeant la seule valeur du métachamp.
+
+  La note porte sur l'entreprise Digital Project Agency, pas sur un produit :
+  aucun balisage AggregateRating ni Product Review n'est émis à partir d'elle.
 
   Rendu 100 % côté serveur : aucun script, aucun SDK tiers, aucun CLS.
 
@@ -20,8 +25,8 @@
   assign gb_count = shop.metafields.dpa_google.rating_count.value | plus: 0
 -%}
 {%- comment -%}
-  Sans synchronisation Google réussie depuis 30 jours, le badge disparaît
-  plutôt que d'afficher une note périmée.
+  Source indisponible ou périmée (voir google-data-fresh) : le badge disparaît
+  entièrement plutôt que d'afficher une note fausse ou un cadre vide.
 {%- endcomment -%}
 {%- capture gb_fresh -%}{%- render 'google-data-fresh' -%}{%- endcapture -%}
 {%- if gb_fresh == '1' and gb_avg != blank and gb_count > 0 -%}
@@ -34,20 +39,20 @@
     endunless
     assign gb_avg_txt = gb_avg_txt | replace: '.', ','
 
+# Les avis portent sur Digital Project Agency dans son ensemble, pas sur la
+    # plaque en particulier. Chaque formulation cite donc explicitement DPA et
+    # évite « avis clients » ou toute mention d'achat vérifié, que Google ne
+    # fournit pas.
     case variant
       when 'hero'
-        assign gb_text = gb_avg_txt | append: '/5 sur Google · ' | append: gb_count | append: ' avis'
-      when 'home_product'
-        assign gb_text = 'Noté ' | append: gb_avg_txt | append: '/5 sur Google — ' | append: gb_count | append: ' avis'
-      when 'pdp'
-        assign gb_text = gb_avg_txt | append: '/5 sur Google — ' | append: gb_count | append: ' avis clients'
+        assign gb_text = 'DPA est notée ' | append: gb_avg_txt | append: '/5 sur Google · ' | append: gb_count | append: ' avis'
       when 'cart'
-        assign gb_text = 'Entreprise notée ' | append: gb_avg_txt | append: '/5 sur Google par ' | append: gb_count | append: ' clients'
+        assign gb_text = 'DPA est notée ' | append: gb_avg_txt | append: '/5 sur Google par ' | append: gb_count | append: ' avis'
       else
-        assign gb_text = gb_avg_txt | append: '/5 sur Google — ' | append: gb_count | append: ' avis'
+        assign gb_text = 'DPA est notée ' | append: gb_avg_txt | append: '/5 sur Google — ' | append: gb_count | append: ' avis'
     endcase
 
-    assign gb_label = 'Note de ' | append: gb_avg_txt | append: ' sur 5 basée sur ' | append: gb_count | append: ' avis Google'
+    assign gb_label = 'Digital Project Agency est notée ' | append: gb_avg_txt | append: ' sur 5 sur Google, sur la base de ' | append: gb_count | append: ' avis'
     assign gb_tag = 'span'
     if href != blank
       assign gb_tag = 'a'

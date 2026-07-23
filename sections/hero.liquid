@@ -19,7 +19,7 @@
         donc vers l'ancre de cette page, pas vers une ancre locale.
       {%- endcomment -%}
       <div class="reveal">
-        {%- assign hero_reviews_link = section.settings.reviews_link | default: '/products/plaque-nfc-avis-google' | append: '#avis-google' -%}
+        {%- assign hero_reviews_link = section.settings.reviews_link | default: '#avis-google' -%}
         {%- render 'google-rating-badge', variant: 'hero', href: hero_reviews_link -%}
       </div>
     </div>
@@ -63,7 +63,7 @@
     { "type": "text", "id": "cta2_label", "label": "Bouton 2 — libellé", "default": "Voir comment ça marche" },
     { "type": "url", "id": "cta2_link", "label": "Bouton 2 — lien" },
     { "type": "image_picker", "id": "image", "label": "Image du Hero (carré)", "info": "Affichée à droite du texte. Format carré recommandé — le cadre recadre en 1:1 sans déformer. Le texte alternatif se règle dans la bibliothèque de contenus." },
-    { "type": "url", "id": "reviews_link", "label": "Lien du badge d’avis", "info": "Page portant le carrousel d’avis. L’ancre #avis-google est ajoutée automatiquement." }
+    { "type": "url", "id": "reviews_link", "label": "Lien du badge d’avis", "info": "Laisser vide pour pointer vers la section d’avis de cette page (#avis-google). Renseigner une URL uniquement si le carrousel se trouve sur une autre page." }
   ],
   "presets": [{ "name": "Hero immersif" }]
 }
