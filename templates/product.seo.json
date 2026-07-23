@@ -162,9 +162,9 @@
         "faq_6"
       ],
       "settings": {
-        "eyebrow": "Plaque avis Google pour commerce",
-        "heading": "Plaque NFC Avis Google pour commerce",
-        "intro": "<p>Vos clients laissent leur avis Google pendant qu’ils sont encore chez vous : ils approchent leur téléphone de la plaque posée sur le comptoir, votre fiche s’ouvre, ils notent. La puce NFC est programmée avec le lien de votre établissement avant l’expédition. Aucun abonnement, aucune application à installer.</p>",
+        "eyebrow": "Plaque avis Google NFC",
+        "heading": "Obtenez plus d’avis Google.",
+        "intro": "<p>Vos clients approchent leur téléphone, votre fiche Google s’ouvre et ils laissent leur avis en quelques secondes. La plaque arrive déjà programmée avec votre établissement : aucun abonnement, aucune application à installer.</p>",
         "faq_eyebrow": "Questions fréquentes",
         "faq_heading": "Ce qu’il faut savoir avant de commander"
       }
