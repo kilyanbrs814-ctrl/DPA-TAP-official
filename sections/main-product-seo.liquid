@@ -240,13 +240,18 @@
                 <p class="eyebrow sp-eyebrow"><span class="sp-index">0{{ chapter }}</span>{{ block.settings.eyebrow }}</p>
                 <h2 class="sp-title">{{ block.settings.heading }}</h2>
               </div>
+              {%- comment -%}
+                Les silhouettes de téléphones sont remplacées par les logos des
+                deux marques, en SVG inline monochrome : la couleur est héritée
+                du thème (currentColor), aucun fichier image n'est chargé.
+              {%- endcomment -%}
               <div class="sp-compat-grid">
                 <div class="sp-device">
-                  <b><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2.4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M10.5 5h3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>{{ block.settings.device1_name }}</b>
+                  <b>{%- render 'icon-apple', class: 'sp-device__logo' -%}{{ block.settings.device1_name }}</b>
                   <p>{{ block.settings.device1_text }}</p>
                 </div>
                 <div class="sp-device">
-                  <b><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2.4" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="18" r="1" fill="currentColor"/></svg>{{ block.settings.device2_name }}</b>
+                  <b>{%- render 'icon-samsung', class: 'sp-device__logo' -%}{{ block.settings.device2_name }}</b>
                   <p>{{ block.settings.device2_text }}</p>
                 </div>
                 <aside class="sp-limits">
@@ -861,19 +866,29 @@
     transition: border-color 0.25s ease;
   }
 
+  {%- comment -%}
+    Logo + nom de la marque : centrés sur mobile, alignés à gauche (donc
+    horizontalement, côte à côte) dès 640 px où la grille passe en colonnes.
+  {%- endcomment -%}
   .sp-device b {
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
+    gap: 12px;
     color: var(--c-paper);
     font-size: 1.05rem;
+    text-align: center;
   }
 
-  .sp-device svg {
-    flex: 0 0 20px;
-    width: 20px;
+  .sp-device__logo {
+    flex: 0 0 auto;
+    width: auto;
+    height: 24px;
+    color: var(--c-paper);
+  }
+
+  .sp-device__logo--samsung {
     height: 20px;
-    color: var(--sp-blue-soft);
   }
 
   .sp-device p {
@@ -1068,6 +1083,13 @@
 
     .sp-compat-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    /* Les deux marques passent côte à côte : le logo reprend sa place à gauche
+       du nom, aligné sur le texte de la carte. */
+    .sp-device b {
+      justify-content: flex-start;
+      text-align: left;
     }
 
     .sp-limits {

@@ -1,0 +1,30 @@
+{%- comment -%}
+  Logo Samsung, monochrome et inline : couleur héritée via `currentColor`.
+
+  Le logo Samsung est un logotype (cartouche elliptique + mot-symbole). Il est
+  reconstruit ici en SVG avec la police du thème plutôt qu'avec les contours
+  officiels, afin de ne pas embarquer de fichier de marque dans le thème.
+
+  Paramètre optionnel :
+  - class : classes CSS ajoutées au <svg>.
+{%- endcomment -%}
+<svg
+  class="dpa-brand-logo dpa-brand-logo--samsung{% if class %} {{ class }}{% endif %}"
+  viewBox="0 0 168 44"
+  role="img"
+  aria-label="Samsung"
+  focusable="false"
+>
+  <ellipse cx="84" cy="22" rx="82" ry="20" fill="none" stroke="currentColor" stroke-width="2.6" />
+  <text
+    x="84"
+    y="22"
+    fill="currentColor"
+    font-family="'Space Grotesk', Helvetica, Arial, sans-serif"
+    font-size="16"
+    font-weight="700"
+    letter-spacing="1.8"
+    text-anchor="middle"
+    dominant-baseline="central"
+  >SAMSUNG</text>
+</svg>
