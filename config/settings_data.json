@@ -1,9 +1,85 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "current": {
     "color_bg": "#0b0b0c",
     "color_ink": "#101012",
     "color_paper": "#f4f2ed",
     "color_grey": "#8a8a8e",
-    "color_blue": "#4285F4"
+    "color_blue": "#4285F4",
+    "sections": {
+      "announcement-marquee": {
+        "type": "announcement-marquee",
+        "settings": {
+          "enabled": true,
+          "aria_label": "Avantages DPA TAP",
+          "item_1_enabled": true,
+          "item_1_text": "Livraison gratuite en France",
+          "item_1_icon": "truck",
+          "item_2_enabled": true,
+          "item_2_text": "Garantie gratuite à vie",
+          "item_2_icon": "shield",
+          "item_3_enabled": true,
+          "item_3_text": "Sans abonnement",
+          "item_3_icon": "no-card",
+          "item_4_enabled": true,
+          "item_4_text": "Installation en 30 secondes",
+          "item_4_icon": "stopwatch",
+          "item_5_enabled": true,
+          "item_5_text": "Compatible iPhone & Android",
+          "item_5_icon": "phone",
+          "show_icons": true,
+          "icon_size": 16,
+          "separator": "dot",
+          "color_background": "#0b0b0c",
+          "color_text": "#f4f2ed",
+          "text_size_desktop": 12,
+          "text_size_mobile": 11,
+          "speed": 45
+        }
+      },
+      "header": {
+        "type": "header",
+        "settings": {
+          "logo_text": "DPA TAP",
+          "label_product": "Plaque NFC",
+          "link_product": "",
+          "label_how": "Fonctionnement",
+          "link_how": "",
+          "label_models": "Modèles",
+          "link_models": "",
+          "label_faq": "FAQ",
+          "link_faq": ""
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {
+          "cta_title": "Vos clients sont prêts à vous noter.",
+          "cta_label": "Choisir ma plaque",
+          "cta_link": "",
+          "guides_label": "Guides",
+          "guides_link": "",
+          "menu": "",
+          "legal": "Plaques NFC pour avis Google.",
+          "note": "Google est une marque de Google LLC."
+        }
+      }
+    },
+    "content_for_index": [],
+    "blocks": {
+      "14947870889598929745": {
+        "type": "shopify://apps/smartbot/blocks/app-embed/d9407b81-7d3e-4612-91c3-2020086e2073",
+        "disabled": false,
+        "settings": {}
+      }
+    }
   }
 }
