@@ -1,0 +1,44 @@
+{%- comment -%}
+  Visuel de la fiche produit SEO — source unique pour les chapitres
+  « Fonctionnement » et « Formats et modèles ».
+
+  Paramètres :
+  - image        : réglage image_picker de la section. Prioritaire dès qu'il est
+                   renseigné : le marchand garde la main depuis l'éditeur.
+  - fallback_url : image du CDN Shopify servie tant que le réglage est vide.
+                   Les images sont carrées (1254 × 1254) et déjà en ligne.
+  - alt          : texte alternatif.
+  - sizes        : attribut `sizes` (largeur d'affichage réelle).
+  - class        : classes CSS ajoutées au <figure>.
+
+  Dans les deux branches : dimensions explicites (pas de saut de mise en page),
+  `loading="lazy"` et srcset responsive — jamais de <img> brut sans srcset.
+{%- endcomment -%}
+{%- liquid
+  assign media_sizes = sizes | default: '(min-width: 900px) 30vw, calc(100vw - 48px)'
+  assign media_alt = alt | default: ''
+-%}
+<figure class="sp-media{% if class %} {{ class }}{% endif %}">
+  {%- if image != blank -%}
+    {{
+      image
+      | image_url: width: 1000
+      | image_tag:
+        widths: '320, 480, 640, 800, 1000',
+        sizes: media_sizes,
+        loading: 'lazy',
+        alt: media_alt
+    }}
+  {%- else -%}
+    <img
+      src="{{ fallback_url }}&width=1000"
+      srcset="{{ fallback_url }}&width=320 320w, {{ fallback_url }}&width=480 480w, {{ fallback_url }}&width=640 640w, {{ fallback_url }}&width=800 800w, {{ fallback_url }}&width=1000 1000w"
+      sizes="{{ media_sizes }}"
+      width="1254"
+      height="1254"
+      loading="lazy"
+      decoding="async"
+      alt="{{ media_alt | escape }}"
+    >
+  {%- endif -%}
+</figure>

@@ -19,6 +19,9 @@
           "settings": {
             "eyebrow": "Fonctionnement",
             "heading": "Du geste du client à l’avis publié",
+            "step1_image": "shopify://shop_images/ChatGPT_Image_13_juil._2026_14_05_27_1.png",
+            "step2_image": "shopify://shop_images/ChatGPT_Image_13_juil._2026_14_05_27_2.png",
+            "step3_image": "shopify://shop_images/ChatGPT_Image_18_juil._2026_10_59_58.png",
             "step1_title": "Le client approche son téléphone",
             "step1_text": "La zone NFC de son iPhone ou de son téléphone Android compatible passe au-dessus de la plaque.",
             "step2_title": "Une notification apparaît",
