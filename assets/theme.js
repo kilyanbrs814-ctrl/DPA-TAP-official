@@ -301,7 +301,9 @@
       }
 
       /* Pack — 14,50 € de remise sur 2 plaques. Doit correspondre à la réduction
-         automatique Shopify « Pack 2 plaques » (remise + livraison gratuite, min. 2 articles). */
+         automatique Shopify « Pack 2 plaques : -14,50 € » (min. 2 articles). La livraison
+         n'en fait pas partie : elle est gratuite pour toute la France via les profils
+         d'expédition, quelle que soit la quantité. */
       var PACK_DISCOUNT = 1450;
       var duoEls = Array.prototype.slice.call(root.querySelectorAll('[data-pack-duo]'));
       var singleEls = Array.prototype.slice.call(root.querySelectorAll('[data-pack-single]'));

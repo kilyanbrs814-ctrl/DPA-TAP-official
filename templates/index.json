@@ -12,9 +12,9 @@
     "hero": {
       "type": "hero",
       "settings": {
-        "title_line1": "Plus d’avis Google",
-        "title_line2": "plus de clients.",
-        "subtitle": "Devenez l'entreprise la mieux notée et la mieux placée localement sur Google.",
+        "title_line1": "Plus d’avis Google,",
+        "title_line2": "en un seul geste.",
+        "subtitle": "Devenez l’entreprise la mieux notée et la mieux placée localement sur Google.",
         "cta1_label": "Choisir ma plaque",
         "cta1_link": "shopify://products/plaque-nfc-avis-google",
         "cta2_label": "Voir comment ça marche",
@@ -99,8 +99,8 @@
     "buy": {
       "type": "product-buy",
       "settings": {
-        "title_line1": "Doublez vos avis Google",
-        "title_line2": "en un seul geste.",
+        "title_line1": "Facilitez la collecte",
+        "title_line2": "d’avis Google.",
         "text": "Les deux modèles embarquent la même puce NFC, programmée avec le lien d’avis de votre établissement avant l’envoi. À l’unité ou en pack de deux.",
         "product": "plaque-nfc-avis-google"
       }
@@ -153,8 +153,8 @@
         "b3": {
           "type": "benefit",
           "settings": {
-            "title": "Référencement",
-            "text": "Vous remontez plus facilement sur Google et Google Maps."
+            "title": "Visibilité locale",
+            "text": "Des avis authentiques et récents renforcent la présence de votre établissement sur Google et Google Maps."
           }
         },
         "b2": {
@@ -168,14 +168,14 @@
           "type": "benefit",
           "settings": {
             "title": "Conversion",
-            "text": "Vous obtenez plus de clics, d’appels et de visites."
+            "text": "Une fiche Google active et rassurante aide vos futurs clients à franchir le pas : un clic, un appel, une visite."
           }
         },
         "b5": {
           "type": "benefit",
           "settings": {
-            "title": "Être le préferé",
-            "text": "Vous augmentez vos chances d’être choisi en premier."
+            "title": "Être le préféré",
+            "text": "Face à plusieurs adresses similaires, des avis récents et accessibles augmentent vos chances d’être choisi."
           }
         }
       },
@@ -187,8 +187,8 @@
         "b5"
       ],
       "settings": {
-        "eyebrow": "Pertes",
-        "title": "Ce que vous perdez chaque jour"
+        "eyebrow": "Bénéfices",
+        "title": "Les bénéfices pour votre entreprise"
       }
     },
     "google_reviews": {

@@ -507,8 +507,10 @@ p{margin:0;text-wrap:pretty}
   .hero{padding:104px 0 72px}
   /* Sous 760 px la ligne la plus longue du H1 occupe déjà presque toute la
      largeur utile (container = 100vw - 48px) : la marge de manœuvre est faible,
-     la borne fluide reste donc juste sous le point de débordement. */
-  .hero h1.h-display{font-size:clamp(2rem,calc(10.8vw - 4px),3.9rem)}
+     la borne fluide reste donc juste sous le point de débordement.
+     Bornes recalées de ~3 % après le passage à « Plus d’avis Google, / en un
+     seul geste. » : la ligne la plus longue passe de 8,12 em à 8,37 em. */
+  .hero h1.h-display{font-size:clamp(1.95rem,calc(10.45vw - 4px),3.78rem)}
   .hero-grid{gap:22px}
   .hero-sub{margin-top:20px;max-width:36ch;font-size:1rem;line-height:1.55}
   .hero-cta{margin-top:28px;gap:10px}

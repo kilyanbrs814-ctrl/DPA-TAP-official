@@ -1,10 +1,16 @@
 {% comment %}
   Formulaire d'achat connecté aux variantes — utilisé sur l'accueil et la page produit.
   « Pack 2 plaques » : ajoute 2 lignes au panier, avec couleur, nom d'établissement et lien
-  Google propres à chaque plaque. Le prix pack (2 × prix unitaire − 14,50 €) et la livraison
-  offerte doivent être portés au checkout par deux réductions automatiques Shopify combinables
-  (minimum 2 articles) : « 14,50 € de remise » + « livraison gratuite ». Le montant 1450 ci-dessous
-  doit rester aligné avec PACK_DISCOUNT dans theme.js et avec la réduction automatique.
+  Google propres à chaque plaque. Le prix pack (2 × prix unitaire − 14,50 €) est porté au
+  checkout par une seule réduction automatique Shopify, « Pack 2 plaques : -14,50 € »
+  (minimum 2 articles). Le montant 1450 ci-dessous doit rester aligné avec PACK_DISCOUNT
+  dans theme.js et avec cette réduction.
+
+  La livraison ne repose plus sur une réduction automatique : elle est gratuite pour toute
+  la France via les profils d'expédition, quelle que soit la quantité commandée. Le pack ne
+  porte donc aucun badge de livraison — l'annoncer sur la seule offre à deux plaques
+  laisserait croire que la plaque seule paie le port. La mention globale vit dans le bandeau
+  d'annonces et dans product-reassurance.liquid.
 {% endcomment %}
 {% assign current = product.selected_or_first_available_variant | default: product.variants.first %}
 {% assign pack_full_price = current.price | times: 2 %}
@@ -68,7 +74,6 @@
       <span class="pack-info">
         <span class="pack-name"><span class="pack-mobile-prefix">Pack </span>2 plaques</span>
         <span class="pack-badge">Économisez {{ 1450 | money }}</span>
-        <span class="pack-badge">Livraison offerte</span>
         <span class="pack-note" style="display:block;font-size:.78rem;opacity:.65;margin-top:2px">Au lieu de {{ pack_full_price | money }} séparément</span>
       </span>
       <span class="pack-price" data-pack-price="2">{{ pack_price | money }}</span>
