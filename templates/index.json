@@ -93,6 +93,7 @@
       ],
       "settings": {
         "eyebrow": "Comment ça marche",
+        "title": "Le geste qui déclenche l’avis.",
         "review_name": "Votre établissement"
       }
     },

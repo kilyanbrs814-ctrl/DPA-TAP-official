@@ -3,7 +3,16 @@
     <div class="scrolly-sticky">
       <div class="container scrolly-grid">
         <div class="scrolly-steps">
-          <h2 class="eyebrow" style="margin-bottom:26px">{{ section.settings.eyebrow | default: 'Comment ça marche' }}</h2>
+          {%- comment -%}
+            Le H1 de la page d'accueil est porté par le hero, donc le titre de
+            section est un H2. L'eyebrow redevient un <p> : il était balisé en
+            H2 faute de vrai titre, alors que toutes les autres sections du
+            thème utilisent déjà le couple <p class="eyebrow"> + <h2>.
+          {%- endcomment -%}
+          {%- if section.settings.title != blank -%}
+            <h2 class="scrolly-title">{{ section.settings.title }}</h2>
+          {%- endif -%}
+          <p class="eyebrow" style="margin-bottom:14px">{{ section.settings.eyebrow | default: 'Comment ça marche' }}</p>
           <div class="scrolly-hint" aria-hidden="true">
             <svg class="hint-svg hint-svg--mouse" viewBox="0 0 20 30" fill="none">
               <rect x="1.25" y="1.25" width="17.5" height="27.5" rx="8.75" stroke="currentColor" stroke-width="2"/>
@@ -66,6 +75,7 @@
   "name": "Scrollytelling",
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Sur-titre", "default": "Comment ça marche" },
+    { "type": "text", "id": "title", "label": "Titre de section", "info": "Laisser vide pour masquer le titre." },
     { "type": "image_picker", "id": "plaque_image", "label": "Image de la plaque" },
     { "type": "text", "id": "review_name", "label": "Nom affiché sur le téléphone", "default": "Votre établissement" }
   ],

@@ -104,6 +104,7 @@ p{margin:0;text-wrap:pretty}
 .scrolly-sticky{position:sticky;top:0;height:100svh;overflow:clip;display:grid;align-items:center}
 .scrolly-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:48px;align-items:center}
 .scrolly-steps{display:flex;flex-direction:column;gap:8px}
+.scrolly-title{max-width:780px;margin:0 0 16px;font-size:clamp(2rem,2.8vw + 1.05rem,3.75rem);line-height:1.05;color:var(--c-paper)}
 .scrolly-step{font-family:"Space Grotesk",sans-serif;font-weight:600;letter-spacing:-.03em;font-size:clamp(2rem,4.6vw,3.8rem);line-height:1.05;color:color-mix(in srgb,var(--c-paper) 22%,transparent);transition:color .5s ease,transform .5s cubic-bezier(.2,.8,.2,1)}
 .scrolly-step h3{font-size:inherit;line-height:inherit;margin:0}
 .scrolly-step.is-active{color:var(--c-paper);transform:translateX(10px)}
@@ -500,6 +501,7 @@ p{margin:0;text-wrap:pretty}
   .scrolly-grid{height:100%;grid-template-rows:auto minmax(0,1fr);gap:10px}
   .scrolly-steps{gap:6px}
   .scrolly-steps .eyebrow{margin-bottom:12px!important}
+  .scrolly-title{margin-bottom:10px}
   .scrolly-step{font-size:clamp(1.9rem,8.5vw,2.6rem);line-height:1.04;color:color-mix(in srgb,var(--c-paper) 27%,transparent)}
   .scrolly-step.is-active{transform:translateX(6px)}
   .scrolly-step.is-done{color:color-mix(in srgb,var(--c-paper) 45%,transparent)}
