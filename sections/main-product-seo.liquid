@@ -33,14 +33,8 @@
       </div>
 
       <div class="seo-product__purchase">
-        <p class="eyebrow">{{ section.settings.eyebrow }}</p>
-        {%- comment -%}
-          Le titre reste un H1 pour le SEO (fiche produit) mais est masqué
-          visuellement : à l'écran, la preuve sociale (étoiles + note) prend
-          sa place juste sous le surtitre.
-        {%- endcomment -%}
-        <h1 class="sr-only">{{ section.settings.heading }}</h1>
         {%- render 'google-rating-badge', variant: 'pdp', href: '#avis-google' -%}
+        <h1 class="h-lg">{{ section.settings.heading }}</h1>
         {%- render 'product-reassurance' -%}
         <div class="seo-product__intro rte">{{ section.settings.intro }}</div>
         {% render 'buy-form', product: product %}
