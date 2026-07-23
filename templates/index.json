@@ -12,8 +12,8 @@
     "hero": {
       "type": "hero",
       "settings": {
-        "title_line1": "Plus d’avis",
-        "title_line2": "Google.",
+        "title_line1": "Plus d’avis Google pour",
+        "title_line2": "booster votre commerce",
         "subtitle": "Devenez l'entreprise la mieux notée et la mieux placée localement sur Google.",
         "cta1_label": "Choisir ma plaque",
         "cta1_link": "/#modeles",
@@ -22,15 +22,6 @@
         "image": "shopify://shop_images/dpa-hero-plaques-1254x1254.png",
         "scroll_hint": "Faites défiler",
         "reviews_link": ""
-      }
-    },
-    "buy": {
-      "type": "product-buy",
-      "settings": {
-        "title_line1": "Doublez vos avis Google",
-        "title_line2": "d",
-        "text": "Les deux modèles embarquent la même puce NFC, programmée avec le lien d’avis de votre établissement avant l’envoi. À l’unité ou en pack de deux.",
-        "product": "plaque-nfc-avis-google"
       }
     },
     "scrolly": {
@@ -63,6 +54,15 @@
       "settings": {
         "eyebrow": "Comment ça marche",
         "review_name": "Votre établissement"
+      }
+    },
+    "buy": {
+      "type": "product-buy",
+      "settings": {
+        "title_line1": "Doublez vos avis Google",
+        "title_line2": "d",
+        "text": "Les deux modèles embarquent la même puce NFC, programmée avec le lien d’avis de votre établissement avant l’envoi. À l’unité ou en pack de deux.",
+        "product": "plaque-nfc-avis-google"
       }
     },
     "install": {
@@ -151,49 +151,6 @@
         "title": "Ce que vous perdez chaque jour"
       }
     },
-    "gallery": {
-      "type": "gallery",
-      "blocks": {
-        "g1": {
-          "type": "photo",
-          "settings": {
-            "caption": "Salon de coiffure",
-            "fallback": "scene-salon.png"
-          }
-        },
-        "g2": {
-          "type": "photo",
-          "settings": {
-            "caption": "Café",
-            "fallback": "scene-cafe.png"
-          }
-        },
-        "g3": {
-          "type": "photo",
-          "settings": {
-            "caption": "Boutique",
-            "fallback": "scene-boutique.png"
-          }
-        },
-        "g4": {
-          "type": "photo",
-          "settings": {
-            "caption": "Restaurant",
-            "fallback": "scene-restaurant.png"
-          }
-        }
-      },
-      "block_order": [
-        "g1",
-        "g2",
-        "g3",
-        "g4"
-      ],
-      "settings": {
-        "eyebrow": "En situation",
-        "title": "Exemples d’installation"
-      }
-    },
     "faq": {
       "type": "faq",
       "blocks": {
@@ -251,6 +208,49 @@
       "settings": {
         "eyebrow": "FAQ",
         "title": "Les questions qu’on nous pose."
+      }
+    },
+    "gallery": {
+      "type": "gallery",
+      "blocks": {
+        "g1": {
+          "type": "photo",
+          "settings": {
+            "caption": "Salon de coiffure",
+            "fallback": "scene-salon.png"
+          }
+        },
+        "g2": {
+          "type": "photo",
+          "settings": {
+            "caption": "Café",
+            "fallback": "scene-cafe.png"
+          }
+        },
+        "g3": {
+          "type": "photo",
+          "settings": {
+            "caption": "Boutique",
+            "fallback": "scene-boutique.png"
+          }
+        },
+        "g4": {
+          "type": "photo",
+          "settings": {
+            "caption": "Restaurant",
+            "fallback": "scene-restaurant.png"
+          }
+        }
+      },
+      "block_order": [
+        "g1",
+        "g2",
+        "g3",
+        "g4"
+      ],
+      "settings": {
+        "eyebrow": "En situation",
+        "title": "Exemples d’installation"
       }
     }
   },
