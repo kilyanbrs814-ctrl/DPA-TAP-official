@@ -1,5 +1,5 @@
 {%- comment -%}
-  Section « Avis Google » — enveloppe fine autour du snippet partagé.
+  Section « Avis clients » — enveloppe fine autour du snippet partagé.
   Le rendu réel vit dans snippets/google-reviews-block.liquid, réutilisé tel
   quel par la fiche produit, pour qu'il n'existe qu'un seul balisage à maintenir.
 {%- endcomment -%}
@@ -16,14 +16,14 @@
 
 {% schema %}
 {
-  "name": "Avis Google",
+  "name": "Avis clients",
   "tag": "section",
   "settings": [
-    { "type": "text", "id": "title", "label": "Titre", "default": "Ils font confiance à DPA" },
-    { "type": "textarea", "id": "source_note", "label": "Mention de source", "default": "Avis publiés sur la fiche Google de Digital Project Agency, l’entreprise à l’origine de DPA TAP. Ces avis concernent l’expérience globale avec DPA et ne portent pas tous spécifiquement sur cette plaque." },
+    { "type": "text", "id": "title", "label": "Titre", "default": "Ce qu’ils pensent de la plaque" },
+    { "type": "textarea", "id": "source_note", "label": "Mention de source", "default": "Avis de clients ayant testé la plaque NFC DPA TAP. Témoignages initialement publiés sur notre fiche Google." },
     { "type": "url", "id": "google_link", "label": "Lien de secours vers la fiche Google", "info": "Utilisé uniquement si le métachamp dpa_google.profile_url est vide." },
     { "type": "range", "id": "initial_count", "label": "Avis affichés au chargement", "min": 3, "max": 12, "step": 1, "default": 6 }
   ],
-  "presets": [{ "name": "Avis Google" }]
+  "presets": [{ "name": "Avis clients" }]
 }
 {% endschema %}

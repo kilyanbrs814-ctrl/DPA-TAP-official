@@ -194,8 +194,8 @@
     "google_reviews": {
       "type": "google-reviews",
       "settings": {
-        "title": "Ils font confiance à DPA",
-        "source_note": "Avis publiés sur la fiche Google de Digital Project Agency, l’entreprise à l’origine de DPA TAP. Ces avis concernent l’expérience globale avec DPA et ne portent pas tous spécifiquement sur cette plaque.",
+        "title": "Ce qu’ils pensent de la plaque",
+        "source_note": "Avis de clients ayant testé la plaque NFC DPA TAP. Témoignages initialement publiés sur notre fiche Google.",
         "google_link": "https://maps.app.goo.gl/u9165oouL2iRPFfRA",
         "initial_count": 6
       }
