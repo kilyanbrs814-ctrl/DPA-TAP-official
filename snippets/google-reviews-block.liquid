@@ -104,6 +104,17 @@
       <div class="g-reviews__nav">
         <button type="button" class="g-reviews__arrow" data-g-prev aria-label="Avis précédents">←</button>
         <button type="button" class="g-reviews__arrow" data-g-next aria-label="Avis suivants">→</button>
+        {%- comment -%}
+          Commande du défilement automatique. Masquée par défaut : theme.js ne
+          la révèle que si l'autoplay peut réellement tourner, c'est-à-dire s'il
+          y a de quoi défiler et si l'utilisateur ne demande pas de réduire les
+          animations. Sans JavaScript, ni autoplay ni bouton inutile.
+        {%- endcomment -%}
+        <button type="button" class="g-reviews__arrow g-reviews__toggle" data-g-toggle
+          aria-pressed="false"
+          aria-label="Mettre le défilement automatique des avis en pause" hidden>
+          <span class="g-reviews__toggle-icon" aria-hidden="true"></span>
+        </button>
       </div>
     </div>
 

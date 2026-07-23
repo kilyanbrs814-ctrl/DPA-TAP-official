@@ -1054,6 +1054,19 @@ a.g-badge:hover{color:inherit;border-color:color-mix(in srgb,currentColor 34%,tr
 .g-reviews__arrow:hover:not(:disabled){background:rgba(255,255,255,.1);border-color:var(--c-paper)}
 .g-reviews__arrow:disabled{opacity:.32;cursor:default}
 @media (prefers-reduced-motion:reduce){.g-reviews__arrow{transition:none}}
+/* Commande du defilement automatique : meme pastille que les fleches, icone
+   dessinee en CSS pour ne dependre d'aucune police. */
+.g-reviews__toggle{display:grid;place-items:center;opacity:.72}
+.g-reviews__toggle:hover{opacity:1}
+.g-reviews__toggle-icon{position:relative;display:block;width:12px;height:12px}
+.g-reviews__toggle-icon::before,.g-reviews__toggle-icon::after{content:"";position:absolute;top:0;width:3px;height:12px;border-radius:1px;background:currentColor}
+.g-reviews__toggle-icon::before{left:1px}
+.g-reviews__toggle-icon::after{right:1px}
+.g-reviews__toggle[aria-pressed="true"] .g-reviews__toggle-icon::before{left:2px;width:0;height:0;background:transparent;border-radius:0;border-left:11px solid currentColor;border-top:6px solid transparent;border-bottom:6px solid transparent}
+.g-reviews__toggle[aria-pressed="true"] .g-reviews__toggle-icon::after{display:none}
+/* Aucun defilement automatique si l'utilisateur reduit les animations : le
+   bouton n'a plus d'objet, theme.js le masque aussi cote script. */
+@media (prefers-reduced-motion:reduce){.g-reviews__toggle{display:none}}
 
 .g-reviews__foot{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin-top:28px}
 .g-reviews__link{color:var(--g-blue);font-family:"Space Grotesk",sans-serif;font-size:.95rem}

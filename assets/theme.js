@@ -556,9 +556,13 @@
   }
 
   /* ---------- Avis Google (carrousel) ---------- */
-  /* Le défilement tactile est assuré par scroll-snap en CSS : ce script ne gère
-     que les flèches et le bouton « Afficher plus ». Aucun listener touch, donc
-     aucun risque d'entrer en conflit avec le scroll vertical de la page. */
+  /* Le défilement tactile reste assuré par scroll-snap en CSS : ce script ne
+     gère que les flèches, le bouton « Afficher plus » et le défilement
+     automatique. Aucun listener touch bloquant, donc aucun conflit avec le
+     scroll vertical de la page ni avec le swipe natif. */
+  var G_DELAY = 4500;   /* un pas toutes les 4,5 s */
+  var G_RESUME = 6000;  /* reprise 6 s après la dernière action manuelle */
+
   function initGoogleReviews(scope) {
     qsa(scope, '[data-g-reviews]').forEach(function (root) {
       if (!guard(root, 'GReviews')) return;
@@ -566,14 +570,23 @@
       var prev = root.querySelector('[data-g-prev]');
       var next = root.querySelector('[data-g-next]');
       var more = root.querySelector('[data-g-more]');
+      var toggle = root.querySelector('[data-g-toggle]');
       if (!track) return;
 
+      /* Le pas vient de la largeur réelle d'une carte et du gap réellement
+         appliqué : il suit donc les 1, 2 ou 3 colonnes selon le breakpoint,
+         sans aucune largeur en dur. */
+      function gap() {
+        var g = parseFloat(getComputedStyle(track).columnGap);
+        return isNaN(g) ? 0 : g;
+      }
       function step() {
         var card = track.querySelector('.g-review:not([hidden])');
-        return card ? card.getBoundingClientRect().width + 18 : track.clientWidth;
+        return card ? card.getBoundingClientRect().width + gap() : track.clientWidth;
       }
+      function maxScroll() { return track.scrollWidth - track.clientWidth; }
       function syncFrom(pos) {
-        var max = track.scrollWidth - track.clientWidth - 2;
+        var max = maxScroll() - 2;
         if (prev) prev.disabled = pos <= 2;
         if (next) next.disabled = pos >= max;
       }
@@ -583,17 +596,131 @@
          étranglé par le navigateur et laissait le bouton précédent désactivé
          après un défilement animé. */
       function go(dir) {
-        var max = track.scrollWidth - track.clientWidth;
+        var max = maxScroll();
         var target = Math.max(0, Math.min(max, track.scrollLeft + dir * step()));
         track.scrollTo({ left: target, behavior: reduced() ? 'auto' : 'smooth' });
         syncFrom(target);
       }
 
-      if (prev) prev.addEventListener('click', function () { go(-1); });
-      if (next) next.addEventListener('click', function () { go(1); });
+      /* ----- Défilement automatique ----- */
+      var timer = null, resumeT = null;
+      var hovering = false, focused = false, manual = false;
+      var paused = false, onScreen = false;
+
+      /* Pas assez de cartes pour dépasser la largeur disponible : rien à faire
+         défiler, donc pas de minuteur et pas de bouton pause. */
+      function scrollable() { return maxScroll() > 4; }
+      function allowed() {
+        return !reduced() && scrollable() && !paused && !hovering &&
+               !focused && !manual && onScreen && !document.hidden;
+      }
+      /* Un seul intervalle possible : on efface toujours avant de (re)poser. */
+      function stop() { if (timer) { clearInterval(timer); timer = null; } }
+      function start() {
+        stop();
+        if (!allowed()) return;
+        timer = setInterval(tick, G_DELAY);
+      }
+      function refresh() {
+        if (toggle) toggle.hidden = reduced() || !scrollable();
+        start();
+      }
+      /* Retour au début : rejouer tout le trajet à l'envers serait long et
+         brutal. On masque le repositionnement instantané par un fondu court,
+         puis l'animation normale reprend. */
+      function rewind() {
+        track.style.transition = 'opacity .18s ease';
+        track.style.opacity = '0';
+        setTimeout(function () {
+          track.scrollTo({ left: 0, behavior: 'auto' });
+          syncFrom(0);
+          track.style.opacity = '1';
+          setTimeout(function () {
+            track.style.transition = '';
+            track.style.opacity = '';
+          }, 240);
+        }, 180);
+      }
+      function tick() {
+        if (!allowed()) { stop(); return; }
+        if (track.scrollLeft >= maxScroll() - 2) rewind();
+        else go(1);
+      }
+      /* Action manuelle : pause franche, puis reprise après inactivité. */
+      function manualPause() {
+        manual = true;
+        stop();
+        if (resumeT) clearTimeout(resumeT);
+        resumeT = setTimeout(function () { manual = false; start(); }, G_RESUME);
+      }
+
+      if (prev) prev.addEventListener('click', function () { go(-1); manualPause(); });
+      if (next) next.addEventListener('click', function () { go(1); manualPause(); });
+
+      root.addEventListener('mouseenter', function () { hovering = true; stop(); });
+      root.addEventListener('mouseleave', function () { hovering = false; start(); });
+      root.addEventListener('focusin', function () { focused = true; stop(); });
+      root.addEventListener('focusout', function () { focused = false; start(); });
+      track.addEventListener('touchstart', manualPause, { passive: true });
+      track.addEventListener('pointerdown', function (e) {
+        if (e.pointerType !== 'mouse') manualPause();
+      }, { passive: true });
+
+      function setToggle() {
+        if (!toggle) return;
+        toggle.setAttribute('aria-pressed', paused ? 'true' : 'false');
+        toggle.setAttribute('aria-label', paused
+          ? 'Reprendre le défilement automatique des avis'
+          : 'Mettre le défilement automatique des avis en pause');
+      }
+      if (toggle) {
+        toggle.addEventListener('click', function () {
+          paused = !paused;
+          setToggle();
+          if (paused) {
+            stop();
+            if (resumeT) clearTimeout(resumeT);
+            manual = false;
+          } else {
+            start();
+          }
+        });
+        setToggle();
+      }
+
+      /* Onglet masqué : le minuteur s'arrête au lieu d'accumuler des pas. */
+      function onVis() { if (document.hidden) stop(); else start(); }
+      document.addEventListener('visibilitychange', onVis);
+
+      /* Hors écran : aucun minuteur ne tourne. */
+      var io = null;
+      if ('IntersectionObserver' in window) {
+        io = new IntersectionObserver(function (entries) {
+          onScreen = entries[0].isIntersecting;
+          if (onScreen) start(); else stop();
+        }, { threshold: 0.25 });
+        io.observe(root);
+      } else {
+        onScreen = true;
+      }
+
+      function onResize() { sync(); refresh(); }
+      window.addEventListener('resize', onResize);
+
+      /* Le réglage système peut changer en cours de session. */
+      function onRM() { if (reduced()) stop(); refresh(); }
+      if (RMQ.addEventListener) RMQ.addEventListener('change', onRM);
+
       track.addEventListener('scroll', sync, { passive: true });
-      window.addEventListener('resize', sync);
-      onCleanup(root, function () { window.removeEventListener('resize', sync); });
+
+      onCleanup(root, function () {
+        stop();
+        if (resumeT) clearTimeout(resumeT);
+        window.removeEventListener('resize', onResize);
+        document.removeEventListener('visibilitychange', onVis);
+        if (io) io.disconnect();
+        if (RMQ.removeEventListener) RMQ.removeEventListener('change', onRM);
+      });
 
       if (more) {
         more.addEventListener('click', function () {
@@ -601,9 +728,11 @@
           more.setAttribute('aria-expanded', 'true');
           more.remove();
           sync();
+          refresh();
         });
       }
       sync();
+      refresh();
     });
   }
 
