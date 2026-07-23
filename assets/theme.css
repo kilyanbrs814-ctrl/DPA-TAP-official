@@ -653,6 +653,9 @@ p{margin:0;text-wrap:pretty}
 }
 
 @media (max-width:360px){
+  /* Sous 360px, le decalage lateral du visuel poussait le telephone 3px hors
+     du stage, qui le rognait a droite. On resserre le decalage. */
+  .scrolly-stage{--shift:clamp(6px,2vw,14px)}
   .hdr-cart-label{display:none}
   .hdr-cart{padding:9px 11px}
   .hdr-menu-nav{right:-52px}
