@@ -65,17 +65,20 @@ p{margin:0;text-wrap:pretty}
 @media (max-width:820px){.hdr-nav{display:none}}
 
 /* ============ Hero ============ */
-.hero{position:relative;min-height:100svh;background:var(--c-bg);color:var(--c-paper);display:grid;align-items:center;overflow:clip;padding:140px 0 80px}
-.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;position:relative;z-index:2}
-.hero-bg{position:absolute;inset:0;z-index:0}
-.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:right center}
-.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(11,11,12,.92) 0%,rgba(11,11,12,.55) 45%,rgba(11,11,12,0) 70%)}
-.hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:33%;z-index:1;pointer-events:none;background:linear-gradient(to bottom,transparent 0%,rgba(11,11,12,.25) 30%,rgba(11,11,12,.75) 70%,var(--c-bg) 100%)}
+/* Mise en page deux colonnes : texte à gauche, visuel carré à droite, les deux
+   centrés verticalement. Le visuel n'est plus un fond plein écran, il occupe sa
+   propre colonne — d'où la disparition de .hero-bg et de ses dégradés. */
+.hero{position:relative;background:var(--c-bg);color:var(--c-paper);display:grid;align-items:center;overflow:clip;padding:clamp(124px,14vh,168px) 0 clamp(64px,8vh,96px)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(32px,4vw,64px);align-items:center;position:relative;z-index:2}
 .hero{margin-bottom:0;border:0}
-.hero-copy{min-width:0}
+.hero-copy{min-width:0;max-width:640px}
+/* Cadre réellement carré : l'image le remplit en cover, donc jamais déformée. */
+.hero-media{min-width:0;display:flex;justify-content:center}
+.hero-media-frame{position:relative;width:100%;max-width:560px;aspect-ratio:1/1;border-radius:28px;overflow:hidden}
+.hero-media-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .hero-eyebrow{max-width:100%;margin-bottom:6px;font-family:"Space Grotesk",sans-serif;font-size:clamp(.72rem,1vw,.9rem);font-weight:600;line-height:1.2;letter-spacing:.24em;text-transform:uppercase;color:var(--g-blue);overflow-wrap:anywhere}
 .hero h1{color:var(--c-paper)}
-.hero h1.h-display{font-size:min(5.5rem,calc(6.6vw - 4px))}
+.hero h1.h-display{font-size:clamp(2.4rem,3.9vw,3.9rem)}
 .hero-title-line{display:block;white-space:nowrap}
 .hero h1 em{font-style:normal;color:var(--g-blue)}
 .hero-sub{margin-top:28px;max-width:44ch;font-size:clamp(1.05rem,1.6vw,1.3rem);color:color-mix(in srgb,var(--c-paper) 72%,transparent)}
@@ -87,7 +90,13 @@ p{margin:0;text-wrap:pretty}
 @keyframes heroFloat{0%,100%{transform:rotateX(8deg) rotateZ(-4deg) translateY(0)}50%{transform:rotateX(8deg) rotateZ(-4deg) translateY(-16px)}}
 @media (prefers-reduced-motion:reduce){.hero-plaque{animation:none}}
 .hero-scrollhint{position:absolute;z-index:2;bottom:26px;left:50%;transform:translateX(-50%);color:color-mix(in srgb,var(--c-paper) 45%,transparent);font-size:.8rem;letter-spacing:.18em;text-transform:uppercase}
-@media (max-width:900px){.hero{padding-top:120px}.hero-grid{grid-template-columns:1fr;gap:24px}.hero-plaque{width:min(420px,88%)}.hero-bg::after{background:rgba(11,11,12,.72)}}
+/* Petits écrans d'ordinateur : on élargit un peu la colonne de texte pour que
+   les deux boutons tiennent sur une seule ligne. */
+@media (min-width:901px) and (max-width:1000px){.hero-grid{grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr)}}
+@media (min-width:1001px) and (max-width:1100px){.hero-grid{grid-template-columns:minmax(0,1.18fr) minmax(0,.82fr)}}
+/* Tablette et mobile : une seule colonne, le visuel carré passe au-dessus du
+   texte (l'ordre du DOM garde le <h1> en premier pour l'accessibilité). */
+@media (max-width:900px){.hero{padding-top:120px}.hero-grid{grid-template-columns:minmax(0,1fr);gap:24px}.hero-copy{order:2;max-width:none}.hero-media{order:1}.hero-media-frame{max-width:min(440px,100%)}.hero-plaque{width:min(420px,88%)}}
 
 /* ============ Scrollytelling ============ */
 .scrolly{background:var(--c-bg);color:var(--c-paper);margin-top:0;border:0}
@@ -341,12 +350,11 @@ p{margin:0;text-wrap:pretty}
 .empty-state p{color:var(--c-grey);margin:14px 0 28px}
 
 /* ============ Motion & micro-interactions ============ */
-/* --- Hero : entrée progressive + parallaxe --- */
+/* --- Hero : entrée progressive --- */
 .hero .reveal{transition-duration:.9s}
 .hero h1.reveal{transition-delay:.08s}
 .hero .hero-sub.reveal{transition-delay:.22s}
 .hero .hero-cta.reveal{transition-delay:.36s}
-.hero-bg img{will-change:transform}
 .hero-scrollhint{animation:hintPulse 2.6s ease-in-out infinite}
 @keyframes hintPulse{0%,100%{opacity:.55;transform:translateX(-50%) translateY(0)}50%{opacity:1;transform:translateX(-50%) translateY(-6px)}}
 
@@ -427,7 +435,6 @@ p{margin:0;text-wrap:pretty}
   .hero-scrollhint{animation:none}
   .hint-wheel,.hint-svg--swipe,.hint-svg--chevron{animation:none}
   .scrolly-hint{transition:none}
-  .hero-bg img{will-change:auto}
   .stage-plaque{transform:translateX(-16%) rotateZ(-3deg)}
   .vcard.is-active .vcard-check,.buy-success:not([hidden]),.buy-error:not([hidden]),.buy-submit.is-shake,.hdr-cart [data-cart-count].is-bump{animation:none}
   .gal-item.reveal img,.install-step.reveal .install-img img{transform:none;transition:none}
@@ -444,7 +451,7 @@ p{margin:0;text-wrap:pretty}
 .pack-badge{align-items:center;min-height:24px;padding:2px 9px;border-radius:999px;background:color-mix(in srgb,var(--g-green) 18%,transparent);color:#76d793;font-size:.72rem;font-weight:600;white-space:nowrap}
 .buy-field input:user-invalid,.buy-field textarea:user-invalid{border-color:var(--g-red)}
 .buy-submit[aria-busy="true"]{cursor:wait}
-.hero-bg picture,.gal-item picture,.install-img picture{display:block;width:100%;height:100%}
+.gal-item picture,.install-img picture{display:block;width:100%;height:100%}
 .vcards picture{display:block}
 .prod-thumbs--mobile{display:none}
 
@@ -469,11 +476,9 @@ p{margin:0;text-wrap:pretty}
   .hdr-cart-icon{display:block;width:20px;height:20px}
   .pack-mobile-prefix{display:inline}
   .pack-badge{display:inline-flex}
-  .hero{min-height:100svh;padding:104px 0 72px}
-  .hero h1.h-display{font-size:clamp(2.1rem,calc(12.5vw - 4px),4.6rem)}
-  .hero-grid{gap:18px}
-  .hero-bg::after{background:linear-gradient(180deg,rgba(11,11,12,.5),rgba(11,11,12,.78))}
-  .hero-bg img{transform:none!important;will-change:auto}
+  .hero{padding:104px 0 72px}
+  .hero h1.h-display{font-size:clamp(2.1rem,calc(10.5vw - 4px),3.6rem)}
+  .hero-grid{gap:22px}
   .hero-sub{margin-top:20px;max-width:36ch;font-size:1rem;line-height:1.55}
   .hero-cta{margin-top:28px;gap:10px}
   .hero-cta .btn{flex:1 1 100%;width:100%;padding:14px 20px;min-height:52px}
@@ -509,23 +514,8 @@ p{margin:0;text-wrap:pretty}
   .scrolly.is-static .stage-plaque{transform:translate(-72%,-50%) rotateZ(-3deg)}
 }
 
-/* Fond Hero mobile dédié (image portrait dpa-hero-mobile-1080x1920.webp).
-   Sous 768 px uniquement — le desktop n'est pas concerné et reste inchangé.
-
-   L'image porte le produit (téléphone, main, plaque) dans sa moitié haute et une
-   grande zone noire dans sa moitié basse. On l'ancre donc en HAUT, à hauteur
-   naturelle (pleine largeur, aucune déformation) : le produit occupe le haut du
-   Hero. Le bas noir de l'image se fond dans le fond sombre du Hero et accueille
-   le texte et les boutons — aucun ne masque le produit. Le contenu est aligné
-   en bas, alors que le desktop reste centré verticalement.
-   Placé après le bloc 900 px pour primer sur son overlay. */
-@media (max-width:767px){
-  .hero{align-items:end}
-  .hero-bg{inset:0 0 auto 0;height:auto}
-  .hero-bg picture{height:auto}
-  .hero-bg img{position:static;width:100%;height:auto;object-position:center top;transform:none!important}
-  .hero-bg::after{background:linear-gradient(0deg,rgba(11,11,12,.6) 0%,rgba(11,11,12,0) 24%)}
-}
+/* Le Hero mobile n'utilise plus d'image de fond portrait : le visuel carré de la
+   colonne de droite passe simplement au-dessus du texte (voir bloc 900 px). */
 
 @media (max-width:760px){
   .h-display{font-size:clamp(2.55rem,14vw,4.6rem)}
