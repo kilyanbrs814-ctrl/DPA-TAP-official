@@ -358,18 +358,15 @@
     color: var(--c-paper);
   }
 
-  {%- comment -%}
-    La piste implicite d'une grille est `auto` : elle ne descend jamais sous le
-    min-content de ses items. `.prod-thumbs` est un conteneur flex dont les
-    miniatures sont inflexibles (`flex:0 0 58/72px`), ce qui lui donne un
-    min-content de ~404 px ; il remontait tel quel jusqu'ici et élargissait
-    toute la page sous ~415 px de large (bande blanche à droite).
-
-    Piste explicite `minmax(0, 1fr)` + `min-width: 0` sur les items : la colonne
-    peut désormais rétrécir sous le min-content de son contenu. Les miniatures
-    gardent leur propre `overflow-x: auto` et défilent toujours à l'intérieur de
-    leur cadre — elles ne peuvent simplement plus pousser le document.
-  {%- endcomment -%}
+  /* La piste implicite d'une grille est `auto` : elle ne descend jamais sous le
+     min-content de ses items. `.prod-thumbs` est un conteneur flex dont les
+     miniatures sont inflexibles (`flex:0 0 58/72px`), ce qui lui donne un
+     min-content de ~404 px ; il remontait tel quel jusqu'ici et élargissait
+     toute la page sous ~415 px de large (bande blanche à droite).
+     Piste explicite `minmax(0, 1fr)` + `min-width: 0` sur les items : la colonne
+     peut désormais rétrécir sous le min-content de son contenu. Les miniatures
+     gardent leur propre `overflow-x: auto` et défilent toujours à l'intérieur de
+     leur cadre — elles ne peuvent simplement plus pousser le document. */
   .seo-product__hero {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -568,12 +565,10 @@
     transition: border-color 0.25s ease, transform 0.25s ease;
   }
 
-  {%- comment -%}
-    Visuel d'étape : il occupe toute la largeur de la carte, y compris sous
-    900 px où `.sp-steps li` est une grille à deux colonnes (icône + texte).
-    Le ratio est imposé en CSS, donc aucun saut de mise en page au chargement,
-    quelle que soit l'image choisie dans l'éditeur.
-  {%- endcomment -%}
+  /* Visuel d'étape : il occupe toute la largeur de la carte, y compris sous
+     900 px où `.sp-steps li` est une grille à deux colonnes (icône + texte).
+     Le ratio est imposé en CSS, donc aucun saut de mise en page au chargement,
+     quelle que soit l'image choisie dans l'éditeur. */
   .sp-media {
     margin: 0;
   }
@@ -788,11 +783,9 @@
     margin-top: 22px;
   }
 
-  {%- comment -%}
-    Les pastilles ne sont plus des aplats de couleur : chacune porte la photo
-    réelle du modèle et pointe vers sa variante. `display:block` + `color:inherit`
-    neutralisent le style de lien hérité (a:hover passait en bleu).
-  {%- endcomment -%}
+  /* Les pastilles ne sont plus des aplats de couleur : chacune porte la photo
+     réelle du modèle et pointe vers sa variante. `display:block` + `color:inherit`
+     neutralisent le style de lien hérité (a:hover passait en bleu). */
   .sp-swatch {
     display: block;
     overflow: hidden;
@@ -866,10 +859,8 @@
     transition: border-color 0.25s ease;
   }
 
-  {%- comment -%}
-    Logo + nom de la marque : centrés sur mobile, alignés à gauche (donc
-    horizontalement, côte à côte) dès 640 px où la grille passe en colonnes.
-  {%- endcomment -%}
+  /* Logo + nom de la marque : centrés sur mobile, alignés à gauche (donc
+     horizontalement, côte à côte) dès 640 px où la grille passe en colonnes. */
   .sp-device b {
     display: flex;
     align-items: center;
@@ -1085,8 +1076,8 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    /* Les deux marques passent côte à côte : le logo reprend sa place à gauche
-       du nom, aligné sur le texte de la carte. */
+  /* Les deux marques passent côte à côte : le logo reprend sa place à gauche
+     du nom, aligné sur le texte de la carte. */
     .sp-device b {
       justify-content: flex-start;
       text-align: left;
@@ -1203,8 +1194,8 @@
       grid-template-columns: minmax(0, 1fr);
     }
 
-    /* Une seule colonne sous 375 px : la photo s'aplatit pour ne pas occuper
-       tout l'écran à elle seule. */
+  /* Une seule colonne sous 375 px : la photo s'aplatit pour ne pas occuper
+     tout l'écran à elle seule. */
     .sp-swatch__media {
       aspect-ratio: 16 / 9;
     }
