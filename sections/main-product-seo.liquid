@@ -194,7 +194,7 @@
                 if sp_variant_bleu != blank
                   assign sp_url_bleu = product.url | append: '?variant=' | append: sp_variant_bleu.id
                 endif
-                assign sp_swatch_sizes = '(min-width: 900px) 16vw, calc(50vw - 32px)'
+                assign sp_swatch_sizes = '(min-width: 900px) 17vw, (min-width: 640px) calc(50vw - 40px), calc(100vw - 80px)'
               -%}
               <p class="sp-size">{{ block.settings.size_value }}<small>{{ block.settings.size_label }}</small></p>
               <div class="sp-swatches">
@@ -219,13 +219,6 @@
                   <span>{{ block.settings.color2_label }}</span>
                 </a>
               </div>
-              {%- render 'sp-media',
-                image: block.settings.size_image,
-                fallback_url: 'https://cdn.shopify.com/s/files/1/1058/4378/6073/files/ChatGPT_Image_13_juil._2026_14_05_28_4.png?v=1783944354',
-                alt: 'Plaque NFC avis Google au format 10 × 10 cm',
-                sizes: '(min-width: 900px) 34vw, calc(100vw - 48px)',
-                class: 'sp-size-visual'
-              -%}
               <p class="sp-formats__text">{{ block.settings.pack_text }}</p>
               <aside class="sp-note">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="10.5" cy="12" r="2.4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M17.5 12H21" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
@@ -776,9 +769,12 @@
     text-transform: uppercase;
   }
 
+  /* Deux modeles, donc deux pastilles : une colonne sur mobile, deux colonnes
+     equilibrees des 640 px (regle plus bas). `align-items:stretch` par defaut :
+     les deux cartes ont exactement la meme hauteur quel que soit le libelle. */
   .sp-swatches {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
     gap: 12px;
     margin-top: 22px;
   }
@@ -802,6 +798,9 @@
     border-color: var(--g-blue);
   }
 
+  /* Cadre carre identique pour les deux modeles, et `object-fit: contain` :
+     la plaque est toujours visible en entier, sans recadrage, y compris si une
+     image non carree est choisie plus tard depuis l'editeur. */
   .sp-swatch__media {
     aspect-ratio: 1 / 1;
     background: #0a0a0c;
@@ -810,22 +809,7 @@
   .sp-swatch__media img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-  }
-
-  .sp-size-visual {
-    margin-top: 18px;
-    overflow: hidden;
-    border: 1px solid var(--sp-line);
-    border-radius: 18px;
-    background: var(--sp-panel-2);
-    aspect-ratio: 1 / 1;
-  }
-
-  .sp-size-visual img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    object-fit: contain;
   }
 
   .sp-swatch > span:last-child {
@@ -1076,6 +1060,11 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    /* Noir et Bleu passent sur deux colonnes de largeur egale. */
+    .sp-swatches {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
   /* Les deux marques passent côte à côte : le logo reprend sa place à gauche
      du nom, aligné sur le texte de la carte. */
     .sp-device b {
@@ -1191,19 +1180,8 @@
   }
 
   @media (max-width: 374px) {
-    .sp-facts,
-    .sp-swatches {
+    .sp-facts {
       grid-template-columns: minmax(0, 1fr);
-    }
-
-  /* Une seule colonne sous 375 px : la photo s'aplatit pour ne pas occuper
-     tout l'écran à elle seule. */
-    .sp-swatch__media {
-      aspect-ratio: 16 / 9;
-    }
-
-    .sp-size-visual {
-      aspect-ratio: 16 / 10;
     }
   }
 
@@ -1333,7 +1311,6 @@
         { "type": "text", "id": "heading", "label": "H2", "default": "10 × 10 cm, en noir ou en bleu" },
         { "type": "text", "id": "size_value", "label": "Dimension affichée", "default": "10 × 10" },
         { "type": "text", "id": "size_label", "label": "Unité", "default": "centimètres" },
-        { "type": "image_picker", "id": "size_image", "label": "Visuel du format 10 × 10 cm", "info": "Laisser vide pour garder la photo cotée par défaut." },
         { "type": "text", "id": "color1_label", "label": "Modèle 1", "info": "Doit correspondre au nom exact de la variante pour que la vignette pointe dessus.", "default": "Noir" },
         { "type": "image_picker", "id": "color1_image", "label": "Modèle 1 — photo", "info": "Laisser vide pour garder la photo de la plaque noire." },
         { "type": "text", "id": "color2_label", "label": "Modèle 2", "info": "Doit correspondre au nom exact de la variante pour que la vignette pointe dessus.", "default": "Bleu" },
