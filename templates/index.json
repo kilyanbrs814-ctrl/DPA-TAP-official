@@ -61,9 +61,7 @@
         "speed": 60,
         "tighten_neighbours": true,
         "space_above": 28,
-        "space_above_mobile": 20,
-        "space_below": 56,
-        "space_below_mobile": 32
+        "space_above_mobile": 20
       }
     },
     "scrolly": {

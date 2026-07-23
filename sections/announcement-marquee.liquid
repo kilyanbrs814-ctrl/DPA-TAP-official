@@ -112,12 +112,19 @@
       {%- if s.tighten_neighbours -%}
       /* Resserre l'enchaînement hero → bandeau → « Comment ça marche ».
          Ces règles ne sont émises que si la variante grand bandeau est posée
-         entre les deux sections, et disparaissent avec elle. */
+         entre les deux sections, et disparaissent avec elle.
+
+         Le vide venait de deux sources mesurées sur la page :
+         1. le padding bas du hero (68 px) ;
+         2. la colonne de texte du scrollytelling (376 px) centrée face à la
+            colonne image (616 px), soit 120 px de vide au-dessus de l'eyebrow.
+         On aligne les deux colonnes en haut plutôt que de réduire la hauteur du
+         stage : la composition reste centrée une fois épinglée et l'eyebrow
+         garde son dégagement sous le header flottant. */
       .hero{ padding-bottom: {{ s.space_above | default: 28 }}px; }
-      .scrolly-sticky{ align-content: start; padding-top: {{ s.space_below | default: 56 }}px; }
+      .scrolly-grid{ align-items: start; }
       @media (max-width: 900px){
         .hero{ padding-bottom: {{ s.space_above_mobile | default: 20 }}px; }
-        .scrolly-sticky{ padding-top: {{ s.space_below_mobile | default: 32 }}px; }
       }
       {%- endif -%}
       {%- endif -%}
@@ -386,9 +393,7 @@
     { "type": "header", "content": "Espacements voisins (grand bandeau)" },
     { "type": "checkbox", "id": "tighten_neighbours", "label": "Resserrer le hero et la section suivante", "default": false, "info": "À activer uniquement pour le grand bandeau placé entre le hero et « Comment ça marche »." },
     { "type": "range", "id": "space_above", "label": "Bas du hero — ordinateur", "unit": "px", "min": 0, "max": 120, "step": 4, "default": 28 },
-    { "type": "range", "id": "space_above_mobile", "label": "Bas du hero — mobile", "unit": "px", "min": 0, "max": 96, "step": 4, "default": 20 },
-    { "type": "range", "id": "space_below", "label": "Haut de « Comment ça marche » — ordinateur", "unit": "px", "min": 0, "max": 160, "step": 4, "default": 56 },
-    { "type": "range", "id": "space_below_mobile", "label": "Haut de « Comment ça marche » — mobile", "unit": "px", "min": 0, "max": 120, "step": 4, "default": 32 }
+    { "type": "range", "id": "space_above_mobile", "label": "Bas du hero — mobile", "unit": "px", "min": 0, "max": 96, "step": 4, "default": 20 }
   ]
 }
 {% endschema %}
