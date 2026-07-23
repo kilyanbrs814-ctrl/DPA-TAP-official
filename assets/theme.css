@@ -192,7 +192,7 @@ p{margin:0;text-wrap:pretty}
 .bene-list{border-top:1px solid color-mix(in srgb,var(--c-ink) 14%,transparent)}
 .bene-row{display:grid;grid-template-columns:70px 1fr minmax(220px,38%);gap:24px;align-items:baseline;padding:34px 0;border-bottom:1px solid color-mix(in srgb,var(--c-ink) 14%,transparent);transition:padding-left .3s cubic-bezier(.2,.8,.2,1)}
 .bene-row:hover{padding-left:12px}
-.bene-num{font-family:"Space Grotesk",sans-serif;font-size:.85rem;color:var(--c-grey)}
+.bene-num{font-family:"Space Grotesk",sans-serif;font-size:.85rem;color:var(--g-blue)}
 .bene-term{font-family:"Space Grotesk",sans-serif;font-weight:600;letter-spacing:-.03em;font-size:clamp(1.7rem,3.6vw,3rem);line-height:1.05}
 .bene-desc{color:var(--c-grey);font-size:1rem}
 .bene-row:nth-child(1) .bene-term em,.bene-row .bene-term em{font-style:normal}
@@ -406,8 +406,10 @@ p{margin:0;text-wrap:pretty}
 .bene-row.reveal:nth-child(4){transition-delay:0s,.21s,.21s}
 .bene-row.reveal:nth-child(5){transition-delay:0s,.28s,.28s}
 .bene-row.reveal:nth-child(6){transition-delay:0s,.35s,.35s}
-.bene-num{transition:color .4s ease}
-.bene-row.is-current .bene-num,.bene-row:hover .bene-num{color:var(--g-blue)}
+/* Les chiffres de la colonne de gauche restent bleus dans tous les états :
+   repos, survol et spotlight au scroll (.is-current). Plus aucune transition de
+   couleur, donc aucune teinte intermédiaire possible. */
+.bene-num,.bene-row.is-current .bene-num,.bene-row:hover .bene-num{color:var(--g-blue)}
 .bene-desc{transition:color .4s ease}
 .bene-row.is-current .bene-desc{color:color-mix(in srgb,var(--c-ink) 78%,transparent)}
 
