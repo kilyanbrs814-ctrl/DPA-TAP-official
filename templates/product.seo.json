@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -19,13 +28,13 @@
           "settings": {
             "eyebrow": "Fonctionnement",
             "heading": "Du geste du client à l’avis publié",
-            "step1_image": "shopify://shop_images/ChatGPT_Image_13_juil._2026_14_05_27_1.png",
-            "step2_image": "shopify://shop_images/ChatGPT_Image_13_juil._2026_14_05_27_2.png",
-            "step3_image": "shopify://shop_images/ChatGPT_Image_18_juil._2026_10_59_58.png",
+            "step1_image": "shopify://shop_images/ChatGPT_Image_23_juil._2026_16_41_30.png",
             "step1_title": "Le client approche son téléphone",
             "step1_text": "La zone NFC de son iPhone ou de son téléphone Android compatible passe au-dessus de la plaque.",
+            "step2_image": "shopify://shop_images/ChatGPT_Image_23_juil._2026_16_41_34.png",
             "step2_title": "Une notification apparaît",
-            "step2_text": "Il la touche pour ouvrir le lien d’avis Google programmé dans la puce NFC.",
+            "step2_text": "Il la touche la notification pour ouvrir le lien d’avis Google programmé dans la puce NFC de la plaque.",
+            "step3_image": "shopify://shop_images/ChatGPT_Image_23_juil._2026_16_41_38.png",
             "step3_title": "La fiche Google s’affiche",
             "step3_text": "Dans son navigateur ou son application : il choisit sa note et rédige, ou non, un commentaire.",
             "note_title": "Aucune publication automatique.",
