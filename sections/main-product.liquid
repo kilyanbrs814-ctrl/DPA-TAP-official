@@ -29,6 +29,7 @@
         {% endif %}
         <div style="margin-top:34px">
           <h1 class="h-lg">{{ product.title }}</h1>
+          {%- render 'product-reassurance' -%}
           <div style="margin-top:16px;color:var(--c-grey);max-width:60ch">{{ product.description }}</div>
         </div>
       </div>

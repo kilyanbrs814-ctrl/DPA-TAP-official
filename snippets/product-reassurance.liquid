@@ -1,0 +1,40 @@
+{%- comment -%}
+  Réassurance produit — SOURCE UNIQUE des 2 emplacements (accueil + fiche produit).
+
+  Garanties commerciales communes aux deux emplacements : le contenu est fixe,
+  aucun réglage ni aucune donnée produit n'est nécessaire. Le bloc s'affiche donc
+  même si le produit n'est pas encore sélectionné dans la section.
+
+  « Livraison offerte en France » correspond au seul tarif d'expédition actif de
+  la boutique (zone France, 0,00 €, sans minimum de commande).
+
+  Rendu 100 % côté serveur : aucun script, aucune police ni icône externe, SVG
+  inline. Icônes purement décoratives, donc aria-hidden — le texte porte le sens.
+{%- endcomment -%}
+<ul class="prod-reassure">
+  <li>
+    <svg class="prod-reassure__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+      <path d="M12 2.75 19.25 6v5.1c0 4.35-2.95 8.15-7.25 9.4-4.3-1.25-7.25-5.05-7.25-9.4V6L12 2.75Z"/>
+      <path d="m8.85 11.85 2.2 2.2 4.1-4.35"/>
+    </svg>
+    <span>Garantie à vie</span>
+  </li>
+  <li>
+    <svg class="prod-reassure__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+      <rect x="2.75" y="6.5" width="10.5" height="9.25" rx="1.6"/>
+      <path d="M13.25 9.75h3.4a2 2 0 0 1 1.68.9l1.75 2.7a2 2 0 0 1 .32 1.1v1.3h-7.15z"/>
+      <circle cx="7.25" cy="18.25" r="1.9"/>
+      <circle cx="16.75" cy="18.25" r="1.9"/>
+    </svg>
+    <span>Livraison offerte en France</span>
+  </li>
+  <li>
+    <svg class="prod-reassure__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+      <rect x="3.25" y="5.5" width="17.5" height="15.25" rx="2.4"/>
+      <path d="M3.25 10.25h17.5"/>
+      <path d="M8.25 3.25v4M15.75 3.25v4"/>
+      <path d="M6.25 19.25 17.75 7.25"/>
+    </svg>
+    <span>Aucun abonnement</span>
+  </li>
+</ul>

@@ -36,6 +36,7 @@
         </div>
         <div class="buy-form-col reveal">
           <h3 class="buy-title">{{ product.title }}</h3>
+          {%- render 'product-reassurance' -%}
           {%- comment -%}
             Emplacement 2 — sous le nom du produit, avant le prix (rendu par buy-form).
             Renvoie vers le carrousel de la fiche produit, seul endroit où il existe.

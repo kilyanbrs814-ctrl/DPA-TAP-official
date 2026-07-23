@@ -35,6 +35,7 @@
       <div class="seo-product__purchase">
         <p class="eyebrow">{{ section.settings.eyebrow }}</p>
         <h1 class="h-lg">{{ section.settings.heading }}</h1>
+        {%- render 'product-reassurance' -%}
         {%- comment -%} Emplacement 3 — sous le H1, avant le prix (rendu par buy-form). {%- endcomment -%}
         {%- render 'google-rating-badge', variant: 'pdp', href: '#avis-google' -%}
         <div class="seo-product__intro rte">{{ section.settings.intro }}</div>
