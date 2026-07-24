@@ -23,7 +23,13 @@
                       <p class="t">{{ item.product.title }}</p>
                       {% if item.variant.title != 'Default Title' %}<p class="p">{{ item.variant.title }}</p>{% endif %}
                       {% for property in item.properties %}
-                        {% if property.last != blank %}<p class="p">{{ property.first }} : {{ property.last }}</p>{% endif %}
+                        {% if property.last != blank %}
+                          {% if property.first contains 'Lien' %}
+                            <p class="p">{{ property.first }} : <a class="cart-link" href="{{ property.last }}" target="_blank" rel="noopener nofollow">{{ property.last }}</a></p>
+                          {% else %}
+                            <p class="p">{{ property.first }} : {{ property.last }}</p>
+                          {% endif %}
+                        {% endif %}
                       {% endfor %}
                     </div>
                   </div>
@@ -34,7 +40,14 @@
                     <input id="updates_{{ item.key }}" style="color:var(--c-ink)" type="number" name="updates[]" value="{{ item.quantity }}" min="0" inputmode="numeric">
                   </div>
                 </td>
-                <td data-label="Total">{{ item.final_line_price | money }}</td>
+                <td data-label="Total">
+                  {% if item.original_line_price > item.final_line_price %}
+                    <s class="cart-was">{{ item.original_line_price | money }}</s>
+                    <span class="cart-now">{{ item.final_line_price | money }}</span>
+                  {% else %}
+                    {{ item.final_line_price | money }}
+                  {% endif %}
+                </td>
                 <td data-label="Action"><a href="{{ item.url_to_remove }}" aria-label="Retirer {{ item.product.title | escape }}">Retirer</a></td>
               </tr>
             {% endfor %}
@@ -47,8 +60,21 @@
             <p style="margin-top:16px"><button type="submit" class="btn btn--ghost" style="color:var(--c-ink);border-color:color-mix(in srgb,var(--c-ink) 30%,transparent)">Mettre à jour</button></p>
           </div>
           <div class="cart-summary">
-            <div class="row"><span>Sous-total</span><span>{{ cart.total_price | money }}</span></div>
-            <p class="small">Taxes et livraison calculées au paiement.</p>
+            {%- comment -%}
+              Réduction pack : montants issus de Shopify (cart.total_discount,
+              appliqué par la remise auto « Pack 2 plaques : -14,50 € » dès 2
+              plaques). Rien n'est codé en dur ; si aucune remise n'est active,
+              seul le sous-total s'affiche. T095.
+            {%- endcomment -%}
+            {% if cart.total_discount > 0 %}
+              <div class="row row--muted"><span>Sous-total</span><span>{{ cart.original_total_price | money }}</span></div>
+              <div class="row row--save"><span>Réduction pack</span><span>−{{ cart.total_discount | money }}</span></div>
+              <div class="row"><span>Total</span><span>{{ cart.total_price | money }}</span></div>
+            {% else %}
+              <div class="row"><span>Sous-total</span><span>{{ cart.total_price | money }}</span></div>
+            {% endif %}
+            <p class="small">Livraison gratuite en France · expédiée sous 24 h. Taxes calculées au paiement.</p>
+            <p class="cart-verify">Avant de payer, vérifiez le nom de votre établissement, votre lien Google, la couleur et la quantité de chaque plaque.</p>
             {%- comment -%}
               Emplacement 5 — réassurance agrégée entre le sous-total et le
               bouton de paiement. Badge seul : aucune liste d'avis n'est
@@ -62,7 +88,17 @@
     {% endif %}
   </div>
 </section>
-<style>.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}</style>
+<style>
+  .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .cart-link{color:var(--g-blue);text-decoration:underline;word-break:break-all}
+  .cart-was{opacity:.55;margin-right:8px}
+  .cart-now{font-weight:600}
+  .cart-summary .row--muted,.cart-summary .row--save{font-size:1rem;font-weight:500}
+  .cart-summary .row--save{color:var(--g-green)}
+  .cart-summary .row--muted span:last-child{text-decoration:line-through;opacity:.6}
+  .cart-summary .row+.row{margin-top:8px}
+  .cart-verify{font-size:.82rem;line-height:1.45;color:var(--c-grey);background:color-mix(in srgb,var(--c-ink) 5%,transparent);border-radius:12px;padding:12px 14px;margin-top:16px}
+</style>
 
 {% schema %}
 {

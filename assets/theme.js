@@ -325,6 +325,27 @@
         var v = combo && getVariant(combo.dataset['v' + i]);
         return v || getVariant(idInput.value);
       }
+      /* Pack — même établissement pour les deux plaques ou deux différents. T050.
+         « same » : seul le panneau Plaque 1 reste visible/actif, ses champs sont
+         réutilisés pour la seconde ligne à l'ajout. Le panneau 2 est masqué ET ses
+         champs désactivés pour sortir de la validation HTML5. */
+      function packScope() {
+        var r = form.querySelector('[data-scope]:checked');
+        return r ? r.value : 'same';
+      }
+      function applyScope() {
+        if (packMode() !== 2) return;
+        var same = packScope() === 'same';
+        var panel2 = form.querySelector('[data-plaque-panel="2"]');
+        if (panel2) {
+          panel2.hidden = same;
+          Array.prototype.slice.call(panel2.querySelectorAll('input,textarea,select')).forEach(function (f) {
+            f.disabled = same || f.hasAttribute('data-unavailable');
+          });
+        }
+        var title1 = form.querySelector('[data-plaque-title="1"]');
+        if (title1) title1.textContent = same ? 'Votre établissement' : 'Plaque 1';
+      }
       function setMainImage(src, imageId) {
         if (!imgEl || !src) return;
         imgEl.removeAttribute('srcset');
@@ -364,8 +385,15 @@
         }
         if (btn) {
           btn.disabled = !ok;
-          if (btnLabel) btnLabel.textContent = ok ? btn.dataset.labelAdd : btn.dataset.labelSoldOut;
         }
+      }
+      /* CTA dynamique — le libellé porte l'offre choisie et son prix (depuis les
+         données variantes Shopify, jamais codé en dur). T052. */
+      function setBtn(mode, cents, ok) {
+        if (!btn || !btnLabel) return;
+        if (!ok) { btnLabel.textContent = btn.dataset.labelSoldOut; return; }
+        var base = mode === 2 ? btn.dataset.labelAddPack : btn.dataset.labelAddSingle;
+        btnLabel.textContent = base + ' — ' + money(cents);
       }
       function refresh() {
         if (packMode() === 2) {
@@ -374,11 +402,13 @@
           var total = v1.price + v2.price;
           setPrice(total - PACK_DISCOUNT, total);
           setAvail(v1.available && v2.available);
+          setBtn(2, total - PACK_DISCOUNT, v1.available && v2.available);
         } else {
           var v = getVariant(idInput.value);
           if (!v) return;
           setPrice(v.price, v.compare_at_price);
           setAvail(v.available);
+          setBtn(1, v.price, v.available);
         }
       }
       function syncCards() {
@@ -414,6 +444,7 @@
           var checked = form.querySelector('[data-variant-radio]:checked');
           setImage(getVariant(idInput.value), checked && checked.closest('.vcard'));
         }
+        applyScope();
         refresh();
       }
       function select(v, card) {
@@ -438,6 +469,15 @@
           syncCards();
           if (cardImage(radio)) setMainImage(cardImage(radio));
           refresh();
+        });
+      });
+      root.querySelectorAll('[data-scope]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+          root.querySelectorAll('.scope-opt').forEach(function (o) {
+            var i = o.querySelector('input');
+            o.classList.toggle('is-active', !!(i && i.checked));
+          });
+          applyScope();
         });
       });
 
@@ -490,10 +530,12 @@
         if (packMode() === 2) {
           var note = form.querySelector('[name="properties[Remarque]"]');
           var combo = selectedCombo();
+          var sameScope = packScope() === 'same';
           var items = [1, 2].map(function (i) {
             var v = plaqueVariant(i);
-            var nameField = form.querySelector('[data-plaque-name="' + i + '"]');
-            var linkField = form.querySelector('[data-plaque-link="' + i + '"]');
+            var srcI = sameScope ? 1 : i;
+            var nameField = form.querySelector('[data-plaque-name="' + srcI + '"]');
+            var linkField = form.querySelector('[data-plaque-link="' + srcI + '"]');
             var props = { 'Plaque': i + '/2' };
             if (combo && combo.dataset.label) props['Combinaison'] = combo.dataset.label;
             if (nameField && nameField.value) props['Nom de l’établissement'] = nameField.value;

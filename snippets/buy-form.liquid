@@ -126,10 +126,24 @@
     </div>
   </div>
 
+  <fieldset class="pack-scope" data-pack-duo hidden style="border:0;padding:0;margin:0 0 6px">
+    <legend class="eyebrow" style="margin-bottom:12px;padding:0">Établissement</legend>
+    <label class="scope-opt is-active">
+      <input type="radio" name="scope-{{ section.id }}" value="same" data-scope checked>
+      <span class="scope-dot" aria-hidden="true"></span>
+      <span>Le même pour les deux plaques</span>
+    </label>
+    <label class="scope-opt">
+      <input type="radio" name="scope-{{ section.id }}" value="diff" data-scope>
+      <span class="scope-dot" aria-hidden="true"></span>
+      <span>Deux établissements différents</span>
+    </label>
+  </fieldset>
+
   <div class="pack-plaques" data-pack-duo hidden>
     {% for i in (1..2) %}
-      <div class="plaque-panel" role="group" aria-labelledby="plaque-title-{{ i }}-{{ section.id }}">
-        <p class="plaque-title" id="plaque-title-{{ i }}-{{ section.id }}">Plaque {{ i }}</p>
+      <div class="plaque-panel" data-plaque-panel="{{ i }}" role="group" aria-labelledby="plaque-title-{{ i }}-{{ section.id }}">
+        <p class="plaque-title" data-plaque-title="{{ i }}" id="plaque-title-{{ i }}-{{ section.id }}">Plaque {{ i }}</p>
         <div class="buy-field">
           <label for="prop-name-{{ i }}-{{ section.id }}">Nom de l’établissement</label>
           <input id="prop-name-{{ i }}-{{ section.id }}" type="text" data-plaque-name="{{ i }}" required autocomplete="organization" placeholder="Ex. Café des Halles" disabled>
@@ -149,12 +163,12 @@
   </div>
 
   <button type="submit" name="add" class="btn btn--blue buy-submit" data-add-btn
-          data-label-add="Ajouter au panier" data-label-sold-out="Épuisé"
+          data-label-add-single="Ajouter une plaque" data-label-add-pack="Ajouter le pack" data-label-sold-out="Épuisé"
           aria-describedby="buy-error-{{ section.id }}"
           {% unless current.available %}disabled{% endunless %}>
     <span class="spinner" aria-hidden="true"></span>
     <span class="check" aria-hidden="true">✓</span>
-    <span class="label">{% if current.available %}Ajouter au panier{% else %}Épuisé{% endif %}</span>
+    <span class="label">{% if current.available %}Ajouter une plaque — {{ current.price | money }}{% else %}Épuisé{% endif %}</span>
   </button>
   <div data-pack-single>{{ form | payment_button }}</div>
   <p class="buy-error" id="buy-error-{{ section.id }}" data-form-error role="alert" tabindex="-1" hidden></p>
