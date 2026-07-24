@@ -171,6 +171,7 @@
     <span class="label">{% if current.available %}Ajouter une plaque — {{ current.price | money }}{% else %}Épuisé{% endif %}</span>
   </button>
   <div data-pack-single>{{ form | payment_button }}</div>
+  <p class="buy-guarantee"><span aria-hidden="true">🛡</span> <a href="{{ routes.root_url }}pages/garantie-a-vie">Garantie à vie</a> — panne ou casse remplacées gratuitement.</p>
   <p class="buy-error" id="buy-error-{{ section.id }}" data-form-error role="alert" tabindex="-1" hidden></p>
   <div class="buy-success" data-form-success role="status" aria-live="polite" hidden>
     <span>Ajouté au panier ✓</span>

@@ -244,6 +244,13 @@
             "question": "La plaque convient-elle à mon type de commerce ?",
             "answer": "<p>Elle est pensée pour les établissements qui reçoivent du public et encaissent sur place : restaurants, cafés, salons, instituts, boutiques, hôtels. L’emplacement et le bon moment changent selon le métier — voir nos pages dédiées aux <a href=\"/pages/plaque-avis-google-restaurant\">restaurants</a> et aux <a href=\"/pages/plaque-avis-google-coiffeur\">salons de coiffure</a>.</p>"
           }
+        },
+        "q7": {
+          "type": "qa",
+          "settings": {
+            "question": "La plaque est-elle garantie ?",
+            "answer": "<p>Oui : <a href=\"/pages/garantie-a-vie\">garantie à vie</a> et gratuite, réservée à l’acheteur initial. En cas de panne ou de casse, quelle qu’en soit la cause, la plaque est remplacée sans frais dans la zone de livraison couverte. La perte et le vol ne sont pas couverts, et la plaque doit toujours exister pour être remplacée. Cette garantie commerciale s’ajoute à vos garanties légales, sans jamais les réduire.</p>"
+          }
         }
       },
       "block_order": [
@@ -252,7 +259,8 @@
         "q3",
         "q4",
         "q5",
-        "q6"
+        "q6",
+        "q7"
       ],
       "settings": {
         "eyebrow": "FAQ",

@@ -310,6 +310,8 @@ p{margin:0;text-wrap:pretty}
 .qty input{width:56px;text-align:center;background:transparent;border:0;color:var(--c-paper);font:inherit;-moz-appearance:textfield}
 .qty input::-webkit-outer-spin-button,.qty input::-webkit-inner-spin-button{-webkit-appearance:none}
 .buy-submit{margin-top:28px;width:100%}
+.buy-guarantee{margin:12px 0 0;font-size:.85rem;line-height:1.4;color:var(--c-grey);text-align:center}
+.buy-guarantee a{color:var(--c-paper);text-decoration:underline;text-underline-offset:2px}
 .buy-submit .spinner{display:none;width:18px;height:18px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
 .buy-submit.is-loading .spinner{display:inline-block}
 .buy-submit.is-loading .label{opacity:.7}
