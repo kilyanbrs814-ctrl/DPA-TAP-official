@@ -16,14 +16,14 @@
 
 {% schema %}
 {
-  "name": "Avis clients",
+  "name": "Avis Google (entreprise)",
   "tag": "section",
   "settings": [
-    { "type": "text", "id": "title", "label": "Titre", "default": "Ce qu’ils pensent de la plaque" },
-    { "type": "textarea", "id": "source_note", "label": "Mention de source", "default": "Avis de clients ayant testé la plaque NFC DPA TAP. Témoignages initialement publiés sur notre fiche Google." },
+    { "type": "text", "id": "title", "label": "Titre", "default": "Ce qu’ils pensent de notre entreprise" },
+    { "type": "textarea", "id": "source_note", "label": "Mention de source", "default": "Avis Google publiés sur la fiche de DigitalProjectAgency (l’entreprise). Ils témoignent de la confiance envers l’agence et ne constituent pas des avis d’achat de la plaque." },
     { "type": "url", "id": "google_link", "label": "Lien de secours vers la fiche Google", "info": "Utilisé uniquement si le métachamp dpa_google.profile_url est vide." },
     { "type": "range", "id": "initial_count", "label": "Avis affichés au chargement", "min": 3, "max": 12, "step": 1, "default": 6 }
   ],
-  "presets": [{ "name": "Avis clients" }]
+  "presets": [{ "name": "Avis Google (entreprise)" }]
 }
 {% endschema %}

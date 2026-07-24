@@ -194,8 +194,8 @@
     "google_reviews": {
       "type": "google-reviews",
       "settings": {
-        "title": "Ce qu’ils pensent de la plaque",
-        "source_note": "Avis de clients ayant testé la plaque NFC DPA TAP. Témoignages initialement publiés sur notre fiche Google.",
+        "title": "Ce qu’ils pensent de notre entreprise",
+        "source_note": "Avis Google publiés sur la fiche de DigitalProjectAgency (l’entreprise). Ils témoignent de la confiance envers l’agence et ne constituent pas des avis d’achat de la plaque.",
         "google_link": "https://maps.app.goo.gl/u9165oouL2iRPFfRA",
         "initial_count": 6
       }

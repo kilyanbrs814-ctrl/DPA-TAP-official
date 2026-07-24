@@ -30,11 +30,9 @@
     assign gr_avg_txt = gr_avg_txt | append: '.0'
   endunless
   assign gr_avg_txt = gr_avg_txt | replace: '.', ','
-  # « avis » est invariable ; seul « client(s) » s'accorde.
-  assign gr_noun = 'avis clients'
-  if gr_count == 1
-    assign gr_noun = 'avis client'
-  endif
+  # Avis Google de l'entreprise DigitalProjectAgency, jamais présentés comme des
+  # avis produit. « avis » est invariable en français.
+  assign gr_noun = 'avis sur DigitalProjectAgency'
 -%}
 {%- comment -%}
   Sans synchronisation Google réussie depuis 30 jours, la section entière
@@ -44,19 +42,19 @@
 {%- if gr_fresh == '1' -%}
 <div class="g-reviews" id="avis-google" data-g-reviews>
   <header class="g-reviews__head">
-    <p class="eyebrow">Avis clients</p>
-    <h2 class="h-lg">{{ title | default: 'Ce qu’ils pensent de la plaque' }}</h2>
+    <p class="eyebrow">Avis Google · entreprise</p>
+    <h2 class="h-lg">{{ title | default: 'Ce qu’ils pensent de notre entreprise' }}</h2>
 
     {%- if gr_count > 0 -%}
       <p class="g-reviews__score">
         {%- render 'google-stars', rating: gr_avg -%}
-        <span aria-hidden="true">Noté {{ gr_avg_txt }}/5 · {{ gr_count }} {{ gr_noun }}</span>
-        <span class="g-vh">Note de {{ gr_avg_txt }} sur 5 basée sur {{ gr_count }} {{ gr_noun }} sur la plaque NFC DPA TAP.</span>
+        <span aria-hidden="true">{{ gr_avg_txt }}/5 sur Google · {{ gr_count }} {{ gr_noun }}</span>
+        <span class="g-vh">Note de {{ gr_avg_txt }} sur 5 sur Google, basée sur {{ gr_count }} {{ gr_noun }}.</span>
       </p>
     {%- endif -%}
 
     <p class="g-reviews__source">
-      {{ source_note | default: "Avis de clients ayant testé la plaque NFC DPA TAP. Témoignages initialement publiés sur notre fiche Google." }}
+      {{ source_note | default: "Avis Google publiés sur la fiche de DigitalProjectAgency (l’entreprise). Ils témoignent de la confiance envers l’agence et ne constituent pas des avis d’achat de la plaque." }}
     </p>
   </header>
 
@@ -83,12 +81,12 @@
                     </p>
                   </div>
                 </div>
-                <span class="g-review__g" aria-hidden="true" title="Avis client sur la plaque">G</span>
+                <span class="g-review__g" aria-hidden="true" title="Avis Google sur l’entreprise DigitalProjectAgency">G</span>
               </header>
 
               <p class="g-review__stars">
                 {%- render 'google-stars', rating: r_rating -%}
-                <span class="g-vh">Note de {{ r_rating }} sur 5. Avis client sur la plaque NFC DPA TAP, initialement publié sur Google.</span>
+                <span class="g-vh">Note de {{ r_rating }} sur 5. Avis Google sur l’entreprise DigitalProjectAgency.</span>
               </p>
 
               {%- if r.body.value != blank -%}
@@ -152,7 +150,7 @@
   {%- else -%}
     {%- comment -%} Aucun avis renvoyé : on n'invente rien, on renvoie vers Google. {%- endcomment -%}
     <p class="g-reviews__empty">
-      Les avis clients sont momentanément indisponibles.
+      Les avis Google de DigitalProjectAgency sont momentanément indisponibles.
       {%- if gr_profile != blank %} <a href="{{ gr_profile }}" target="_blank" rel="noopener nofollow">Consulter tous les avis</a>.{% endif -%}
     </p>
   {%- endif -%}

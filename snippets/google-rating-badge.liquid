@@ -8,9 +8,10 @@
   ni ailleurs dans le thème : si Google passe de 32 à 33 avis ou de 5,0 à 4,9,
   tous les emplacements suivent en changeant la seule valeur du métachamp.
 
-  Les témoignages portent sur la plaque NFC DPA TAP, recueillis via Google.
-  Aucun balisage AggregateRating ni Product Review n'est émis à partir d'eux
-  dans ce correctif.
+  Ce sont des avis Google de l'ENTREPRISE DigitalProjectAgency (agence), jamais
+  présentés comme des avis produit / plaque. Le badge mène à la fiche Google
+  publique (métachamp dpa_google.profile_url) où les avis sont consultables.
+  Aucun balisage AggregateRating ni Product Review n'est émis à partir d'eux.
 
   Rendu 100 % côté serveur : aucun script, aucun SDK tiers, aucun CLS.
 
@@ -44,25 +45,23 @@
       assign gb_avg_txt = gb_avg_txt | replace: '.', ','
     endif
 
-    # Les témoignages portent sur la plaque : format produit unique pour tous
-    # les emplacements, sans mention d'entreprise ni de plateforme.
-    assign gb_text = 'Noté ' | append: gb_avg_txt | append: '/5 · ' | append: gb_count | append: ' avis'
+    # Avis Google de l'entreprise DigitalProjectAgency — plateforme (Google) et
+    # entreprise explicites, jamais présentés comme des avis produit.
+    assign gb_text = gb_avg_txt | append: '/5 sur Google · ' | append: gb_count | append: ' avis sur DigitalProjectAgency'
 
-    # « avis » est invariable en français ; seul « client(s) » de l'aria-label
-    # s'accorde.
-    assign gb_noun = 'avis clients'
-    if gb_count == 1
-      assign gb_noun = 'avis client'
-    endif
-    assign gb_label = 'Note de ' | append: gb_avg_txt | append: ' sur 5 basée sur ' | append: gb_count | append: ' ' | append: gb_noun | append: ' sur la plaque NFC DPA TAP'
+    assign gb_label = 'Note de ' | append: gb_avg_txt | append: ' sur 5 sur Google, basée sur ' | append: gb_count | append: ' avis sur l’entreprise DigitalProjectAgency'
+
+    # Le badge mène à la fiche Google publique où les avis sont consultables
+    # (métachamp unique dpa_google.profile_url ; l'ancre passée en secours).
+    assign gb_href = shop.metafields.dpa_google.profile_url.value | default: href
     assign gb_tag = 'span'
-    if href != blank
+    if gb_href != blank
       assign gb_tag = 'a'
-      assign gb_label = gb_label | append: '. Voir les avis.'
+      assign gb_label = gb_label | append: '. Voir les avis sur Google.'
     endif
   -%}
   <{{ gb_tag }} class="g-badge g-badge--{{ variant | default: 'pdp' }}"
-    {% if href != blank %}href="{{ href }}" data-g-badge-link{% endif %}
+    {% if gb_href != blank %}href="{{ gb_href }}" target="_blank" rel="noopener nofollow" data-g-badge-link{% endif %}
     aria-label="{{ gb_label | escape }}">
     {%- render 'google-stars', rating: gb_avg -%}
     <span class="g-badge__text" aria-hidden="true">{{ gb_text }}</span>
