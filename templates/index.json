@@ -105,6 +105,22 @@
         "product": "plaque-nfc-avis-google"
       }
     },
+    "pro_network": {
+      "type": "pro-network",
+      "settings": {
+        "eyebrow": "RÉSEAUX · FRANCHISES · MULTISITES",
+        "title": "Plusieurs établissements ? Équipez tout votre réseau.",
+        "text": "Dès 5 plaques, profitez de tarifs dégressifs, choisissez vos couleurs et associez un lien Google différent à chaque établissement.",
+        "reassure_1_enabled": true,
+        "reassure_1_text": "Dès 5 plaques",
+        "reassure_2_enabled": true,
+        "reassure_2_text": "Un lien Google par établissement",
+        "reassure_3_enabled": true,
+        "reassure_3_text": "Tarifs dégressifs",
+        "button_label": "Découvrir l’offre professionnelle",
+        "button_link": "/pages/offre-professionnelle"
+      }
+    },
     "install": {
       "type": "installation",
       "blocks": {
@@ -316,6 +332,7 @@
     "reassurance_marquee",
     "scrolly",
     "buy",
+    "pro_network",
     "install",
     "benefits",
     "google_reviews",
