@@ -78,12 +78,13 @@
             <p class="cart-verify">Avant de payer, vérifiez le nom de votre établissement, votre lien Google, la couleur et la quantité de chaque plaque.</p>
             {%- comment -%}
               Emplacement 5 — réassurance agrégée entre le sous-total et le
-              bouton de paiement. Badge seul, portée boutique : aucune liste
+              bouton de paiement. Le badge porte sur le produit réellement dans
+              le panier, pas sur un produit codé ici. Badge seul : aucune liste
               d'avis n'est chargée dans le panier, il n'y en avait pas avant et
               en ajouter une éloignerait du paiement. Pas de lien non plus,
               pour ne pas faire sortir du tunnel juste avant de payer.
             {%- endcomment -%}
-            {%- render 'judgeme-badge', scope: 'shop', variant: 'cart' -%}
+            {%- render 'judgeme-badge', product: cart.items.first.product, variant: 'cart' -%}
             <button type="submit" name="checkout" class="btn btn--blue">Paiement sécurisé</button>
           </div>
         </div>

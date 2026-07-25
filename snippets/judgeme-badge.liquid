@@ -1,65 +1,43 @@
 {%- comment -%}
   Badge de note — SOURCE UNIQUE de tous les emplacements de preuve sociale.
 
-  Code d'installation officiel Judge.me. Aucune note, aucun compteur et aucune
-  étoile ne sont écrits dans le thème : tout provient des métachamps que
-  Judge.me régénère à chaque nouvel avis publié.
+  Code d'installation officiel Judge.me du « Star Rating Badge » (preview
+  badge). Aucune note, aucun compteur et aucune étoile ne sont écrits dans le
+  thème : tout vient de product.metafields.judgeme.badge, que Judge.me
+  régénère à chaque avis publié. Le HTML est livré avec la page, donc pas de
+  décalage de mise en page ni d'appel réseau supplémentaire ; l'App Embed
+  « judgeme_core » charge le SDK une seule fois pour toute la boutique.
 
-    portée « product » → product.metafields.judgeme.badge
-                         (widget officiel « Star Rating Badge » / preview badge)
-    portée « shop »    → shop.metafields.judgeme.all_reviews_rating / _count
-                         (widget officiel « All Reviews Rating »)
+  POURQUOI LE BADGE PRODUIT PARTOUT, Y COMPRIS SUR LE HERO ET LE PANIER
 
-  Le choix de la portée suit le sens de l'emplacement :
-    - preuve sociale du produit  → données du produit ;
-    - preuve sociale de DPA TAP  → données globales de la boutique.
-
-  Le badge produit est rendu côté serveur (HTML déjà présent dans le métachamp),
-  donc sans décalage de mise en page. Le badge boutique est complété par le
-  script Judge.me déjà chargé par l'App Embed ; sa hauteur est réservée en CSS
-  (.dpa-jdgm-badge, cf. theme.css) pour qu'il ne fasse pas sauter le Hero.
-
-  Aucun script n'est ajouté ici : l'App Embed « judgeme_core » charge le SDK une
-  seule fois pour toute la boutique.
+  Le widget boutique « All Reviews Rating » a d'abord été posé sur le Hero et
+  le panier, avec le code officiel (div .jdgm-all-reviews-rating alimentée par
+  shop.metafields.judgeme.all_reviews_rating / _count). Vérifié en ligne, il
+  ressort systématiquement avec cinq étoiles éteintes et sans texte : le script
+  Judge.me ne reprend pas ces attributs hors de sa page « tous les avis ». Un
+  badge vide vaut moins que pas de badge, et le reconstruire à la main
+  reviendrait à réécrire une note en dur — exactement ce qu'on supprime ici.
+  DPA TAP ne vendant qu'un produit, le badge produit porte la même promesse au
+  même endroit, avec un widget officiel qui fonctionne réellement.
 
   Paramètres :
-    scope    product | shop   (par défaut : product)
+    product  objet produit (obligatoire)
     variant  hero | home_product | pdp | cart   (styles DPA)
-    product  objet produit (obligatoire pour scope: product)
     href     lien facultatif. Sur la fiche produit, ne rien passer : Judge.me
-             fait lui-même défiler jusqu'au widget d'avis au clic sur le badge.
+             fait lui-même défiler jusqu'au widget d'avis au clic sur le badge,
+             et un lien par-dessus doublonnerait avec son gestionnaire.
 
-  Sans avis publié, Judge.me ne renvoie rien et le badge disparaît, plutôt que
-  d'afficher un cadre vide ou une note inventée.
+  Sans avis publié, Judge.me ne renvoie rien et le badge disparaît entièrement,
+  plutôt que d'afficher un cadre vide ou une note inventée.
 {%- endcomment -%}
 
-{%- liquid
-  assign jb_scope = scope | default: 'product'
-  assign jb_variant = variant | default: 'pdp'
--%}
-
-{%- if jb_scope == 'shop' -%}
-  {%- liquid
-    assign jb_count = shop.metafields.judgeme.all_reviews_count | plus: 0
-    assign jb_avg = shop.metafields.judgeme.all_reviews_rating
-  -%}
-  {%- if jb_count > 0 -%}
-    {%- if href != blank -%}<a class="dpa-jdgm-badge__link" href="{{ href }}">{%- endif -%}
-      <div class="jdgm-widget jdgm-all-reviews-rating dpa-jdgm dpa-jdgm-badge dpa-jdgm-badge--{{ jb_variant }}"
-        data-average-rating="{{ jb_avg }}"
-        data-number-of-reviews="{{ jb_count }}"></div>
-    {%- if href != blank -%}</a>{%- endif -%}
-  {%- endif -%}
-
-{%- else -%}
-  {%- assign jb_badge = product.metafields.judgeme.badge -%}
-  {%- if jb_badge != blank -%}
-    {%- if href != blank -%}<a class="dpa-jdgm-badge__link" href="{{ href }}">{%- endif -%}
-      <div class="jdgm-widget jdgm-preview-badge dpa-jdgm dpa-jdgm-badge dpa-jdgm-badge--{{ jb_variant }}"
-        data-id="{{ product.id }}"
-        data-template="{{ template | split: '.' | first }}">
-        {{ jb_badge }}
-      </div>
-    {%- if href != blank -%}</a>{%- endif -%}
-  {%- endif -%}
+{%- assign jb_badge = product.metafields.judgeme.badge -%}
+{%- if jb_badge != blank -%}
+  {%- if href != blank -%}<a class="dpa-jdgm-badge__link" href="{{ href }}">{%- endif -%}
+    <div class="jdgm-widget jdgm-preview-badge dpa-jdgm dpa-jdgm-badge dpa-jdgm-badge--{{ variant | default: 'pdp' }}"
+      data-id="{{ product.id }}"
+      data-template="{{ template | split: '.' | first }}">
+      {{ jb_badge }}
+    </div>
+  {%- if href != blank -%}</a>{%- endif -%}
 {%- endif -%}
