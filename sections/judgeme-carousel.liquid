@@ -1,0 +1,53 @@
+{%- comment -%}
+  Section avis de la page d'accueil — carrousel officiel Judge.me.
+
+  Le contenu vient de shop.metafields.judgeme.featured_carousel : Judge.me y
+  publie le carrousel déjà rendu à partir des seuls avis publiés dans
+  l'application. Aucun témoignage n'est écrit dans le thème, aucun nom, aucune
+  date et aucun commentaire ne sont saisis à la main : ajouter ou retirer un
+  avis dans Judge.me met la section à jour toute seule.
+
+  Le titre et le chapô restent éditables parce qu'ils relèvent du discours de
+  la marque, pas de la preuve sociale elle-même.
+
+  Le HTML du carrousel est livré avec la page (pas d'appel réseau bloquant, pas
+  de décalage de mise en page) ; le script de l'App Embed « judgeme_core »,
+  chargé une seule fois pour toute la boutique, ne fait qu'activer le défilement.
+
+  Sans avis publié, Judge.me ne renvoie rien : la section entière disparaît au
+  lieu de laisser un cadre vide.
+{%- endcomment -%}
+
+{%- assign jc_carousel = shop.metafields.judgeme.featured_carousel -%}
+{%- if jc_carousel != blank -%}
+  <section class="jdgm-sec" id="avis-clients">
+    <div class="container">
+      <header class="jdgm-sec__head">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        <h2 class="h-lg">{{ section.settings.title | default: 'Ce qu’en disent nos clients' }}</h2>
+        {%- if section.settings.intro != blank -%}
+          <p class="jdgm-sec__intro">{{ section.settings.intro }}</p>
+        {%- endif -%}
+      </header>
+
+      <div class="dpa-jdgm dpa-jdgm-carousel">
+        {{ jc_carousel }}
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Avis Judge.me (carrousel)",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Sur-titre", "default": "Avis clients" },
+    { "type": "text", "id": "title", "label": "Titre", "default": "Ce qu’en disent nos clients" },
+    { "type": "textarea", "id": "intro", "label": "Chapô", "info": "Texte de marque. La note, le nombre d’avis et les commentaires viennent uniquement de Judge.me." }
+  ],
+  "presets": [{ "name": "Avis Judge.me (carrousel)" }]
+}
+{% endschema %}

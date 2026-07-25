@@ -1,0 +1,31 @@
+{%- comment -%}
+  Section complète des avis de la fiche produit — widget officiel Judge.me
+  (« Review Widget »), installé avec le code officiel de l'application.
+
+  Le contenu vient de product.metafields.judgeme.widget : Judge.me y publie le
+  widget déjà rendu (note moyenne, histogramme, filtres, tri, pagination, nom,
+  note, date et commentaire de chaque avis). Rien n'est reconstruit en Liquid,
+  et le bouton « écrire un avis » n'apparaît que si Judge.me l'autorise dans ses
+  propres réglages.
+
+  Le HTML étant déjà présent à la livraison de la page, il n'y a ni appel réseau
+  bloquant ni décalage de mise en page ; le script de l'App Embed ne fait
+  qu'activer filtres, tri et pagination.
+
+  L'ancre `#judgeme_product_reviews` est celle attendue par Judge.me : le clic
+  sur le badge de note fait défiler jusqu'ici sans code supplémentaire.
+
+  Paramètre : product (objet produit)
+{%- endcomment -%}
+
+{%- if product.metafields.judgeme.widget != blank -%}
+  <div class="dpa-jdgm dpa-jdgm-reviews" id="avis-clients">
+    <div style="clear:both"></div>
+    <div id="judgeme_product_reviews"
+      class="jdgm-widget jdgm-review-widget"
+      data-product-title="{{ product.title | escape }}"
+      data-id="{{ product.id }}">
+      {{ product.metafields.judgeme.widget }}
+    </div>
+  </div>
+{%- endif -%}

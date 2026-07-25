@@ -33,7 +33,13 @@
       </div>
 
       <div class="seo-product__purchase">
-        {%- render 'google-rating-badge', variant: 'pdp', href: '#avis-google' -%}
+        {%- comment -%}
+          Emplacement 3 — badge de note au-dessus du titre.
+          Aucun `href` n'est passé : sur une fiche produit, Judge.me fait
+          lui-même défiler jusqu'à son widget d'avis au clic sur le badge.
+          Ajouter un lien par-dessus doublonnerait avec son gestionnaire.
+        {%- endcomment -%}
+        {%- render 'judgeme-badge', scope: 'product', product: product, variant: 'pdp' -%}
         <h1 class="h-lg">{{ section.settings.heading }}</h1>
         {%- render 'product-reassurance' -%}
         <div class="seo-product__intro rte">{{ section.settings.intro }}</div>
@@ -309,14 +315,11 @@
 
       {%- comment -%}
         Emplacement 4 — section complète des avis, juste avant la FAQ.
-        Même snippet que la section d'accueil : un seul balisage à maintenir.
+        Widget officiel Judge.me : lecture de tous les avis du produit, note
+        moyenne, filtres et tri. Rien n'est réglable ici, tout se pilote depuis
+        Judge.me pour qu'il n'existe qu'une seule source d'avis.
       {%- endcomment -%}
-      {%- render 'google-reviews-block',
-        title: section.settings.reviews_title,
-        source_note: section.settings.reviews_source_note,
-        google_link: section.settings.reviews_google_link,
-        initial_count: section.settings.reviews_initial_count
-      -%}
+      {%- render 'judgeme-review-widget', product: product -%}
 
       {% assign has_faq = false %}
       {% for block in section.blocks %}
@@ -1267,11 +1270,8 @@
     { "type": "richtext", "id": "intro", "label": "Introduction", "default": "<p>Une plaque NFC prête à l’emploi pour ouvrir directement la page d’avis Google de votre établissement depuis un smartphone compatible. Personnalisation, programmation et achat sans abonnement.</p>" },
     { "type": "text", "id": "faq_eyebrow", "label": "Surtitre FAQ", "default": "Questions fréquentes" },
     { "type": "text", "id": "faq_heading", "label": "Titre FAQ", "default": "Ce qu’il faut savoir avant de commander" },
-    { "type": "header", "content": "Avis Google (entreprise)" },
-    { "type": "text", "id": "reviews_title", "label": "Titre de la section avis", "default": "Ce qu’ils pensent de notre entreprise" },
-    { "type": "textarea", "id": "reviews_source_note", "label": "Mention de source", "default": "Avis Google publiés sur la fiche de DigitalProjectAgency (l’entreprise). Ils témoignent de la confiance envers l’agence et ne constituent pas des avis d’achat de la plaque." },
-    { "type": "url", "id": "reviews_google_link", "label": "Lien de secours vers la fiche Google", "info": "Utilisé uniquement si le métachamp dpa_google.profile_url est vide." },
-    { "type": "range", "id": "reviews_initial_count", "label": "Avis affichés au chargement", "min": 3, "max": 12, "step": 1, "default": 6 }
+    { "type": "header", "content": "Avis" },
+    { "type": "paragraph", "content": "Les avis, la note moyenne et le nombre d’avis viennent de Judge.me. Titre, filtres, tri et bouton « écrire un avis » se règlent dans l’application Judge.me, pas ici." }
   ],
   "blocks": [
     {
