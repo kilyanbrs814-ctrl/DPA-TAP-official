@@ -1060,9 +1060,9 @@ p{margin:0;text-wrap:pretty}
    page n'en contient donc jamais qu'un par emplacement. On les révèle en
    restant strictement dans notre conteneur `.dpa-jdgm-badge`, pour ne jamais
    faire réapparaître un badge que Judge.me voudrait cacher ailleurs.
-   Deux classes et un attribut : la règle passe devant celle de Judge.me sans
-   avoir besoin de `!important`. */
-.dpa-jdgm-badge.jdgm-preview-badge[data-template]{display:block}
+   Judge.me pose ce masquage en `display:none !important` : la spécificité seule
+   ne suffit pas, `!important` est ici le seul moyen de repasser devant. */
+.dpa-jdgm-badge.jdgm-preview-badge[data-template]{display:block!important}
 
 /* Le badge lui-même est livré en `style="display:none"`, que Judge.me lève
    normalement au moment où il installe le sien. Comme c'est nous qui le
