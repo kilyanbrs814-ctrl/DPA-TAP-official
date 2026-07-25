@@ -1137,12 +1137,19 @@ p{margin:0;text-wrap:pretty}
 .dpa-jdgm-reviews .jdgm-rev__body p{color:color-mix(in srgb,var(--c-paper) 80%,transparent)!important}
 .dpa-jdgm-reviews .jdgm-rev__timestamp,
 .dpa-jdgm-reviews .jdgm-rev__location{color:var(--c-grey)!important}
-.dpa-jdgm-reviews .jdgm-rev__icon{background:var(--g-blue);color:#fff}
+/* Judge.me livre une pastille d'avatar vide pour les avis sans photo : rond et
+   discret plutôt que carré et coloré, sinon un aplat plein attire l'œil sur
+   une zone qui ne dit rien. */
+.dpa-jdgm-reviews .jdgm-rev__icon{border-radius:50%;background:color-mix(in srgb,var(--c-paper) 12%,transparent);color:var(--c-paper)}
 
 /* Boutons, tri et filtres : mêmes formes que les boutons du thème, sans
-   toucher à leur fonctionnement. */
+   toucher à leur fonctionnement. La couleur du bouton « écrire un avis » vient
+   de la feuille de style Judge.me, servie depuis son propre domaine et donc
+   hors de portée du calcul de spécificité : `!important` est ici le seul levier
+   pour ramener le vert Judge.me sur le bleu DPA. */
 .dpa-jdgm-reviews .jdgm-write-rev-link,
 .dpa-jdgm-reviews .jdgm-btn{border-radius:999px;font-family:"Space Grotesk",sans-serif}
+.dpa-jdgm-reviews .jdgm-write-rev-link{background:var(--g-blue)!important;border-color:var(--g-blue)!important;color:#fff!important}
 .dpa-jdgm-reviews .jdgm-sort-dropdown,
 .dpa-jdgm-reviews .jdgm-sort-dropdown-arrow,
 .dpa-jdgm-reviews .jdgm-widget-actions-wrapper{color:var(--c-paper)}
