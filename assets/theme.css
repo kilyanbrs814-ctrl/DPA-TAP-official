@@ -260,6 +260,12 @@ p{margin:0;text-wrap:pretty}
 .prod-reassure__ico{flex:none;width:18px;height:18px;color:var(--g-blue)}
 .prod-reassure span{font-family:"Space Grotesk",sans-serif;font-weight:500;font-size:clamp(.72rem,.92vw,.85rem);line-height:1.25;white-space:nowrap;color:color-mix(in srgb,var(--c-paper) 82%,transparent)}
 .buy-title:has(+ .prod-reassure){margin-bottom:0}
+/* Fiche produit — desktop uniquement : coupe volontairement le 2e avantage
+   (« Livraison offerte : » / « domicile ou point relais ») sur deux lignes afin
+   d'éviter le chevauchement avec « Aucun abonnement ». Le <br> est masqué par
+   défaut, donc mobile, tablette (≤980px) et l'accueil restent strictement inchangés. */
+.prod-reassure__br-desk{display:none}
+@media (min-width:981px){.template-product .prod-reassure__br-desk{display:inline}}
 .buy-price-row{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
 .buy-price{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:2.4rem;letter-spacing:-.02em}
 .buy-compare{color:var(--c-grey);text-decoration:line-through}
