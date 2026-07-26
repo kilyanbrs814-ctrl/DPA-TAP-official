@@ -100,6 +100,38 @@ p{margin:0;text-wrap:pretty}
    texte (l'ordre du DOM garde le <h1> en premier pour l'accessibilité). */
 @media (max-width:900px){.hero{padding-top:120px}.hero-grid{grid-template-columns:minmax(0,1fr);gap:24px}.hero-copy{order:2;max-width:none}.hero-media{order:1}.hero-media-frame{max-width:min(440px,100%)}.hero-plaque{width:min(420px,88%)}}
 
+/* Grand écran : la composition du Hero et de l'en-tête est agrandie de ~12,5 %.
+   Le rendu de référence était obtenu au zoom navigateur 112,5 % ; ces règles
+   reproduisent les mêmes dimensions à 100 %, en dimensions réelles (aucun
+   `zoom` ni `transform:scale`, donc le texte reste net et sélectionnable).
+   Tout est scopé sous `.hdr` et `.hero*` à partir de 1200 px : les autres
+   sections gardent leur `.container` de 1240 px, et les paliers tablette et
+   mobile (max-width:900px et en dessous) ne sont pas touchés. */
+@media (min-width:1200px){
+  /* En-tête : même largeur que la grille du Hero, proportions ×1,125. */
+  .hdr{width:min(1400px,100% - 32px);top:16px;gap:20px;padding:11px 11px 11px 25px}
+  .hdr-logo img{height:31.5px}
+  .hdr-nav a{font-size:1.035rem;padding:9px 16px}
+  .hdr-cart{gap:9px;padding:11px 20px;font-size:1.035rem}
+  .hdr-cart [data-cart-count]{font-size:.81rem;min-width:22.5px;height:22.5px;padding:0 7px}
+  /* Hero : conteneur 1240 → 1400 px, hauteur et espacements suivent. */
+  .hero{padding-top:clamp(140px,15.5vh,189px)}
+  .hero-grid{width:min(1400px,100% - 54px);gap:clamp(36px,4.5vw,72px)}
+  .hero-copy{max-width:700px}
+  .hero-eyebrow{margin-bottom:7px;font-size:clamp(.81rem,1.13vw,1.0125rem)}
+  /* Borne haute relevée en proportion de la colonne de texte (697 px à partir
+     de 1400 px de container) : les deux lignes en `nowrap` tiennent toujours. */
+  .hero h1.h-display{font-size:clamp(2.93rem,5.18vw,4.725rem)}
+  .hero-sub{margin-top:32px;font-size:clamp(1.18rem,1.8vw,1.4625rem)}
+  .hero-cta{margin-top:45px;gap:16px}
+  .hero-cta .btn{padding:18px 36px;font-size:1.125rem;min-height:58.5px}
+  .hero-cta .btn--blue{padding:20px 45px;font-size:1.19rem}
+  .hero-media-frame{max-width:630px;border-radius:31.5px}
+  /* Le badge d'avis est agrandi plus bas, après ses règles de base : sans cela
+     la déclaration `.dpa-jdgm-badge` de la section Judge.me, plus loin dans la
+     feuille et de même spécificité, reprendrait la main. */
+}
+
 /* ============ Scrollytelling ============ */
 .scrolly{background:var(--c-bg);color:var(--c-paper);margin-top:0;border:0}
 .scrolly-track{height:380vh}
@@ -1081,6 +1113,13 @@ p{margin:0;text-wrap:pretty}
 .dpa-jdgm-badge--home_product{margin-top:14px}
 .dpa-jdgm-badge--pdp{margin:0 0 14px}
 .dpa-jdgm-badge--cart{display:flex;justify-content:center;margin:14px 0;text-align:center}
+/* Grand écran : le badge du Hero suit l'agrandissement de la section (×1,125).
+   Les étoiles Judge.me sont dimensionnées en em, elles suivent la font-size. */
+@media (min-width:1200px){
+  .dpa-jdgm-badge--hero{margin-top:25px;font-size:1.0125rem}
+  .dpa-jdgm-badge--hero .jdgm-prev-badge{gap:8px}
+  .dpa-jdgm-badge--hero .jdgm-prev-badge__text{font-size:.99rem}
+}
 
 /* Sur la fiche produit, Judge.me rend le badge cliquable lui-même
    (défilement jusqu'au widget) : on l'annonce au pointeur. */
