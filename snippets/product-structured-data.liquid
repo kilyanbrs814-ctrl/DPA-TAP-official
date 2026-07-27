@@ -152,6 +152,48 @@
           "shippingDestination": {
             "@type": "DefinedRegion",
             "addressCountry": "FR"
+          },
+          {%- comment -%}
+            `handlingTime` reprend l'engagement de la politique d'expédition :
+            la commande complète part « au plus tard le jour ouvré suivant »,
+            soit 0 à 1 jour ouvré de préparation.
+
+            `transitTime` correspond au délai d'acheminement observé en France
+            métropolitaine, 2 à 4 jours ouvrés (information confirmée par le
+            marchand le 27 juillet 2026). Ce délai est distinct de la
+            préparation, comme le précise la politique.
+
+            `businessDays` limite les deux durées au lundi-vendredi : la
+            politique exclut expressément les samedis, dimanches et jours
+            fériés du décompte des jours ouvrés.
+
+            Si les délais transporteur changent, mettre à jour ces valeurs ici
+            et dans /policies/shipping-policy pour qu'elles restent identiques.
+          {%- endcomment %}
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            },
+            "transitTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 2,
+              "maxValue": 4,
+              "unitCode": "DAY"
+            },
+            "businessDays": {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": [
+                "https://schema.org/Monday",
+                "https://schema.org/Tuesday",
+                "https://schema.org/Wednesday",
+                "https://schema.org/Thursday",
+                "https://schema.org/Friday"
+              ]
+            }
           }
         },
         "hasMerchantReturnPolicy": {

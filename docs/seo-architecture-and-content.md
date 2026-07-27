@@ -567,6 +567,7 @@ Dans Shopify Admin :
 - Produit, articles, blog et pages métier : `BreadcrumbList` aligné sur le fil d’Ariane visible.
 - Aucun faux avis, faux stock, fausse date ou donnée invisible n’est ajouté. `aggregateRating` et `review` proviennent exclusivement des metafields alimentés par Judge.me (`reviews.rating`, `reviews.rating_count`, `judgeme.review_widget_data`) : ce sont les avis réellement affichés par le widget de la page, avec leur auteur, leur note, leur date et leur texte d’origine. Sans avis publié, les deux blocs disparaissent au lieu d’afficher une note vide.
 - `shippingDetails` et `hasMerchantReturnPolicy` reprennent les conditions réellement publiées : livraison gratuite en France (`/policies/shipping-policy`), rétractation de quatorze jours avec retour postal aux frais du client (`/policies/refund-policy`). Toute évolution de ces politiques doit être répercutée dans le snippet.
+- `deliveryTime` distingue les deux durées annoncées : préparation de 0 à 1 jour ouvré (« expédiée au plus tard le jour ouvré suivant », politique d’expédition) et acheminement de 2 à 4 jours ouvrés en France métropolitaine. `businessDays` est limité au lundi-vendredi, la politique excluant samedis, dimanches et jours fériés. Ces valeurs doivent rester identiques à celles de `/policies/shipping-policy`.
 
 ## 11. Contrôles manuels avant publication
 
