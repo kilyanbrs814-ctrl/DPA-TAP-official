@@ -286,18 +286,11 @@
     "gallery": {
       "type": "gallery",
       "blocks": {
-        "photo_eirqzp": {
+        "photo_63ggNi": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_27_juil._2026_10_14_13.png",
-            "caption": "boutique",
-            "fallback": "scene-cafe.png"
-          }
-        },
-        "g2": {
-          "type": "photo",
-          "settings": {
-            "caption": "Café",
+            "image": "shopify://shop_images/ChatGPT_Image_27_juil._2026_10_20_16.png",
+            "caption": "intitut de beauté",
             "fallback": "scene-cafe.png"
           }
         },
@@ -316,12 +309,19 @@
             "fallback": "scene-salon.png"
           }
         },
-        "g3": {
+        "photo_eirqzp": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_27_juil._2026_09_58_20.png",
-            "caption": "boulangerie",
-            "fallback": "scene-boutique.png"
+            "image": "shopify://shop_images/ChatGPT_Image_27_juil._2026_10_14_13.png",
+            "caption": "boutique",
+            "fallback": "scene-cafe.png"
+          }
+        },
+        "g2": {
+          "type": "photo",
+          "settings": {
+            "caption": "Café",
+            "fallback": "scene-cafe.png"
           }
         },
         "g4": {
@@ -331,15 +331,24 @@
             "caption": "garage",
             "fallback": "scene-restaurant.png"
           }
+        },
+        "g3": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_27_juil._2026_09_58_20.png",
+            "caption": "boulangerie",
+            "fallback": "scene-boutique.png"
+          }
         }
       },
       "block_order": [
-        "photo_eirqzp",
-        "g2",
+        "photo_63ggNi",
         "photo_88ACRT",
         "g1",
-        "g3",
-        "g4"
+        "photo_eirqzp",
+        "g2",
+        "g4",
+        "g3"
       ],
       "settings": {
         "eyebrow": "En situation",
