@@ -1,4 +1,12 @@
-<section class="page-pad"><div class="container"><h1 class="h-lg">{{ page.title }}</h1><div style="margin-top:28px;max-width:70ch">{{ page.content }}</div></div></section>
+{%- comment -%}
+  Certaines pages (offre professionnelle, demande de devis) apportent leur
+  propre mise en page complète, titre compris, dans le contenu Shopify. Elles
+  masquaient le titre du gabarit en CSS (`display:none`) : le H1 restait dans le
+  HTML et la page en comptait deux, dont un invisible. Le titre du gabarit n'est
+  donc rendu que lorsque le contenu n'en fournit pas déjà un — rien ne change à
+  l'écran, il n'y a simplement plus de second H1 caché dans le document.
+{%- endcomment -%}
+<section class="page-pad"><div class="container">{% unless page.content contains '<h1' %}<h1 class="h-lg">{{ page.title }}</h1>{% endunless %}<div style="margin-top:28px;max-width:70ch">{{ page.content }}</div></div></section>
 
 {% schema %}
 { "name": "Page", "settings": [] }

@@ -345,9 +345,7 @@
   </div>
 </section>
 
-<script type="application/ld+json">
-  {{ product | structured_data }}
-</script>
+{%- render 'product-structured-data', product: product -%}
 
 {% stylesheet %}
   .seo-product {

@@ -1,0 +1,170 @@
+{%- comment -%}
+  Données structurées de la fiche produit — remplace `{{ product | structured_data }}`.
+
+  POURQUOI CE SNIPPET REMPLACE LA SORTIE NATIVE
+
+  La sortie native de Shopify produit un `ProductGroup` correct mais incomplet :
+  elle n'expose ni la note, ni les avis, ni la livraison, ni la politique de
+  retour, et ne répète pas la description sur chaque variante. Search Console
+  remontait cinq avertissements sur cette seule URL :
+
+    Extraits de produits   Champ "aggregateRating" manquant            (1)
+    Extraits de produits   Champ "review" manquant                     (1)
+    Fiches de marchand     Champ "hasMerchantReturnPolicy" manquant    (2)
+    Fiches de marchand     Champ "shippingDetails" manquant            (2)
+    Fiches de marchand     Champ "description" manquant                (2)
+
+  Aucune de ces valeurs n'est écrite en dur ici. Elles proviennent toutes de
+  l'objet `product`, des metafields alimentés par Judge.me, et des politiques
+  réellement publiées sur la boutique :
+
+    note et nombre d'avis   product.metafields.reviews.rating / rating_count
+                            (Judge.me les régénère à chaque avis publié)
+    avis individuels        product.metafields.judgeme.review_widget_data
+                            — exactement les avis rendus par le widget de la
+                            page, avec leur auteur, leur note, leur date et
+                            leur texte d'origine. Rien n'est reformulé, filtré
+                            ni complété.
+    livraison               profil de livraison réel : France, 0,00 €
+                            (/policies/shipping-policy)
+    retour                  rétractation de quatorze jours, retour par voie
+                            postale, frais de retour à la charge du client
+                            (/policies/refund-policy)
+
+  Si Judge.me ne renvoie aucun avis, les blocs `aggregateRating` et `review`
+  disparaissent entièrement plutôt que d'afficher une note vide ou inventée.
+
+  Paramètre : product (objet produit)
+{%- endcomment -%}
+
+{%- liquid
+  assign psd_url = shop.url | append: product.url
+  assign psd_id = psd_url | append: '#product'
+
+  assign psd_rating = product.metafields.reviews.rating.value
+  assign psd_rating_count = product.metafields.reviews.rating_count.value
+  assign psd_reviews = product.metafields.judgeme.review_widget_data.value.reviews
+
+  assign psd_has_rating = false
+  if psd_rating != blank and psd_rating_count != blank and psd_rating_count > 0
+    assign psd_has_rating = true
+  endif
+
+  assign psd_description = product.description | strip_html | strip | replace: '  ', ' '
+-%}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@id": {{ psd_id | json }},
+  "@type": "ProductGroup",
+  "name": {{ product.title | json }},
+  "description": {{ psd_description | json }},
+  "url": {{ psd_url | json }},
+  "productGroupID": "{{ product.id }}",
+  "brand": {
+    "@type": "Brand",
+    "name": {{ product.vendor | json }}
+  },
+  {%- if product.type != blank %}
+  "category": {{ product.type | json }},
+  {%- endif %}
+  {%- if product.featured_image %}
+    {%- assign psd_img = product.featured_image | image_url: width: 1920 | split: '//' | last | prepend: 'https://' %}
+  "image": {{ psd_img | json }},
+  {%- endif %}
+  "variesBy": ["https://schema.org/color"],
+  {%- if psd_has_rating %}
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": {{ psd_rating.rating | json }},
+    "reviewCount": {{ psd_rating_count | json }},
+    "bestRating": {{ psd_rating.scale_max | json }},
+    "worstRating": {{ psd_rating.scale_min | json }}
+  },
+  {%- endif %}
+  {%- if psd_reviews != blank %}
+  "review": [
+    {%- assign psd_first_review = true -%}
+    {%- for psd_review in psd_reviews -%}
+      {%- if psd_review.reviewer_name != blank and psd_review.body != blank -%}
+        {%- unless psd_first_review %},{% endunless -%}
+        {%- assign psd_first_review = false %}
+    {
+      "@type": "Review",
+      "author": {
+        "@type": "Person",
+        "name": {{ psd_review.reviewer_name | json }}
+      },
+      "datePublished": {{ psd_review.created_at | date: '%Y-%m-%d' | json }},
+      "reviewBody": {{ psd_review.body | json }},
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": {{ psd_review.rating | json }},
+        "bestRating": 5,
+        "worstRating": 1
+      }
+    }
+      {%- endif -%}
+    {%- endfor %}
+  ],
+  {%- endif %}
+  "hasVariant": [
+    {%- for variant in product.variants %}
+    {
+      "@type": "Product",
+      "@id": {{ psd_url | append: '?variant=' | append: variant.id | append: '#variant' | json }},
+      "name": {{ product.title | append: ' - ' | append: variant.title | json }},
+      "description": {{ psd_description | json }},
+      {%- comment -%}
+        `variesBy` annonce que les variantes se distinguent par la couleur : la
+        propriété correspondante doit donc figurer sur chacune. `option1` porte
+        le libellé réel de l'option (Noir, Bleu), tel qu'il est affiché.
+      {%- endcomment %}
+      "color": {{ variant.option1 | json }},
+      {%- if variant.sku != blank %}
+      "sku": {{ variant.sku | json }},
+      {%- endif %}
+      {%- assign psd_v_image = variant.featured_image | default: product.featured_image %}
+      {%- if psd_v_image %}
+        {%- assign psd_v_img = psd_v_image | image_url: width: 1920 | split: '//' | last | prepend: 'https://' %}
+      "image": {{ psd_v_img | json }},
+      {%- endif %}
+      "offers": {
+        "@type": "Offer",
+        "@id": {{ psd_url | append: '?variant=' | append: variant.id | append: '#offer' | json }},
+        "url": {{ psd_url | append: '?variant=' | append: variant.id | json }},
+        "price": {{ variant.price | divided_by: 100.0 }},
+        "priceCurrency": {{ shop.currency | json }},
+        "availability": "https://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+        "itemCondition": "https://schema.org/NewCondition",
+        "seller": {
+          "@type": "Organization",
+          "name": {{ shop.name | json }}
+        },
+        "shippingDetails": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": 0,
+            "currency": {{ shop.currency | json }}
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "FR"
+          }
+        },
+        "hasMerchantReturnPolicy": {
+          "@type": "MerchantReturnPolicy",
+          "applicableCountry": "FR",
+          "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+          "merchantReturnDays": 14,
+          "returnMethod": "https://schema.org/ReturnByMail",
+          "returnFees": "https://schema.org/ReturnShippingFees"
+        }
+      }
+    }{% unless forloop.last %},{% endunless %}
+    {%- endfor %}
+  ]
+}
+</script>

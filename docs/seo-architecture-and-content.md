@@ -562,10 +562,11 @@ Dans Shopify Admin :
 
 ## 10. Données structurées préparées
 
-- Produit : sortie native `{{ product | structured_data }}` de Shopify, alimentée par les variantes, prix, devise, disponibilité, URL et images réels.
+- Produit : `snippets/product-structured-data.liquid`. La sortie native `{{ product | structured_data }}` a été remplacée parce qu’elle n’expose ni la note, ni les avis, ni la livraison, ni la politique de retour, et ne répète pas la description sur chaque variante — Search Console remontait cinq avertissements sur cette seule URL. Le snippet reprend l’intégralité de la sortie native (variantes, prix, devise, disponibilité, URL, images, SKU) et y ajoute `aggregateRating`, `review`, `shippingDetails`, `hasMerchantReturnPolicy`, `color` et la description de variante.
 - Articles : sortie native `{{ article | structured_data }}`, alimentée par l’auteur, les dates et l’image réels de l’article.
 - Produit, articles, blog et pages métier : `BreadcrumbList` aligné sur le fil d’Ariane visible.
-- Aucun `AggregateRating`, faux avis, faux stock, fausse date ou donnée invisible n’est ajouté.
+- Aucun faux avis, faux stock, fausse date ou donnée invisible n’est ajouté. `aggregateRating` et `review` proviennent exclusivement des metafields alimentés par Judge.me (`reviews.rating`, `reviews.rating_count`, `judgeme.review_widget_data`) : ce sont les avis réellement affichés par le widget de la page, avec leur auteur, leur note, leur date et leur texte d’origine. Sans avis publié, les deux blocs disparaissent au lieu d’afficher une note vide.
+- `shippingDetails` et `hasMerchantReturnPolicy` reprennent les conditions réellement publiées : livraison gratuite en France (`/policies/shipping-policy`), rétractation de quatorze jours avec retour postal aux frais du client (`/policies/refund-policy`). Toute évolution de ces politiques doit être répercutée dans le snippet.
 
 ## 11. Contrôles manuels avant publication
 
