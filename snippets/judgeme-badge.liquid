@@ -1,78 +1,93 @@
 {%- comment -%}
   Badge de note — SOURCE UNIQUE de tous les emplacements de preuve sociale.
 
-  Code d'installation officiel Judge.me du « Star Rating Badge » (preview
-  badge). Aucune note, aucun compteur et aucune étoile ne sont écrits dans le
-  thème : tout vient de product.metafields.judgeme.badge, que Judge.me
-  régénère à chaque avis publié. Le HTML est livré avec la page, donc pas de
-  décalage de mise en page ni d'appel réseau supplémentaire ; l'App Embed
-  « judgeme_core » charge le SDK une seule fois pour toute la boutique.
+  Affichage : `5/5 | 8 avis` (ou `4,8/5 | 12 avis`).
 
-  POURQUOI LE BADGE PRODUIT PARTOUT, Y COMPRIS SUR LE HERO ET LE PANIER
+  POURQUOI LE THÈME REND CE BADGE LUI-MÊME
 
-  Le widget boutique « All Reviews Rating » a d'abord été posé sur le Hero et
-  le panier, avec le code officiel (div .jdgm-all-reviews-rating alimentée par
-  shop.metafields.judgeme.all_reviews_rating / _count). Vérifié en ligne, il
-  ressort systématiquement avec cinq étoiles éteintes et sans texte : le script
-  Judge.me ne reprend pas ces attributs hors de sa page « tous les avis ». Un
-  badge vide vaut moins que pas de badge, et le reconstruire à la main
-  reviendrait à réécrire une note en dur — exactement ce qu'on supprime ici.
-  DPA TAP ne vendant qu'un produit, le badge produit porte la même promesse au
-  même endroit, avec un widget officiel qui fonctionne réellement.
+  Le badge affichait auparavant le HTML livré par Judge.me
+  (product.metafields.judgeme.badge), c'est-à-dire cinq étoiles suivies de
+  « 8 reviews ». Trois défauts venaient de là :
+
+    — le libellé restait en anglais et n'était pas modifiable ;
+    — la feuille de style de Judge.me, servie depuis son propre domaine, pose
+      `.jdgm-prev-badge__text { visibility: hidden }` et
+      `.jdgm-preview-badge[data-template] { display: none !important }`. Le
+      thème devait les contrer à coups de `!important` pour que le compteur
+      reste visible ;
+    — ce HTML embarquait un `AggregateRating` en microdonnées sans conteneur
+      `Product` parent, que Search Console signalait comme problème critique
+      (« Champ "itemReviewed" manquant »).
+
+  Le badge est donc écrit ici, à partir des metafields de notation. Aucune
+  classe `jdgm-*` n'est utilisée : la feuille de Judge.me ne peut plus masquer
+  quoi que ce soit, et plus aucune microdonnée n'est réintroduite. Le widget
+  d'avis complet et le carrousel, eux, continuent d'utiliser le HTML officiel
+  de Judge.me et ne sont pas touchés.
+
+  SOURCE DES DONNÉES — RIEN N'EST ÉCRIT EN DUR
+
+    product.metafields.reviews.rating.value.rating      note moyenne
+    product.metafields.reviews.rating.value.scale_max   échelle (5)
+    product.metafields.reviews.rating_count.value       nombre d'avis
+
+  Ces trois metafields sont alimentés et régénérés par Judge.me à chaque avis
+  publié ou modéré : le badge suit automatiquement, sans intervention.
+
+  La note est arrondie à une décimale et écrite à la française : un entier
+  s'affiche sans décimale (`5/5`), une note décimale avec une virgule
+  (`4,8/5`).
 
   Paramètres :
     product  objet produit (obligatoire)
     variant  hero | home_product | pdp | cart   (styles DPA)
-    href     lien facultatif. Sur la fiche produit, ne rien passer : Judge.me
-             fait lui-même défiler jusqu'au widget d'avis au clic sur le badge,
-             et un lien par-dessus doublonnerait avec son gestionnaire.
+    href     lien facultatif ; à défaut, l'ancre du widget d'avis de la page.
 
-  Sans avis publié, Judge.me ne renvoie rien et le badge disparaît entièrement,
-  plutôt que d'afficher un cadre vide ou une note inventée.
-{%- endcomment -%}
-
-{%- comment -%}
-  MICRODATA ORPHELIN NEUTRALISÉ — NE PAS RETIRER CE FILTRE
-
-  Le HTML livré par Judge.me embarque son propre balisage microdata :
-
-    <div class='jdgm-prev-badge__rich-snippet'
-         itemprop='aggregateRating' itemscope
-         itemtype='http://schema.org/AggregateRating'>
-      <meta itemprop='reviewCount' content='8'>
-      <meta itemprop='ratingValue' content='5.00'>
-    </div>
-
-  Ce bloc suppose un parent `itemscope itemtype="…/Product"`, que le thème ne
-  pose nulle part. La note se retrouve donc seule, rattachée à rien : Search
-  Console la signalait comme problème critique dans « Extraits d'avis » —
-  « Champ "itemReviewed" manquant », élément « Sans objet ». Deux occurrences
-  sur l'accueil, où le badge est rendu deux fois, deux autres sur la fiche
-  produit (badge + widget).
-
-  Les attributs microdata sont donc renommés en `data-*`. Rien ne disparaît :
-  les étoiles, la note et le nombre d'avis restent affichés à l'identique, les
-  valeurs restent lisibles dans le HTML, et Judge.me continue de piloter le
-  badge par ses classes et ses attributs `data-`, qu'on ne touche pas.
-
-  La note et les avis ne sont pas perdus pour Google : ils sont exprimés en
-  JSON-LD sur la fiche produit (snippets/product-structured-data.liquid), sous
-  une forme complète et valide — `aggregateRating` rattaché au produit, plus
-  chaque avis avec son auteur, sa note, sa date et son texte.
+  Sans note ou sans avis, le snippet ne rend rien du tout, plutôt qu'un cadre
+  vide ou une note inventée.
 {%- endcomment -%}
 
 {%- liquid
-  assign jb_badge = product.metafields.judgeme.badge
-  if jb_badge != blank
-    assign jb_badge = jb_badge | replace: 'itemscope', '' | replace: 'itemprop=', 'data-jdgm-prop=' | replace: 'itemtype=', 'data-jdgm-type='
+  assign jb_rating = product.metafields.reviews.rating.value
+  assign jb_count = product.metafields.reviews.rating_count.value
+
+  assign jb_show = false
+  if jb_rating != blank and jb_rating.rating != blank and jb_count != blank and jb_count > 0
+    assign jb_show = true
   endif
 -%}
-{%- if jb_badge != blank -%}
-  {%- if href != blank -%}<a class="dpa-jdgm-badge__link" href="{{ href }}">{%- endif -%}
-    <div class="jdgm-widget jdgm-preview-badge dpa-jdgm dpa-jdgm-badge dpa-jdgm-badge--{{ variant | default: 'pdp' }}"
-      data-id="{{ product.id }}"
-      data-template="{{ template | split: '.' | first }}">
-      {{ jb_badge }}
-    </div>
-  {%- if href != blank -%}</a>{%- endif -%}
+
+{%- if jb_show -%}
+  {%- liquid
+    comment
+      Arrondi à une décimale sans passer par les flottants : la note est portée
+      en dixièmes, ce qui évite les 4.799999 de l'arithmétique Liquid. Le reste
+      de la division par dix donne la décimale ; nulle, elle n'est pas écrite.
+    endcomment
+    assign jb_tenths = jb_rating.rating | times: 10 | round
+    assign jb_whole = jb_tenths | divided_by: 10
+    assign jb_decimal = jb_tenths | modulo: 10
+
+    if jb_decimal == 0
+      assign jb_score = jb_whole
+    else
+      assign jb_score = jb_whole | append: ',' | append: jb_decimal
+    endif
+
+    assign jb_scale = jb_rating.scale_max | default: 5 | times: 1 | round
+
+    assign jb_href = href | default: '#judgeme_product_reviews'
+    assign jb_label = 'Noté ' | append: jb_score | append: ' sur ' | append: jb_scale | append: ' d’après ' | append: jb_count | append: ' avis'
+  -%}
+  <a
+    class="dpa-jdgm-badge__link"
+    href="{{ jb_href }}"
+    aria-label="{{ jb_label | escape }}"
+  >
+    <span class="dpa-jdgm dpa-jdgm-badge dpa-jdgm-badge--{{ variant | default: 'pdp' }}">
+      <span class="dpa-jdgm-badge__score">{{ jb_score }}/{{ jb_scale }}</span>
+      <span class="dpa-jdgm-badge__sep" aria-hidden="true">|</span>
+      <span class="dpa-jdgm-badge__count">{{ jb_count }} avis</span>
+    </span>
+  </a>
 {%- endif -%}

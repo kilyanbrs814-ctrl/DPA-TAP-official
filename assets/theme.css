@@ -1080,29 +1080,32 @@ p{margin:0;text-wrap:pretty}
 .dpa-jdgm .jdgm-star.jdgm--off{color:color-mix(in srgb,currentColor 24%,transparent)}
 
 /* ---- Badges de note (Hero, produit accueil, fiche produit, panier) ----
-   Le HTML du badge arrive déjà rendu par Judge.me : `min-height` ne sert donc
-   pas à masquer une arrivée tardive, seulement à garder une ligne stable quand
-   un produit n'a pas encore d'avis et que le badge ne s'affiche pas. */
-.dpa-jdgm-badge{display:block;min-height:22px;line-height:1.3;font-size:.9rem}
+   Le badge est désormais rendu par le thème (snippets/judgeme-badge.liquid) et
+   affiche `5/5 | 8 avis` à partir des metafields de notation. Il n'utilise plus
+   aucune classe `jdgm-*` : la feuille de Judge.me, servie depuis son propre
+   domaine, ne peut donc plus l'atteindre. Les contournements qui vivaient ici —
+   `display:block!important` contre `.jdgm-preview-badge[data-template]`, et la
+   levée du `style="display:none"` du badge livré — n'ont plus d'objet et ont été
+   retirés avec eux. En particulier, `.jdgm-prev-badge__text{visibility:hidden}`
+   ne s'applique plus au compteur, qui porte maintenant `.dpa-jdgm-badge__count`.
 
-/* Judge.me masque par défaut tout `.jdgm-preview-badge[data-template="…"]` :
-   c'est son garde-fou contre le doublon avec le badge que son installation
-   automatique injecte elle-même. Ici les badges sont posés à la main, à des
-   emplacements choisis, et l'installation automatique n'en pose aucun — la
-   page n'en contient donc jamais qu'un par emplacement. On les révèle en
-   restant strictement dans notre conteneur `.dpa-jdgm-badge`, pour ne jamais
-   faire réapparaître un badge que Judge.me voudrait cacher ailleurs.
-   Judge.me pose ce masquage en `display:none !important` : la spécificité seule
-   ne suffit pas, `!important` est ici le seul moyen de repasser devant. */
-.dpa-jdgm-badge.jdgm-preview-badge[data-template]{display:block!important}
-
-/* Le badge lui-même est livré en `style="display:none"`, que Judge.me lève
-   normalement au moment où il installe le sien. Comme c'est nous qui le
-   posons, on le lève ici — seul endroit du fichier où un style en ligne doit
-   être battu, donc seul endroit où `!important` est justifié. */
-.dpa-jdgm-badge .jdgm-prev-badge{display:inline-flex!important;align-items:center;gap:7px;flex-wrap:wrap}
-.dpa-jdgm-badge .jdgm-prev-badge__stars{display:inline-flex;gap:1px;line-height:1}
-.dpa-jdgm-badge .jdgm-prev-badge__text{margin:0;font-size:.88rem;color:color-mix(in srgb,currentColor 80%,transparent)}
+   `min-height` garde une ligne stable quand un produit n'a pas encore d'avis et
+   que le badge ne s'affiche pas du tout. `flex-wrap` évite tout débordement sur
+   les petites largeurs : le compteur passe sous la note plutôt que de pousser
+   la mise en page. */
+.dpa-jdgm-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  max-width:100%;
+  min-height:22px;
+  line-height:1.3;
+  font-size:.9rem;
+}
+.dpa-jdgm-badge__score{font-weight:600;white-space:nowrap}
+.dpa-jdgm-badge__sep{color:color-mix(in srgb,currentColor 40%,transparent)}
+.dpa-jdgm-badge__count{color:color-mix(in srgb,currentColor 80%,transparent);white-space:nowrap}
 
 /* Le lien enveloppant ne doit ni souligner ni recolorer le badge au repos :
    c'est une signature discrète, pas un bouton. */
@@ -1114,17 +1117,10 @@ p{margin:0;text-wrap:pretty}
 .dpa-jdgm-badge--pdp{margin:0 0 14px}
 .dpa-jdgm-badge--cart{display:flex;justify-content:center;margin:14px 0;text-align:center}
 /* Grand écran : le badge du Hero suit l'agrandissement de la section (×1,125).
-   Les étoiles Judge.me sont dimensionnées en em, elles suivent la font-size. */
+   Tout est dimensionné en em ou en rem, la composition suit la font-size. */
 @media (min-width:1200px){
   .dpa-jdgm-badge--hero{margin-top:25px;font-size:1.0125rem}
-  .dpa-jdgm-badge--hero .jdgm-prev-badge{gap:8px}
-  .dpa-jdgm-badge--hero .jdgm-prev-badge__text{font-size:.99rem}
 }
-
-/* Sur la fiche produit, Judge.me rend le badge cliquable lui-même
-   (défilement jusqu'au widget) : on l'annonce au pointeur. */
-.dpa-jdgm-badge--pdp .jdgm-prev-badge,
-.dpa-jdgm-badge--pdp .jdgm-prev-badge__stars{cursor:pointer}
 
 /* ---- Section avis de la page d'accueil (carrousel Judge.me) ---- */
 .jdgm-sec{background:var(--c-bg);color:var(--c-paper);padding:96px 0}
