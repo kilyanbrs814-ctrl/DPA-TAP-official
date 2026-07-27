@@ -76,6 +76,17 @@
 
     assign jb_scale = jb_rating.scale_max | default: 5 | times: 1 | round
 
+    comment
+      Étoiles décoratives : leur nombre d'allumées suit la note, arrondie à
+      l'étoile la plus proche. Elles ne sont pas figées à cinq — une moyenne qui
+      descendrait afficherait aussitôt une étoile éteinte, plutôt qu'une note
+      flatteuse démentie par le chiffre affiché juste à côté.
+      Le conteneur est `aria-hidden` : la note est déjà annoncée en toutes
+      lettres par l'`aria-label` du lien, répéter cinq caractères « ★ » à un
+      lecteur d'écran n'apporterait rien.
+    endcomment
+    assign jb_stars_on = jb_rating.rating | round
+
     assign jb_href = href | default: '#judgeme_product_reviews'
     assign jb_label = 'Noté ' | append: jb_score | append: ' sur ' | append: jb_scale | append: ' d’après ' | append: jb_count | append: ' avis'
   -%}
@@ -85,6 +96,11 @@
     aria-label="{{ jb_label | escape }}"
   >
     <span class="dpa-jdgm dpa-jdgm-badge dpa-jdgm-badge--{{ variant | default: 'pdp' }}">
+      <span class="dpa-jdgm-badge__stars" aria-hidden="true">
+        {%- for i in (1..jb_scale) -%}
+          <span class="dpa-jdgm-badge__star{% if i > jb_stars_on %} dpa-jdgm-badge__star--off{% endif %}">★</span>
+        {%- endfor -%}
+      </span>
       <span class="dpa-jdgm-badge__score">{{ jb_score }}/{{ jb_scale }}</span>
       <span class="dpa-jdgm-badge__sep" aria-hidden="true">|</span>
       <span class="dpa-jdgm-badge__count">{{ jb_count }} avis</span>

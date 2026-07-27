@@ -1103,6 +1103,18 @@ p{margin:0;text-wrap:pretty}
   line-height:1.3;
   font-size:.9rem;
 }
+/* Étoiles décoratives. Elles gardent le jaune du thème, déjà utilisé par les
+   étoiles du widget et du carrousel Judge.me, pour que les trois se répondent.
+   Les éteintes reprennent la couleur du texte fortement atténuée : le badge est
+   posé aussi bien sur fond sombre que sur fond clair, `currentColor` s'adapte
+   aux deux sans règle par emplacement.
+   `gap:1px` évite que les glyphes se touchent, `line-height:1` les aligne sur
+   le chiffre qui suit. Tout est en em : le badge agrandi du Hero les emmène
+   avec lui. */
+.dpa-jdgm-badge__stars{display:inline-flex;gap:1px;line-height:1;letter-spacing:0}
+.dpa-jdgm-badge__star{color:var(--g-yellow)}
+.dpa-jdgm-badge__star--off{color:color-mix(in srgb,currentColor 24%,transparent)}
+
 .dpa-jdgm-badge__score{font-weight:600;white-space:nowrap}
 .dpa-jdgm-badge__sep{color:color-mix(in srgb,currentColor 40%,transparent)}
 .dpa-jdgm-badge__count{color:color-mix(in srgb,currentColor 80%,transparent);white-space:nowrap}
