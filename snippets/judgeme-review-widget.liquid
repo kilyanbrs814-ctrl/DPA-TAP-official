@@ -18,14 +18,32 @@
   Paramètre : product (objet produit)
 {%- endcomment -%}
 
-{%- if product.metafields.judgeme.widget != blank -%}
+{%- comment -%}
+  MICRODATA ORPHELIN NEUTRALISÉ — voir l'explication détaillée dans
+  snippets/judgeme-badge.liquid.
+
+  L'en-tête du widget embarque le même bloc `AggregateRating` en microdata, sans
+  parent `Product`, donc sans `itemReviewed`. Les attributs sont renommés en
+  `data-*` : les avis, la note moyenne, l'histogramme, les filtres et le tri
+  s'affichent exactement comme avant, et la note reste exprimée pour Google en
+  JSON-LD par snippets/product-structured-data.liquid.
+{%- endcomment -%}
+
+{%- liquid
+  assign jrw_widget = product.metafields.judgeme.widget
+  if jrw_widget != blank
+    assign jrw_widget = jrw_widget | replace: 'itemscope', '' | replace: 'itemprop=', 'data-jdgm-prop=' | replace: 'itemtype=', 'data-jdgm-type='
+  endif
+-%}
+
+{%- if jrw_widget != blank -%}
   <div class="dpa-jdgm dpa-jdgm-reviews" id="avis-clients">
     <div style="clear:both"></div>
     <div id="judgeme_product_reviews"
       class="jdgm-widget jdgm-review-widget"
       data-product-title="{{ product.title | escape }}"
       data-id="{{ product.id }}">
-      {{ product.metafields.judgeme.widget }}
+      {{ jrw_widget }}
     </div>
   </div>
 {%- endif -%}

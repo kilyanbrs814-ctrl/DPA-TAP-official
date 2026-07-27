@@ -31,7 +31,42 @@
   plutôt que d'afficher un cadre vide ou une note inventée.
 {%- endcomment -%}
 
-{%- assign jb_badge = product.metafields.judgeme.badge -%}
+{%- comment -%}
+  MICRODATA ORPHELIN NEUTRALISÉ — NE PAS RETIRER CE FILTRE
+
+  Le HTML livré par Judge.me embarque son propre balisage microdata :
+
+    <div class='jdgm-prev-badge__rich-snippet'
+         itemprop='aggregateRating' itemscope
+         itemtype='http://schema.org/AggregateRating'>
+      <meta itemprop='reviewCount' content='8'>
+      <meta itemprop='ratingValue' content='5.00'>
+    </div>
+
+  Ce bloc suppose un parent `itemscope itemtype="…/Product"`, que le thème ne
+  pose nulle part. La note se retrouve donc seule, rattachée à rien : Search
+  Console la signalait comme problème critique dans « Extraits d'avis » —
+  « Champ "itemReviewed" manquant », élément « Sans objet ». Deux occurrences
+  sur l'accueil, où le badge est rendu deux fois, deux autres sur la fiche
+  produit (badge + widget).
+
+  Les attributs microdata sont donc renommés en `data-*`. Rien ne disparaît :
+  les étoiles, la note et le nombre d'avis restent affichés à l'identique, les
+  valeurs restent lisibles dans le HTML, et Judge.me continue de piloter le
+  badge par ses classes et ses attributs `data-`, qu'on ne touche pas.
+
+  La note et les avis ne sont pas perdus pour Google : ils sont exprimés en
+  JSON-LD sur la fiche produit (snippets/product-structured-data.liquid), sous
+  une forme complète et valide — `aggregateRating` rattaché au produit, plus
+  chaque avis avec son auteur, sa note, sa date et son texte.
+{%- endcomment -%}
+
+{%- liquid
+  assign jb_badge = product.metafields.judgeme.badge
+  if jb_badge != blank
+    assign jb_badge = jb_badge | replace: 'itemscope', '' | replace: 'itemprop=', 'data-jdgm-prop=' | replace: 'itemtype=', 'data-jdgm-type='
+  endif
+-%}
 {%- if jb_badge != blank -%}
   {%- if href != blank -%}<a class="dpa-jdgm-badge__link" href="{{ href }}">{%- endif -%}
     <div class="jdgm-widget jdgm-preview-badge dpa-jdgm dpa-jdgm-badge dpa-jdgm-badge--{{ variant | default: 'pdp' }}"
