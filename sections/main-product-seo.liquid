@@ -106,6 +106,16 @@
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0 1 13.6-5.7L20 8.5M20 12a8 8 0 0 1-13.6 5.7L4 15.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M20 4.5v4h-4M4 19.5v-4h4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 {{ block.settings.note_text }}
               </p>
+              <aside class="sp-review-notice">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 3.5 19 6v5.3c0 4.4-2.7 7.8-7 9.2-4.3-1.4-7-4.8-7-9.2V6z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+                  <path d="M9 12.1 11.1 14 15.3 9.8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div>
+                  <b>{{ block.settings.review_notice_title }}</b>
+                  <p>{{ block.settings.review_notice_text }}</p>
+                </div>
+              </aside>
             </section>
 
           {% when 'formats' %}
@@ -199,6 +209,23 @@
                   <p>{{ block.settings.limits_text }}</p>
                 </aside>
               </div>
+            </section>
+
+          {% when 'professional' %}
+            <section class="sp-chapter sp-pro" {{ block.shopify_attributes }}>
+              <div class="sp-pro__body">
+                <p class="eyebrow sp-pro__eyebrow">{{ block.settings.eyebrow }}</p>
+                <h2 class="sp-pro__title">{{ block.settings.heading }}</h2>
+                <p class="sp-pro__text">{{ block.settings.text }}</p>
+                <ul class="sp-pro__chips" role="list">
+                  <li>{{ block.settings.reassure_1 }}</li>
+                  <li>{{ block.settings.reassure_2 }}</li>
+                  <li>{{ block.settings.reassure_3 }}</li>
+                </ul>
+              </div>
+              {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+                <a class="btn btn--paper sp-pro__button" href="{{ block.settings.button_link }}">{{ block.settings.button_label }}</a>
+              {% endif %}
             </section>
 
           {% when 'install' %}
@@ -431,7 +458,7 @@
     background: var(--sp-panel);
   }
 
-  /* 01 — bloc principal commerces */
+  /* 02 — bloc principal commerces */
   .sp-lead {
     display: grid;
     gap: 30px;
@@ -602,7 +629,7 @@
     color: var(--c-paper);
   }
 
-  /* 03 — préparation, timeline */
+  /* 04 — préparation, timeline */
   .sp-timeline {
     margin: 26px 0 22px;
     padding: 0;
@@ -702,7 +729,38 @@
     color: var(--sp-blue-soft);
   }
 
-  /* 04 — formats */
+  .sp-review-notice {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-top: 18px;
+    padding: 16px 18px;
+    border: 1px solid color-mix(in srgb, var(--g-blue) 42%, transparent);
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--g-blue) 9%, transparent);
+  }
+
+  .sp-review-notice svg {
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
+    margin-top: 1px;
+    color: var(--sp-blue-soft);
+  }
+
+  .sp-review-notice b {
+    color: var(--c-paper);
+    font-size: 0.96rem;
+  }
+
+  .sp-review-notice p {
+    margin-top: 5px;
+    color: var(--sp-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  /* 03 — formats */
   .sp-size {
     margin: 24px 0 4px;
     color: var(--c-paper);
@@ -781,7 +839,7 @@
     line-height: 1.55;
   }
 
-  /* 05 — compatibilité */
+  /* 06 — compatibilité */
   .sp-compat-grid {
     display: grid;
     gap: 12px;
@@ -844,7 +902,70 @@
     line-height: 1.55;
   }
 
-  /* 06 — installation et livraison (reprise de la section accueil, variante sombre) */
+  .sp-pro {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 26px;
+    overflow: hidden;
+    padding: clamp(26px, 5vw, 48px);
+    border: 1px solid color-mix(in srgb, var(--g-blue) 32%, transparent);
+    border-radius: 28px;
+    background:
+      radial-gradient(circle at 92% -30%, color-mix(in srgb, var(--g-blue) 18%, transparent), transparent 48%),
+      #121215;
+  }
+
+  .sp-pro__body,
+  .sp-pro__button {
+    position: relative;
+    z-index: 1;
+  }
+
+  .sp-pro__eyebrow {
+    color: var(--sp-blue-soft);
+  }
+
+  .sp-pro__title {
+    max-width: 24ch;
+    margin-top: 12px;
+    color: var(--c-paper);
+    font-size: clamp(1.65rem, 5.6vw, 2.6rem);
+    line-height: 1.06;
+    letter-spacing: -0.015em;
+  }
+
+  .sp-pro__text {
+    max-width: 58ch;
+    margin-top: 16px;
+    color: var(--sp-muted);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .sp-pro__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 22px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sp-pro__chips li {
+    padding: 9px 14px;
+    border: 1px solid var(--sp-line);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.045);
+    color: var(--c-paper);
+    font-size: 0.86rem;
+  }
+
+  .sp-pro__button {
+    justify-self: start;
+  }
+
+  /* 05 — installation et livraison (reprise de la section accueil, variante sombre) */
   .sp-install .sp-install30 {
     margin-top: 30px;
   }
@@ -1064,6 +1185,11 @@
       align-items: center;
     }
 
+    .sp-pro {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+    }
+
     /* Les trois cartes forment une rangée strictement alignée : une seule piste
        de grille (`grid-auto-rows: 1fr`) dont la hauteur est celle de la carte la
        plus haute, et des items étirés dessus. Aucune hauteur en dur : elle reste
@@ -1280,7 +1406,10 @@
         { "type": "text", "id": "fact1_label", "label": "Libellé 1", "default": "application à installer pour le commerçant" },
         { "type": "text", "id": "fact2_value", "label": "Chiffre 2", "default": "0" },
         { "type": "text", "id": "fact2_label", "label": "Libellé 2", "default": "abonnement à renouveler" },
-        { "type": "textarea", "id": "note_text", "label": "Note reprogrammation", "default": "Si le lien change par la suite, la puce peut être reprogrammée avec un smartphone compatible." }
+        { "type": "textarea", "id": "note_text", "label": "Note reprogrammation", "default": "Si le lien change par la suite, la puce peut être reprogrammée avec un smartphone compatible." },
+        { "type": "header", "content": "Liberté de l’avis" },
+        { "type": "text", "id": "review_notice_title", "label": "Titre", "default": "Le client reste libre de son avis." },
+        { "type": "textarea", "id": "review_notice_text", "label": "Texte", "default": "La plaque ouvre la page Google, mais elle ne publie rien automatiquement. DPA TAP ne contrôle ni la note ni le commentaire laissés par le client." }
       ]
     },
     {
@@ -1314,6 +1443,21 @@
         { "type": "textarea", "id": "device2_text", "label": "Appareil 2 — texte", "default": "Sur certains modèles, le NFC doit être activé dans les réglages. La position de l’antenne varie : il suffit de déplacer lentement le dos du téléphone au-dessus de la plaque." },
         { "type": "text", "id": "limits_title", "label": "Limites — titre", "default": "Les limites, en toute transparence" },
         { "type": "textarea", "id": "limits_text", "label": "Limites — texte", "default": "Un téléphone ancien dépourvu de NFC, un NFC désactivé ou une coque très épaisse peuvent empêcher la lecture. La plaque facilite l’accès au formulaire d’avis, mais elle ne garantit ni que chaque client publiera un avis, ni un résultat particulier dans Google." }
+      ]
+    },
+    {
+      "type": "professional",
+      "name": "Offre professionnelle",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "RÉSEAUX · FRANCHISES · MULTISITES" },
+        { "type": "text", "id": "heading", "label": "H2", "default": "Plusieurs établissements ? Équipez tout votre réseau." },
+        { "type": "textarea", "id": "text", "label": "Texte", "default": "Dès 5 plaques, profitez de tarifs dégressifs, choisissez vos couleurs et associez un lien Google différent à chaque établissement." },
+        { "type": "text", "id": "reassure_1", "label": "Réassurance 1", "default": "Dès 5 plaques" },
+        { "type": "text", "id": "reassure_2", "label": "Réassurance 2", "default": "Un lien Google par établissement" },
+        { "type": "text", "id": "reassure_3", "label": "Réassurance 3", "default": "Tarifs dégressifs" },
+        { "type": "text", "id": "button_label", "label": "Libellé du bouton", "default": "Découvrir l’offre professionnelle" },
+        { "type": "url", "id": "button_link", "label": "Lien du bouton" }
       ]
     },
     {
