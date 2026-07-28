@@ -26,19 +26,20 @@
         "operation": {
           "type": "process",
           "settings": {
-            "eyebrow": "Fonctionnement",
-            "heading": "Du geste du client à l’avis publié",
-            "step1_image": "shopify://shop_images/ChatGPT_Image_23_juil._2026_16_41_30.png",
-            "step1_title": "Le client approche son téléphone",
-            "step1_text": "La zone NFC de son iPhone ou de son téléphone Android compatible passe au-dessus de la plaque.",
-            "step2_image": "shopify://shop_images/ChatGPT_Image_26_juil._2026_01_09_37.png",
-            "step2_title": "Une notification apparaît",
-            "step2_text": "Il la touche pour ouvrir le lien d’avis Google programmé dans la puce NFC de la plaque.",
-            "step3_image": "shopify://shop_images/ChatGPT_Image_26_juil._2026_01_51_07.png",
-            "step3_title": "La fiche Google s’affiche",
-            "step3_text": "Dans son navigateur ou son application : il choisit sa note et rédige, ou non, un commentaire.",
-            "note_title": "Aucune publication automatique.",
-            "note_text": "La plaque ne publie rien à la place du client : il reste libre d’ouvrir le lien, de choisir sa note et de laisser ou non un avis."
+            "eyebrow": "COMMENT ÇA MARCHE",
+            "title": "Un geste. Un avis Google.",
+            "text": "Approchez simplement le téléphone de la plaque NFC : la fiche Google de votre établissement s’ouvre instantanément, sans application.",
+            "badge": "Démonstration réelle",
+            "video_label": "Démonstration réelle : un téléphone est approché de la plaque NFC, la fiche Google de l’établissement s’ouvre et le client laisse un avis cinq étoiles.",
+            "step_1": "Approchez le téléphone",
+            "step_1_text": "Le smartphone détecte automatiquement la puce NFC intégrée, sans application.",
+            "step_2": "La fiche Google s’ouvre",
+            "step_2_text": "La notification dirige directement le client vers la page d’avis Google de votre établissement.",
+            "step_3": "Le client laisse son avis",
+            "step_3_text": "Il choisit ses étoiles, ajoute un commentaire s’il le souhaite, puis publie son avis.",
+            "reassure_1": "Sans application",
+            "reassure_2": "Sans abonnement",
+            "reassure_3": "Prête à l’emploi"
           }
         },
         "programming": {
