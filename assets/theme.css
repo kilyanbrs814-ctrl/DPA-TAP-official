@@ -158,17 +158,23 @@ p{margin:0;text-wrap:pretty}
    la vidéo, donc aucune bande noire. Le léger rognage volontaire est décrit
    sous `.hiw-video`. */
 .hiw-card{position:relative;width:100%;max-width:440px;aspect-ratio:4/5;border-radius:26px;overflow:hidden;background:#000;border:1px solid color-mix(in srgb,var(--hiw-fg) 12%,transparent);box-shadow:0 30px 70px -32px rgba(0,0,0,.8)}
-/* Cadrage légèrement resserré : la vidéo est rendue à 106 % du cadre, ancrée à
-   gauche et remontée d'un cinquième de son débordement vertical. Le rognage est
-   donc pris là où il n'y a que le plan de travail — à droite et en bas. Vérifié
-   image par image sur les 250 images : la plaque et le téléphone restent
-   entiers du début à la fin ; seul l'avant-bras qui entre par la droite est un
-   peu plus court, et il était déjà coupé par le cadre d'origine.
+/* Cadrage resserré : la vidéo est rendue à 108 % du cadre, calée en haut à
+   gauche. Le débordement est donc pris entièrement en bas et à droite, c'est-à-
+   dire sur le plan de travail vide — le sujet, lui, occupe le haut-gauche du
+   plan. Concrètement, la zone visible de la source (1080 × 1350) va de x 0 à
+   1000 et de y 0 à 1250.
+   Les limites viennent du fichier lui-même : le téléphone frôle déjà le bord
+   droit dans les deux premières secondes et le bord gauche dans la seconde
+   moitié, alors qu'il ne descend jamais plus bas que y = 1125. C'est donc la
+   largeur qui plafonne l'agrandissement, pas la hauteur ; au-delà de ~110 % le
+   téléphone commence à être rogné. Vérifié image par image sur les 250 images :
+   la plaque et le téléphone restent entiers du début à la fin, seul l'avant-bras
+   qui entre par la droite est plus court — et il était déjà coupé à l'origine.
    Pas de `transform` ici : le débordement est découpé par l'`overflow:hidden` de
    la carte, ce qui garde les coins arrondis nets partout.
    La source fait 1080 px de large pour un cadre de 500 px au maximum : même
    agrandie, l'image reste réduite à l'affichage, donc sans perte de qualité. */
-.hiw-video{position:absolute;top:-1.13%;left:0;display:block;width:106%;height:106%;object-fit:cover}
+.hiw-video{position:absolute;top:0;left:0;display:block;width:108%;height:108%;object-fit:cover}
 .hiw-badge{position:absolute;top:12px;left:12px;padding:7px 12px;border-radius:999px;background:color-mix(in srgb,var(--c-bg) 70%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.16);color:#fff;font-family:"Space Grotesk",sans-serif;font-size:.66rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
 /* Étapes : le numéro occupe la première colonne, titre et description la
    seconde, donc la description s'aligne sur le titre et non sous le numéro. */
