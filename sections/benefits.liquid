@@ -1,8 +1,11 @@
+{%- liquid
+  assign bene_eyebrow = section.settings.eyebrow | default: 'Bénéfices'
+  assign bene_title = section.settings.title | default: 'Ce que la plaque change, concrètement.'
+-%}
 <section class="bene">
   <div class="container">
-    <div class="bene-head">
-      <h2 class="h-xl reveal">{{ section.settings.title | default: 'Ce que la plaque change, concrètement.' }}</h2>
-      <p class="eyebrow reveal">{{ section.settings.eyebrow | default: 'Bénéfices' }}</p>
+    <div class="sec-head">
+      {%- render 'section-heading', eyebrow: bene_eyebrow, title: bene_title -%}
     </div>
     <div class="bene-list" data-spotlight>
       {% for block in section.blocks %}

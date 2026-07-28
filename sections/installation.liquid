@@ -1,8 +1,11 @@
+{%- liquid
+  assign install_eyebrow = section.settings.eyebrow | default: 'Installation'
+  assign install_title = section.settings.title | default: 'Installée en trente secondes.'
+-%}
 <section class="install" id="installation">
   <div class="container">
-    <div class="bene-head">
-      <h2 class="h-xl reveal">{{ section.settings.title | default: 'Installée en trente secondes.' }}</h2>
-      <p class="eyebrow reveal">{{ section.settings.eyebrow | default: 'Installation' }}</p>
+    <div class="sec-head">
+      {%- render 'section-heading', eyebrow: install_eyebrow, title: install_title -%}
     </div>
     <div class="install-grid" data-spotlight>
       {% for block in section.blocks %}

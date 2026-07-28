@@ -1,0 +1,34 @@
+{%- comment -%}
+  En-tête de section partagé — SOURCE UNIQUE du couple sur-titre + titre.
+
+  Reprend exactement la composition de « Comment ça marche » : le sur-titre
+  au-dessus, le titre juste en dessous, alignés à gauche, à l'échelle
+  `--sec-title` (la même que `.hiw-title`). Passer par ce composant évite de
+  redéclarer une taille par section, ce qui est précisément ce qui avait fait
+  diverger les titres de 36 à 80 px.
+
+  Le balisage est volontairement sans conteneur : chaque section garde le sien
+  (`.sec-head`, `.buy-head`, `.revw-head__text`…), avec ses propres marges.
+
+  Paramètres :
+  - eyebrow    : texte du sur-titre (omis si vide)
+  - title      : texte du titre
+  - title_html : titre déjà balisé, prioritaire sur `title` (ex. deux lignes)
+  - heading_id : id posé sur le titre, pour aria-labelledby
+  - reveal     : false pour désactiver l'animation d'apparition
+{%- endcomment -%}
+
+{%- liquid
+  assign sh_reveal = ' reveal'
+  if reveal == false
+    assign sh_reveal = ''
+  endif
+-%}
+
+{%- if eyebrow != blank -%}
+  <p class="eyebrow sec-head__eyebrow{{ sh_reveal }}">{{ eyebrow }}</p>
+{%- endif -%}
+
+<h2 class="sec-head__title{{ sh_reveal }}"{% if heading_id != blank %} id="{{ heading_id }}"{% endif %}>
+  {%- if title_html != blank -%}{{ title_html }}{%- else -%}{{ title }}{%- endif -%}
+</h2>

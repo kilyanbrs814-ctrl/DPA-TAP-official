@@ -318,7 +318,7 @@
         moyenne, filtres et tri. Rien n'est réglable ici, tout se pilote depuis
         Judge.me pour qu'il n'existe qu'une seule source d'avis.
       {%- endcomment -%}
-      {%- render 'judgeme-review-widget', product: product -%}
+      {%- render 'judgeme-review-widget', product: product, eyebrow: section.settings.reviews_eyebrow -%}
 
       {% assign has_faq = false %}
       {% for block in section.blocks %}
@@ -349,7 +349,8 @@
 {% stylesheet %}
   .seo-product {
     min-height: 100vh;
-    padding: 128px 0 96px;
+    /* Le haut reste dégagé : l'en-tête du thème est fixe et vient par-dessus. */
+    padding: 128px 0 var(--sec-pad-y);
     background: var(--c-bg);
     color: var(--c-paper);
   }
@@ -435,8 +436,11 @@
     --sp-blue-soft: #8bc0ff;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: clamp(52px, 9vw, 80px) 20px;
-    margin-top: clamp(72px, 10vw, 104px);
+    /* Écart entre chapitres et marge avant la composition éditoriale ramenés à
+       environ la moitié (52–80 px → 28–44 px, 72–104 px → 40–56 px). Les
+       espacements internes des cartes ne sont pas touchés. */
+    gap: clamp(28px, 4.4vw, 44px) 20px;
+    margin-top: clamp(40px, 5vw, 56px);
     font-family: "Space Grotesk", Helvetica, Arial, sans-serif;
   }
 
@@ -471,13 +475,15 @@
     content: "";
   }
 
+  /* Titres de chapitre : même échelle, même interligne et même approche que
+     « Comment ça marche ». La graisse, la ligne et l'interlettrage viennent de
+     la règle globale h1–h4 du thème ; seule la taille est branchée sur le
+     jeton partagé --sec-title. */
   .sp-title {
     max-width: 24ch;
-    margin-top: 12px;
+    margin-top: var(--sec-eyebrow-gap);
     color: var(--c-paper);
-    font-size: clamp(1.65rem, 5.6vw, 2.6rem);
-    line-height: 1.06;
-    letter-spacing: -0.015em;
+    font-size: var(--sec-title);
   }
 
   .sp-panel {
@@ -957,11 +963,9 @@
 
   .sp-pro__title {
     max-width: 24ch;
-    margin-top: 12px;
+    margin-top: var(--sec-eyebrow-gap);
     color: var(--c-paper);
-    font-size: clamp(1.65rem, 5.6vw, 2.6rem);
-    line-height: 1.06;
-    letter-spacing: -0.015em;
+    font-size: var(--sec-title);
   }
 
   .sp-pro__text {
@@ -1079,9 +1083,9 @@
 
   .seo-product__panel h2,
   .seo-product__faq h2 {
-    margin-top: 10px;
+    margin-top: var(--sec-eyebrow-gap);
     color: var(--c-paper);
-    font-size: clamp(1.65rem, 5vw, 2.5rem);
+    font-size: var(--sec-title);
   }
 
   .seo-prose {
@@ -1183,7 +1187,7 @@
   @media (min-width: 900px) {
     .seo-product {
       padding-top: 150px;
-      padding-bottom: 128px;
+      padding-bottom: var(--sec-pad-y);
     }
 
     .seo-product__hero {
@@ -1280,7 +1284,7 @@
   @media (max-width: 560px) {
     .seo-product {
       padding-top: 112px;
-      padding-bottom: 72px;
+      padding-bottom: var(--sec-pad-y);
     }
 
     .seo-product .container {
@@ -1373,7 +1377,8 @@
     { "type": "text", "id": "faq_eyebrow", "label": "Surtitre FAQ", "default": "Questions fréquentes" },
     { "type": "text", "id": "faq_heading", "label": "Titre FAQ", "default": "Ce qu’il faut savoir avant de commander" },
     { "type": "header", "content": "Avis" },
-    { "type": "paragraph", "content": "Les avis, la note moyenne et le nombre d’avis viennent de Judge.me. Titre, filtres, tri et bouton « écrire un avis » se règlent dans l’application Judge.me, pas ici." }
+    { "type": "text", "id": "reviews_eyebrow", "label": "Surtitre des avis", "info": "Le titre de la section vient de Judge.me : choisir un libellé différent pour éviter un doublon.", "default": "Témoignages" },
+    { "type": "paragraph", "content": "Les avis, la note moyenne, le nombre d’avis et le titre de la section viennent de Judge.me. Filtres, tri et bouton « écrire un avis » se règlent dans l’application Judge.me, pas ici." }
   ],
   "blocks": [
     {

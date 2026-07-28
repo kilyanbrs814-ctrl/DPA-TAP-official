@@ -55,12 +55,14 @@
 </section>
 
 {% stylesheet %}
-.pro-net{background:var(--c-paper);padding:clamp(64px,9vw,110px) 0}
+.pro-net{background:var(--c-paper);padding:var(--sec-pad-y) 0}
 .pro-net__card{position:relative;overflow:clip;background:var(--c-bg);color:var(--c-paper);border:1px solid rgba(255,255,255,.08);border-radius:clamp(20px,3vw,28px);padding:clamp(28px,5vw,56px);display:grid;grid-template-columns:1fr auto;gap:clamp(24px,4vw,48px);align-items:center;box-shadow:0 40px 90px -50px rgba(66,133,244,.45)}
 .pro-net__card::before{content:"";position:absolute;top:-40%;right:-8%;width:55%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--g-blue) 20%,transparent),transparent 65%);filter:blur(30px);pointer-events:none;z-index:0}
 .pro-net__body{position:relative;z-index:1;min-width:0}
-.pro-net__eyebrow{margin:0 0 12px;font-family:"Space Grotesk",Helvetica,Arial,sans-serif;font-size:.78rem;font-weight:600;line-height:1.4;letter-spacing:.2em;text-transform:uppercase;color:var(--g-blue);overflow-wrap:anywhere}
-.pro-net__title{margin:0;max-width:24ch;font-size:clamp(1.55rem,1.15rem + 1.9vw,2.3rem);line-height:1.06;color:var(--c-paper);overflow-wrap:anywhere}
+.pro-net__eyebrow{margin:0 0 var(--sec-eyebrow-gap);font-family:"Space Grotesk",Helvetica,Arial,sans-serif;font-size:.78rem;font-weight:600;line-height:1.4;letter-spacing:.2em;text-transform:uppercase;color:var(--g-blue);overflow-wrap:anywhere}
+/* Même échelle que « Comment ça marche » : le titre se branche sur --sec-title
+   plutôt que sur un clamp propre à cette section. */
+.pro-net__title{margin:0;max-width:24ch;font-size:var(--sec-title);color:var(--c-paper);overflow-wrap:anywhere}
 .pro-net__text{margin:16px 0 0;max-width:54ch;font-size:clamp(1rem,.96rem + .3vw,1.1rem);line-height:1.6;color:color-mix(in srgb,var(--c-paper) 76%,transparent);overflow-wrap:anywhere}
 .pro-net__chips{list-style:none;margin:24px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:10px}
 .pro-net__chip{display:inline-flex;align-items:center;gap:8px;max-width:100%;padding:9px 16px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);font-family:"Space Grotesk",Helvetica,Arial,sans-serif;font-weight:500;font-size:.85rem;line-height:1.25;color:color-mix(in srgb,var(--c-paper) 88%,transparent);overflow-wrap:anywhere}

@@ -1,8 +1,11 @@
+{%- liquid
+  assign gal_eyebrow = section.settings.eyebrow | default: 'En situation'
+  assign gal_title = section.settings.title | default: 'Chez eux, elle travaille déjà.'
+-%}
 <section class="gal">
   <div class="container">
-    <div class="bene-head">
-      <h2 class="h-xl reveal">{{ section.settings.title | default: 'Chez eux, elle travaille déjà.' }}</h2>
-      <p class="eyebrow reveal">{{ section.settings.eyebrow | default: 'En situation' }}</p>
+    <div class="sec-head">
+      {%- render 'section-heading', eyebrow: gal_eyebrow, title: gal_title -%}
     </div>
     <div class="gal-grid">
       {% assign shapes = 'a,b,c,d' | split: ',' %}

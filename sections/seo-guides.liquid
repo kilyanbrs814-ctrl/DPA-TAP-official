@@ -36,7 +36,7 @@
 
 {% stylesheet %}
   .seo-guides {
-    padding: 88px 0;
+    padding: var(--sec-pad-y) 0;
     background: var(--c-paper);
     color: var(--c-ink);
   }
@@ -46,12 +46,13 @@
     align-items: end;
     justify-content: space-between;
     gap: 24px;
-    margin-bottom: 36px;
+    margin-bottom: var(--sec-head-gap);
   }
 
+  /* Même échelle et même écart sur-titre / titre que « Comment ça marche ». */
   .seo-guides__head h2 {
-    margin-top: 10px;
-    font-size: clamp(2rem, 6vw, 3.5rem);
+    margin-top: var(--sec-eyebrow-gap);
+    font-size: var(--sec-title);
   }
 
   .seo-guides__all,

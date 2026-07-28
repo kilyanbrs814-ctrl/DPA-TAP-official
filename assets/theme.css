@@ -20,9 +20,20 @@ p{margin:0;text-wrap:pretty}
 .skip-link:focus{left:0;color:#fff}
 :focus-visible{outline:2px solid var(--g-blue);outline-offset:3px}
 .container{width:min(1240px,100% - 48px);margin-inline:auto}
+/* Échelle et rythme partagés des sections éditoriales.
+   `--sec-title` est LA taille de référence : celle du titre de « Comment ça
+   marche » (.hiw-title). Tous les titres de section s'y branchent, donc ils ne
+   peuvent plus diverger. `--sec-pad-y` porte l'espace vertical entre deux
+   grandes sections ; il remplace les paddings 96–130 px posés section par
+   section, qui n'étaient jamais d'accord entre eux. */
+:root{--sec-title:clamp(1.8rem,4vw,3rem);--sec-eyebrow-gap:14px;--sec-head-gap:36px;--sec-pad-y:64px}
 .h-display{font-size:clamp(3rem,9vw,8rem)}
 .h-xl{font-size:clamp(2.4rem,6vw,5rem)}
-.h-lg{font-size:clamp(1.8rem,4vw,3rem)}
+.h-lg{font-size:var(--sec-title)}
+/* En-tête de section partagé : sur-titre au-dessus, titre en dessous, aligné à
+   gauche. Balisage rendu par snippets/section-heading.liquid — source unique. */
+.sec-head{margin-bottom:var(--sec-head-gap)}
+.sec-head__title{margin:var(--sec-eyebrow-gap) 0 0;font-size:var(--sec-title)}
 .eyebrow{font-family:"Space Grotesk",sans-serif;font-size:.78rem;font-weight:500;line-height:1.6;letter-spacing:.22em;text-transform:uppercase;color:var(--c-grey)}
 .g-dots{display:inline-flex;gap:6px;vertical-align:middle}
 .g-dots span{width:8px;height:8px;border-radius:50%}
@@ -138,9 +149,9 @@ p{margin:0;text-wrap:pretty}
    mobile ; le bureau repasse en deux colonnes via `grid-template-areas`, sans
    réordonner le balisage. Aucun contrôle visible sur la vidéo : la lecture
    suit l'entrée et la sortie du viewport. */
-.hiw{--hiw-bg:var(--c-bg);--hiw-fg:var(--c-paper);background:var(--hiw-bg);color:var(--hiw-fg);padding:110px 0}
+.hiw{--hiw-bg:var(--c-bg);--hiw-fg:var(--c-paper);background:var(--hiw-bg);color:var(--hiw-fg);padding:var(--sec-pad-y) 0}
 .hiw-eyebrow{color:color-mix(in srgb,var(--hiw-fg) 60%,transparent)}
-.hiw-title{margin:14px 0 0;color:var(--hiw-fg)}
+.hiw-title{margin:var(--sec-eyebrow-gap) 0 0;color:var(--hiw-fg)}
 .hiw-text{margin-top:18px;max-width:46ch;font-size:1.05rem;line-height:1.6;color:color-mix(in srgb,var(--hiw-fg) 78%,transparent)}
 .hiw-media{margin:30px 0 0;display:flex;justify-content:center}
 /* Le fichier est recadré en 4:5 à l'encodage : la carte suit le ratio réel de
@@ -161,7 +172,6 @@ p{margin:0;text-wrap:pretty}
 .hiw-reassure li{display:inline-flex;align-items:center;gap:9px;padding:9px 16px;border-radius:999px;background:color-mix(in srgb,var(--g-blue) 12%,transparent);border:1px solid color-mix(in srgb,var(--g-blue) 52%,transparent);color:var(--g-blue);font-family:"Space Grotesk",sans-serif;font-size:.85rem;font-weight:600}
 .hiw-reassure li::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:currentColor}
 @media (min-width:901px){
-  .hiw{padding:120px 0}
   .hiw-grid{display:grid;align-content:center;column-gap:clamp(40px,5vw,72px);grid-template-columns:minmax(0,1fr) minmax(0,clamp(420px,34vw,500px));grid-template-areas:"eyebrow video" "title video" "text video" "steps video" "reassure video"}
   .hiw-eyebrow{grid-area:eyebrow}
   .hiw-title{grid-area:title}
@@ -172,7 +182,6 @@ p{margin:0;text-wrap:pretty}
   .hiw-card{max-width:500px}
 }
 @media (max-width:900px){
-  .hiw{padding:78px 0}
   .hiw-text{margin-top:16px;font-size:1rem}
   .hiw-media{margin-top:26px}
   .hiw-card{max-width:460px}
@@ -187,8 +196,7 @@ p{margin:0;text-wrap:pretty}
 }
 
 /* ============ Benefits ============ */
-.bene{background:var(--c-paper);color:var(--c-ink);padding:120px 0}
-.bene-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:56px;flex-wrap:wrap}
+.bene{background:var(--c-paper);color:var(--c-ink);padding:var(--sec-pad-y) 0}
 .bene-list{border-top:1px solid color-mix(in srgb,var(--c-ink) 14%,transparent)}
 .bene-row{display:grid;grid-template-columns:70px 1fr minmax(220px,38%);gap:24px;align-items:baseline;padding:34px 0;border-bottom:1px solid color-mix(in srgb,var(--c-ink) 14%,transparent);transition:padding-left .3s cubic-bezier(.2,.8,.2,1)}
 .bene-row:hover{padding-left:12px}
@@ -196,10 +204,12 @@ p{margin:0;text-wrap:pretty}
 .bene-term{font-family:"Space Grotesk",sans-serif;font-weight:600;letter-spacing:-.03em;font-size:clamp(1.7rem,3.6vw,3rem);line-height:1.05}
 .bene-desc{color:var(--c-grey);font-size:1rem}
 .bene-row:nth-child(1) .bene-term em,.bene-row .bene-term em{font-style:normal}
-@media (max-width:760px){.bene{padding:90px 0}.bene-row{grid-template-columns:48px 1fr;row-gap:8px}.bene-desc{grid-column:2}}
+@media (max-width:760px){.bene-row{grid-template-columns:48px 1fr;row-gap:8px}.bene-desc{grid-column:2}}
 
 /* ============ Gallery ============ */
-.gal{background:var(--c-paper);padding:40px 0 120px}
+/* La galerie garde volontairement un haut plus serré que les autres sections :
+   elle prolonge visuellement les bénéfices, sur le même fond papier. */
+.gal{background:var(--c-paper);padding:calc(var(--sec-pad-y)/2) 0 var(--sec-pad-y)}
 .gal-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:20px;grid-auto-flow:dense}
 .gal-item{position:relative;overflow:clip;border-radius:18px;background:#e8e5de}
 .gal-item img{width:100%;height:100%;object-fit:cover;transition:transform 1.1s cubic-bezier(.2,.8,.2,1)}
@@ -212,16 +222,15 @@ p{margin:0;text-wrap:pretty}
 @media (max-width:760px){.gal-grid{grid-template-columns:1fr 1fr}.gal-item{grid-column:span 2 !important;aspect-ratio:4/3}}
 
 /* ============ Buy / model picker ============ */
-.buy-sec{background:var(--c-bg);color:var(--c-paper);padding:130px 0}
+.buy-sec{background:var(--c-bg);color:var(--c-paper);padding:var(--sec-pad-y) 0}
 .buy-sec h2{color:var(--c-paper)}
-.buy-head{margin-bottom:64px;max-width:800px}
+.buy-head{margin-bottom:var(--sec-head-gap);max-width:800px}
 /* Titre de la section produit : les deux réglages « ligne 1 » / « ligne 2 »
-   gardent chacun leur propre ligne (block + nowrap). La taille est donc pilotée
-   par un clamp dédié, dimensionné pour que la plus longue des deux lignes tienne
-   dans .buy-head (800 px max) comme dans le container mobile (100vw - 48px). */
+   gardent chacun leur propre ligne (block + nowrap). À l'échelle commune
+   (--sec-title, 48 px au maximum), la plus longue des deux tient dans .buy-head
+   comme dans le container mobile, sans clamp dédié. */
 .buy-title-line{display:block;white-space:nowrap}
-.buy-head h2.h-xl{font-size:clamp(1.35rem,5.2vw,4rem)}
-.buy-head p{margin-top:20px;color:color-mix(in srgb,var(--c-paper) 65%,transparent);font-size:1.1rem}
+.buy-head p:not(.eyebrow){margin-top:20px;color:color-mix(in srgb,var(--c-paper) 65%,transparent);font-size:1.1rem}
 .buy-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:64px;align-items:start}
 @media (min-width:981px){
   .buy-media{--buy-media-h:calc(min((100vw - 112px)*.575,676px) + 96px);position:sticky;top:max(100px,calc((100vh - var(--buy-media-h))/2));top:max(100px,calc((100svh - var(--buy-media-h))/2))}
@@ -339,8 +348,8 @@ p{margin:0;text-wrap:pretty}
 @media (max-width:560px){.vcards{grid-template-columns:1fr}}
 
 /* ============ Installation ============ */
-.install{background:var(--c-paper);padding:120px 0}
-.install-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:64px}
+.install{background:var(--c-paper);padding:var(--sec-pad-y) 0}
+.install-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:44px}
 /* Plus de filet horizontal au-dessus des visuels : le padding est conservé pour
    ne pas resserrer la grille. */
 .install-step{border-top:0;padding-top:22px}
@@ -351,11 +360,13 @@ p{margin:0;text-wrap:pretty}
 .install-step .num{font-family:"Space Grotesk",sans-serif;font-size:.85rem;color:var(--g-blue);letter-spacing:.14em}
 .install-step h3{font-size:1.5rem;margin:12px 0 10px}
 .install-step p{color:var(--c-grey)}
-@media (max-width:760px){.install{padding:90px 0}.install-grid{grid-template-columns:1fr;gap:44px}.install-step{padding-top:22px}.install-grid .install-step{transition-delay:0s}}
+@media (max-width:760px){.install-grid{grid-template-columns:1fr;gap:44px}.install-step{padding-top:22px}.install-grid .install-step{transition-delay:0s}}
 
 /* ============ FAQ ============ */
-.faq{background:var(--c-paper);padding:0 0 130px}
-.faq-list{margin-top:56px;border-top:1px solid color-mix(in srgb,var(--c-ink) 14%,transparent)}
+/* La FAQ n'avait aucun padding supérieur : elle collait à la section précédente.
+   Elle suit désormais le même rythme vertical que les autres sections. */
+.faq{background:var(--c-paper);padding:var(--sec-pad-y) 0}
+.faq-list{margin-top:40px;border-top:1px solid color-mix(in srgb,var(--c-ink) 14%,transparent)}
 .faq-item{border-bottom:1px solid color-mix(in srgb,var(--c-ink) 14%,transparent)}
 .faq-item summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:26px 0;cursor:pointer;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:clamp(1.1rem,2vw,1.4rem);letter-spacing:-.01em}
 .faq-item summary::-webkit-details-marker{display:none}
@@ -542,14 +553,9 @@ p{margin:0;text-wrap:pretty}
    colonne de droite passe simplement au-dessus du texte (voir bloc 900 px). */
 
 @media (max-width:760px){
+  :root{--sec-title:clamp(1.75rem,8vw,2.4rem);--sec-pad-y:48px}
   .h-display{font-size:clamp(2.55rem,14vw,4.6rem)}
   .h-xl{font-size:clamp(2rem,10vw,3rem)}
-  .h-lg{font-size:clamp(1.75rem,8vw,2.4rem)}
-  .bene,.buy-sec,.install{padding:84px 0}
-  .gal{padding:20px 0 84px}
-  .faq{padding-bottom:88px}
-  .bene-head{display:grid;gap:14px;margin-bottom:36px}
-  .bene-head .eyebrow{grid-row:1}
   .bene-row{grid-template-columns:34px minmax(0,1fr);gap:8px 10px;padding:24px 0}
   .bene-row:hover{padding-left:0}
   .bene-term{font-size:clamp(1.45rem,7.5vw,2rem)}
@@ -557,8 +563,7 @@ p{margin:0;text-wrap:pretty}
   .gal-grid{gap:14px}
   .gal-item{border-radius:14px}
   .gal-item figcaption{left:10px;right:10px;bottom:10px;width:max-content;max-width:calc(100% - 20px);white-space:normal;line-height:1.35}
-  .buy-head{margin-bottom:36px}
-  .buy-head p{font-size:1rem;line-height:1.55}
+  .buy-head p:not(.eyebrow){font-size:1rem;line-height:1.55}
   .buy-grid{gap:28px}
   .prod-thumbs--mobile{display:flex}
   .buy-form-col{border-radius:20px;padding:20px}
@@ -574,9 +579,9 @@ p{margin:0;text-wrap:pretty}
   .page-form .field{margin-top:18px}
   .buy-submit{position:sticky;z-index:20;bottom:max(8px,env(safe-area-inset-bottom));min-height:56px;margin-top:24px;box-shadow:0 14px 34px rgba(0,0,0,.36)}
   .reassure{display:grid;grid-template-columns:1fr;gap:10px;margin-top:28px}
-  .install-grid{margin-top:40px}
+  .install-grid{margin-top:32px}
   .install-step h3{font-size:1.35rem}
-  .faq-list{margin-top:36px}
+  .faq-list{margin-top:32px}
   .faq-item summary{min-height:64px;padding:18px 0;font-size:1.08rem;line-height:1.3}
   .faq-item summary .plus{width:44px;height:44px}
   .ftr{padding:82px 0 max(32px,env(safe-area-inset-bottom))}
@@ -1064,15 +1069,15 @@ p{margin:0;text-wrap:pretty}
 }
 
 /* ---- Section avis de la page d'accueil ---- */
-.jdgm-sec{background:var(--c-bg);color:var(--c-paper);padding:96px 0}
-.jdgm-sec h2{color:var(--c-paper);margin:10px 0 18px}
+.jdgm-sec{background:var(--c-bg);color:var(--c-paper);padding:var(--sec-pad-y) 0}
+.jdgm-sec h2{color:var(--c-paper)}
 
 /* En-tête : le texte à gauche, les flèches du rail en haut à droite dès qu'on a
    la place de les poser sur la même ligne de base. En dessous, elles n'existent
    pas : le défilement se fait au doigt. */
-.revw-head{display:grid;gap:4px;margin-bottom:34px}
+.revw-head{display:grid;gap:4px;margin-bottom:var(--sec-head-gap)}
 .revw-head__text{max-width:56ch}
-.revw-head__intro{margin:0;font-size:.95rem;color:color-mix(in srgb,var(--c-paper) 66%,transparent)}
+.revw-head__intro{margin:18px 0 0;font-size:.95rem;color:color-mix(in srgb,var(--c-paper) 66%,transparent)}
 .revw-nav{display:none;gap:10px}
 .revw-nav[hidden]{display:none}
 .revw-nav__btn{
@@ -1174,16 +1179,32 @@ p{margin:0;text-wrap:pretty}
 .dpa-jdgm-carousel .jdgm-carousel__dots .jdgm-carousel__dot.jdgm--active{background:var(--c-paper)}
 
 /* ---- Widget d'avis complet (fiche produit, bande sombre) ---- */
-.dpa-jdgm-reviews{margin-top:64px;scroll-margin-top:96px}
-.dpa-jdgm-reviews .jdgm-rev-widg{
+.dpa-jdgm-reviews{scroll-margin-top:96px}
+/* La carte est portée par le conteneur officiel `#judgeme_product_reviews` et
+   non plus par `.jdgm-rev-widg` : le sur-titre du thème, rendu à l'intérieur,
+   partage ainsi le bord gauche du titre de Judge.me. */
+.dpa-jdgm-reviews .dpa-jdgm-card{
   padding:28px;
   border-radius:26px;
   border:1px solid rgba(255,255,255,.09);
   background:color-mix(in srgb,var(--c-paper) 4%,transparent);
   color:var(--c-paper);
 }
+/* Le retrait interne du widget est déjà fourni par la carte ci-dessus : le
+   remettre décalerait le titre de Judge.me par rapport au sur-titre du thème. */
+.dpa-jdgm-reviews .jdgm-rev-widg{padding:0}
+/* Sur-titre posé par le thème ; le titre reste celui de Judge.me
+   (`.jdgm-rev-widg__title`), donc un seul H2 et pas de doublon visuel.
+   Spécificité montée d'un cran : la feuille de Judge.me est injectée après celle
+   du thème et remet à zéro les marges des paragraphes du widget. */
+.dpa-jdgm-reviews .dpa-jdgm-head{margin:0 0 var(--sec-eyebrow-gap)}
 .dpa-jdgm-reviews .jdgm-rev-widg__title{
   font-family:"Space Grotesk",sans-serif;
+  font-size:var(--sec-title);
+  font-weight:600;
+  line-height:1.02;
+  letter-spacing:-.03em;
+  text-align:left;
   color:var(--c-paper)!important;
   margin:0 0 18px;
 }
@@ -1236,12 +1257,10 @@ p{margin:0;text-wrap:pretty}
 .dpa-jdgm .jdgm-rev__pic{max-width:100%;height:auto}
 
 @media (max-width:600px){
-  .jdgm-sec{padding:72px 0}
   .revw-head{margin-bottom:26px}
   .revw-track{gap:14px}
   .revw-card{flex-basis:min(90%,320px);padding:20px;border-radius:18px;gap:12px}
-  .dpa-jdgm-reviews{margin-top:48px}
-  .dpa-jdgm-reviews .jdgm-rev-widg{padding:20px;border-radius:20px}
+  .dpa-jdgm-reviews .dpa-jdgm-card{padding:20px;border-radius:20px}
   .dpa-jdgm-reviews .jdgm-write-rev-link,
   .dpa-jdgm-reviews .jdgm-btn{width:100%}
 }

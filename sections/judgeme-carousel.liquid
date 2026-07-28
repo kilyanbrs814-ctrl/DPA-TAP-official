@@ -165,10 +165,12 @@
     <div class="container">
       <header class="revw-head">
         <div class="revw-head__text">
-          {%- if section.settings.eyebrow != blank -%}
-            <p class="eyebrow">{{ section.settings.eyebrow }}</p>
-          {%- endif -%}
-          <h2 class="h-lg">{{ section.settings.title | default: 'Ce qu’en disent nos clients' }}</h2>
+          {%- assign jc_title = section.settings.title | default: 'Ce qu’en disent nos clients' -%}
+          {%- render 'section-heading',
+            eyebrow: section.settings.eyebrow,
+            title: jc_title,
+            reveal: false
+          -%}
           {%- if section.settings.intro != blank -%}
             <p class="revw-head__intro">{{ section.settings.intro }}</p>
           {%- endif -%}

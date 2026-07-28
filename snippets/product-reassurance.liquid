@@ -31,12 +31,12 @@
     <span>Livraison offerte&nbsp;: <br class="prod-reassure__br-desk">domicile ou point relais</span>
   </li>
   <li>
-    <svg class="prod-reassure__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-      <rect x="3.25" y="5.5" width="17.5" height="15.25" rx="2.4"/>
-      <path d="M3.25 10.25h17.5"/>
-      <path d="M8.25 3.25v4M15.75 3.25v4"/>
-      <path d="M6.25 19.25 17.75 7.25"/>
-    </svg>
+    {%- comment -%}
+      « Aucun abonnement » réutilise exactement le tracé `no-card` du bandeau
+      défilant sous le Hero, rendu par snippets/dpa-marquee-icon.liquid. Un seul
+      SVG pour les deux emplacements : plus d'icône calendrier divergente ici.
+    {%- endcomment -%}
+    {%- render 'dpa-marquee-icon', name: 'no-card', class: 'prod-reassure__ico' -%}
     <span>Aucun abonnement</span>
   </li>
 </ul>

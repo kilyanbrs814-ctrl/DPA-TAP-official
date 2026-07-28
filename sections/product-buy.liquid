@@ -1,12 +1,20 @@
+{%- comment -%}
+  Une ligne = un réglage = un bloc. Le <br> est remplacé par deux <span>
+  en `display:block; white-space:nowrap` (cf. .buy-title-line dans theme.css) :
+  chaque ligne garde la sienne et ne se replie jamais.
+{%- endcomment -%}
+{%- liquid
+  assign buy_eyebrow = section.settings.eyebrow | default: 'Modèles'
+  assign buy_line1 = section.settings.title_line1 | default: 'Deux designs.'
+  assign buy_line2 = section.settings.title_line2 | default: 'Un même impact.'
+-%}
+{%- capture buy_title_html -%}
+  <span class="buy-title-line">{{ buy_line1 }}</span><span class="buy-title-line">{{ buy_line2 }}</span>
+{%- endcapture -%}
 <section class="buy-sec" id="modeles">
   <div class="container">
     <div class="buy-head">
-      {%- comment -%}
-        Une ligne = un réglage = un bloc. Le <br> est remplacé par deux <span>
-        en `display:block; white-space:nowrap` (cf. .buy-title-line dans
-        theme.css) : chaque ligne garde la sienne et ne se replie jamais.
-      {%- endcomment -%}
-      <h2 class="h-xl reveal"><span class="buy-title-line">{{ section.settings.title_line1 | default: 'Deux designs.' }}</span><span class="buy-title-line">{{ section.settings.title_line2 | default: 'Un même impact.' }}</span></h2>
+      {%- render 'section-heading', eyebrow: buy_eyebrow, title_html: buy_title_html -%}
       <p class="reveal">{{ section.settings.text | default: 'Midnight Black pour les comptoirs affirmés, Google Blue pour les enseignes lumineuses. Les deux embarquent la même puce NFC, programmée pour vous.' }}</p>
     </div>
     {% assign product = section.settings.product %}
@@ -72,6 +80,7 @@
 {
   "name": "Choix du modèle + achat",
   "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Sur-titre", "default": "Modèles" },
     { "type": "text", "id": "title_line1", "label": "Titre — ligne 1", "default": "Deux designs." },
     { "type": "text", "id": "title_line2", "label": "Titre — ligne 2", "default": "Un même impact." },
     { "type": "textarea", "id": "text", "label": "Texte", "default": "Midnight Black pour les comptoirs affirmés, Google Blue pour les enseignes lumineuses. Les deux embarquent la même puce NFC, programmée pour vous." },

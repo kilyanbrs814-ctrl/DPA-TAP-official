@@ -1,8 +1,11 @@
+{%- liquid
+  assign faq_eyebrow = section.settings.eyebrow | default: 'FAQ'
+  assign faq_title = section.settings.title | default: 'Les questions qu’on nous pose.'
+-%}
 <section class="faq" id="faq">
   <div class="container">
-    <div class="bene-head">
-      <h2 class="h-xl reveal">{{ section.settings.title | default: 'Les questions qu’on nous pose.' }}</h2>
-      <p class="eyebrow reveal">{{ section.settings.eyebrow | default: 'FAQ' }}</p>
+    <div class="sec-head">
+      {%- render 'section-heading', eyebrow: faq_eyebrow, title: faq_title -%}
     </div>
     <div class="faq-list">
       {% for block in section.blocks %}

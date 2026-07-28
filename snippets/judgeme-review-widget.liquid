@@ -15,7 +15,13 @@
   L'ancre `#judgeme_product_reviews` est celle attendue par Judge.me : le clic
   sur le badge de note fait défiler jusqu'ici sans code supplémentaire.
 
-  Paramètre : product (objet produit)
+  Le thème pose seulement un sur-titre au-dessus du widget, pour aligner cette
+  section sur les autres (sur-titre au-dessus, titre en dessous, à gauche). Le
+  titre reste celui de Judge.me — `.jdgm-rev-widg__title`, ramené à l'échelle
+  commune `--sec-title` dans theme.css. Il n'existe donc qu'un seul H2 ici : pas
+  de doublon visuel ni de titres concurrents.
+
+  Paramètres : product (objet produit), eyebrow (sur-titre, facultatif)
 {%- endcomment -%}
 
 {%- comment -%}
@@ -39,10 +45,26 @@
 {%- if jrw_widget != blank -%}
   <div class="dpa-jdgm dpa-jdgm-reviews" id="avis-clients">
     <div style="clear:both"></div>
+    {%- comment -%}
+      Le sur-titre est posé À L'INTÉRIEUR du conteneur officiel, juste avant le
+      HTML de Judge.me : c'est ce conteneur qui porte la carte (fond, bordure,
+      retrait), donc sur-titre et titre partagent le même bord gauche et le même
+      écart vertical que partout ailleurs. Les attributs et classes attendus par
+      Judge.me sur ce div sont inchangés.
+    {%- endcomment -%}
     <div id="judgeme_product_reviews"
-      class="jdgm-widget jdgm-review-widget"
+      class="jdgm-widget jdgm-review-widget dpa-jdgm-card"
       data-product-title="{{ product.title | escape }}"
       data-id="{{ product.id }}">
+      {%- comment -%}
+        Libellé volontairement différent du titre rendu par Judge.me
+        (« Avis Clients ») : le sur-titre situe la section sans répéter le titre
+        juste en dessous.
+      {%- endcomment -%}
+      {%- assign jrw_eyebrow = eyebrow | default: 'Témoignages' -%}
+      {%- if jrw_eyebrow != blank -%}
+        <p class="eyebrow dpa-jdgm-head">{{ jrw_eyebrow }}</p>
+      {%- endif -%}
       {{ jrw_widget }}
     </div>
   </div>

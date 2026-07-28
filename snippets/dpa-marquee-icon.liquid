@@ -3,6 +3,11 @@
   Style unifié : viewBox 24x24, fill none, stroke currentColor, épaisseur 1.6,
   extrémités et jonctions arrondies. Décoratives => aria-hidden.
   Usage : {% render 'dpa-marquee-icon', name: 'truck' %}
+
+  `class` permet de réutiliser exactement le même tracé hors du bandeau, dont le
+  CSS est scopé à l'identifiant de la section. La valeur par défaut reste la
+  classe du bandeau : aucun appel existant n'est modifié.
+  Ex. : {% render 'dpa-marquee-icon', name: 'no-card', class: 'prod-reassure__ico' %}
 {%- endcomment -%}
 {%- capture shapes -%}
 {%- case name -%}
@@ -39,6 +44,7 @@
 {%- endcase -%}
 {%- endcapture -%}
 
+{%- assign icon_class = class | default: 'dpa-mq__icon' -%}
 {%- if shapes != blank -%}
-  <svg class="dpa-mq__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">{{ shapes }}</svg>
+  <svg class="{{ icon_class }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">{{ shapes }}</svg>
 {%- endif -%}
