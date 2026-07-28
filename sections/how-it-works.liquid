@@ -1,0 +1,125 @@
+{%- comment -%}
+  « Comment ça marche » — démonstration vidéo réelle.
+
+  Remplace l'ancienne section `scrollytelling`, qui simulait le geste avec une
+  maquette CSS animée pilotée au scroll (380 vh de piste, téléphone et fiche
+  d'avis reconstitués en HTML). La preuve est désormais la vidéo du produit
+  filmée en conditions réelles, ce qui rend la section beaucoup plus courte et
+  supprime tout le pilotage au scroll.
+
+  L'ancre `#fonctionnement` est conservée : l'en-tête, le pied de page et le
+  second bouton du hero pointent tous dessus.
+
+  L'ordre du DOM est l'ordre mobile (sur-titre, titre, texte, vidéo, étapes,
+  réassurances, CTA). La mise en page deux colonnes du bureau est obtenue avec
+  `grid-template-areas`, donc sans réordonner le balisage.
+{%- endcomment -%}
+
+{%- liquid
+  assign vid = section.settings.video
+  assign poster_url = ''
+  if section.settings.poster != blank
+    assign poster_url = section.settings.poster | image_url: width: 1080
+  else
+    assign poster_url = 'demo-plaque-nfc-poster.webp' | asset_url
+  endif
+  assign cta_link = section.settings.cta_link | default: '/products/plaque-nfc-avis-google'
+-%}
+
+<section
+  class="hiw"
+  id="fonctionnement"
+  {% if section.settings.color_bg != blank or section.settings.color_text != blank %}style="{% if section.settings.color_bg != blank %}--hiw-bg:{{ section.settings.color_bg }};{% endif %}{% if section.settings.color_text != blank %}--hiw-fg:{{ section.settings.color_text }};{% endif %}"{% endif %}
+>
+  <div class="container hiw-grid">
+    <p class="eyebrow hiw-eyebrow reveal">{{ section.settings.eyebrow | default: 'COMMENT ÇA MARCHE' }}</p>
+
+    <h2 class="h-lg hiw-title reveal">{{ section.settings.title | default: 'Un geste. Un avis Google.' }}</h2>
+
+    <p class="hiw-text reveal">{{ section.settings.text | default: 'Approchez simplement le téléphone de la plaque NFC : la fiche Google de votre établissement s’ouvre instantanément, sans application.' }}</p>
+
+    <figure class="hiw-media reveal">
+      <div class="hiw-card" data-hiw-video>
+        <video
+          class="hiw-video"
+          width="1080"
+          height="1920"
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          poster="{{ poster_url }}"
+          aria-label="{{ section.settings.video_label | default: 'Démonstration réelle : un téléphone est approché de la plaque NFC, la fiche Google de l’établissement s’ouvre et le client laisse un avis cinq étoiles.' }}"
+        >
+          {%- if vid != blank -%}
+            {%- for src in vid.sources -%}
+              {%- if src.format == 'mp4' -%}
+                <source src="{{ src.url }}" type="{{ src.mime_type }}">
+              {%- endif -%}
+            {%- endfor -%}
+          {%- else -%}
+            <source src="{{ 'demo-plaque-nfc.mp4' | asset_url }}" type="video/mp4">
+          {%- endif -%}
+        </video>
+
+        <button class="hiw-toggle" type="button" data-hiw-toggle aria-label="Mettre la démonstration en pause">
+          <svg class="hiw-ico hiw-ico--pause" viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="2.5" width="3.5" height="11" rx="1.2"/><rect x="9" y="2.5" width="3.5" height="11" rx="1.2"/></svg>
+          <svg class="hiw-ico hiw-ico--play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.7v10.6a.8.8 0 0 0 1.22.68l8.3-5.3a.8.8 0 0 0 0-1.36l-8.3-5.3A.8.8 0 0 0 4.5 2.7z"/></svg>
+        </button>
+
+        {%- if section.settings.badge != blank -%}
+          <span class="hiw-badge">{{ section.settings.badge }}</span>
+        {%- endif -%}
+      </div>
+    </figure>
+
+    <ol class="hiw-steps reveal">
+      <li><span class="hiw-num" aria-hidden="true">1</span>{{ section.settings.step_1 | default: 'Approchez le téléphone' }}</li>
+      <li><span class="hiw-num" aria-hidden="true">2</span>{{ section.settings.step_2 | default: 'La fiche Google s’ouvre' }}</li>
+      <li><span class="hiw-num" aria-hidden="true">3</span>{{ section.settings.step_3 | default: 'Le client laisse son avis' }}</li>
+    </ol>
+
+    <ul class="hiw-reassure reveal">
+      {%- if section.settings.reassure_1 != blank -%}<li>{{ section.settings.reassure_1 }}</li>{%- endif -%}
+      {%- if section.settings.reassure_2 != blank -%}<li>{{ section.settings.reassure_2 }}</li>{%- endif -%}
+      {%- if section.settings.reassure_3 != blank -%}<li>{{ section.settings.reassure_3 }}</li>{%- endif -%}
+    </ul>
+
+    <div class="hiw-cta reveal">
+      <a class="btn btn--paper" href="{{ cta_link }}">{{ section.settings.cta_label | default: 'Découvrir la plaque' }}</a>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Comment ça marche",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Sur-titre", "default": "COMMENT ÇA MARCHE" },
+    { "type": "text", "id": "title", "label": "Titre", "default": "Un geste. Un avis Google." },
+    { "type": "textarea", "id": "text", "label": "Texte", "default": "Approchez simplement le téléphone de la plaque NFC : la fiche Google de votre établissement s’ouvre instantanément, sans application." },
+    { "type": "header", "content": "Vidéo" },
+    { "type": "video", "id": "video", "label": "Vidéo", "info": "Laisser vide pour utiliser la démonstration optimisée livrée avec le thème (MP4 1080 × 1920, sans son)." },
+    { "type": "image_picker", "id": "poster", "label": "Image d’aperçu (poster)", "info": "Format vertical 9:16. Laisser vide pour utiliser le poster livré avec le thème." },
+    { "type": "text", "id": "badge", "label": "Badge", "default": "Démonstration réelle" },
+    { "type": "textarea", "id": "video_label", "label": "Description accessible de la vidéo", "default": "Démonstration réelle : un téléphone est approché de la plaque NFC, la fiche Google de l’établissement s’ouvre et le client laisse un avis cinq étoiles." },
+    { "type": "header", "content": "Étapes" },
+    { "type": "text", "id": "step_1", "label": "Étape 1", "default": "Approchez le téléphone" },
+    { "type": "text", "id": "step_2", "label": "Étape 2", "default": "La fiche Google s’ouvre" },
+    { "type": "text", "id": "step_3", "label": "Étape 3", "default": "Le client laisse son avis" },
+    { "type": "header", "content": "Réassurances" },
+    { "type": "text", "id": "reassure_1", "label": "Réassurance 1", "default": "Sans application" },
+    { "type": "text", "id": "reassure_2", "label": "Réassurance 2", "default": "Sans abonnement" },
+    { "type": "text", "id": "reassure_3", "label": "Réassurance 3", "default": "Prête à l’emploi" },
+    { "type": "header", "content": "Bouton" },
+    { "type": "text", "id": "cta_label", "label": "Libellé", "default": "Découvrir la plaque" },
+    { "type": "url", "id": "cta_link", "label": "Lien", "info": "Par défaut : /products/plaque-nfc-avis-google" },
+    { "type": "header", "content": "Couleurs" },
+    { "type": "color", "id": "color_bg", "label": "Fond", "info": "Laisser vide pour le fond sombre du thème." },
+    { "type": "color", "id": "color_text", "label": "Texte", "info": "Laisser vide pour la couleur de texte du thème." }
+  ],
+  "presets": [
+    { "name": "Comment ça marche" }
+  ]
+}
+{% endschema %}

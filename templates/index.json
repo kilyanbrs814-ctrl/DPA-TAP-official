@@ -64,37 +64,22 @@
         "space_above_mobile": 20
       }
     },
-    "scrolly": {
-      "type": "scrollytelling",
-      "blocks": {
-        "s1": {
-          "type": "step",
-          "settings": {
-            "title": "Il approche."
-          }
-        },
-        "s2": {
-          "type": "step",
-          "settings": {
-            "title": "Il touche."
-          }
-        },
-        "s3": {
-          "type": "step",
-          "settings": {
-            "title": "Il vous note."
-          }
-        }
-      },
-      "block_order": [
-        "s1",
-        "s2",
-        "s3"
-      ],
+    "how_it_works": {
+      "type": "how-it-works",
       "settings": {
-        "eyebrow": "Comment ça marche",
-        "title": "Le geste qui déclenche l’avis.",
-        "review_name": "Votre établissement"
+        "eyebrow": "COMMENT ÇA MARCHE",
+        "title": "Un geste. Un avis Google.",
+        "text": "Approchez simplement le téléphone de la plaque NFC : la fiche Google de votre établissement s’ouvre instantanément, sans application.",
+        "badge": "Démonstration réelle",
+        "video_label": "Démonstration réelle : un téléphone est approché de la plaque NFC, la fiche Google de l’établissement s’ouvre et le client laisse un avis cinq étoiles.",
+        "step_1": "Approchez le téléphone",
+        "step_2": "La fiche Google s’ouvre",
+        "step_3": "Le client laisse son avis",
+        "reassure_1": "Sans application",
+        "reassure_2": "Sans abonnement",
+        "reassure_3": "Prête à l’emploi",
+        "cta_label": "Découvrir la plaque",
+        "cta_link": "/products/plaque-nfc-avis-google"
       }
     },
     "buy": {
@@ -359,7 +344,7 @@
   "order": [
     "hero",
     "reassurance_marquee",
-    "scrolly",
+    "how_it_works",
     "buy",
     "pro_network",
     "install",

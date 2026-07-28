@@ -5,7 +5,7 @@
   - "topbar"  : barre fine fixée en haut, rendue par layout/theme.liquid sur
                 toutes les pages SAUF l'accueil.
   - "feature" : grand bandeau dans le flux, inséré via templates/index.json
-                entre le hero et le scrollytelling « Comment ça marche ».
+                entre le hero et la section « Comment ça marche ».
 
   Le CSS est scopé sur l'id unique de la section, donc les deux variantes
   peuvent coexister sans collision. Aucun JavaScript, aucune librairie externe.
@@ -67,8 +67,6 @@
       html{ scroll-padding-top: var(--dpa-mq-h); }
       body{ padding-top: var(--dpa-mq-h); }
       .hdr{ top: calc(var(--dpa-mq-h) + 14px); }
-      /* Élément collant du scrollytelling : décalé pour ne pas passer sous la barre. */
-      .scrolly-sticky{ top: var(--dpa-mq-h); height: calc(100svh - var(--dpa-mq-h)); }
 
       #{{ uid }}{
         position: fixed;
@@ -112,17 +110,9 @@
       {%- if s.tighten_neighbours -%}
       /* Resserre l'enchaînement hero → bandeau → « Comment ça marche ».
          Ces règles ne sont émises que si la variante grand bandeau est posée
-         entre les deux sections, et disparaissent avec elle.
-
-         Le vide venait de deux sources mesurées sur la page :
-         1. le padding bas du hero (68 px) ;
-         2. la colonne de texte du scrollytelling (376 px) centrée face à la
-            colonne image (616 px), soit 120 px de vide au-dessus de l'eyebrow.
-         On aligne les deux colonnes en haut plutôt que de réduire la hauteur du
-         stage : la composition reste centrée une fois épinglée et l'eyebrow
-         garde son dégagement sous le header flottant. */
+         entre les deux sections, et disparaissent avec elle. Le vide venait du
+         padding bas du hero (68 px), que l'on ramène à la valeur réglée ici. */
       .hero{ padding-bottom: {{ s.space_above | default: 28 }}px; }
-      .scrolly-grid{ align-items: start; }
       @media (max-width: 900px){
         .hero{ padding-bottom: {{ s.space_above_mobile | default: 20 }}px; }
       }

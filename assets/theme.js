@@ -125,50 +125,59 @@
     });
   }
 
-  /* ---------- Scrollytelling ---------- */
-  function initScrolly(scope) {
-    qsa(scope, '[data-scrolly]').forEach(function (root) {
-      if (!guard(root, 'Scrolly')) return;
-      if (reduced() || window.matchMedia('(max-width: 900px) and (max-height: 560px)').matches || !('IntersectionObserver' in window)) { root.classList.add('is-static'); return; }
-      root.classList.remove('is-begun');
-      var stage = root.querySelector('.scrolly-stage');
-      var steps = root.querySelectorAll('[data-step]');
-      var track = root.querySelector('.scrolly-track');
-      if (!stage || !track) return;
-      var active = false, rafId = null;
-      function frame() {
-        rafId = null;
-        if (!active) return;
-        var r = track.getBoundingClientRect();
-        var total = r.height - window.innerHeight;
-        var p = total > 0 ? Math.min(1, Math.max(0, -r.top / total)) : 0;
-        var v = p.toFixed(4);
-        root.style.setProperty('--p', v);
-        stage.style.setProperty('--p', v);
-        root.classList.toggle('is-begun', p > 0.05);
-        var phase = p < 1 / 3 ? 1 : p < 2 / 3 ? 2 : 3;
-        if (stage.dataset.phase !== String(phase)) {
-          stage.dataset.phase = phase;
-          steps.forEach(function (el, i) {
-            el.classList.toggle('is-active', i === phase - 1);
-            el.classList.toggle('is-done', i < phase - 1);
-          });
-        }
+  /* ---------- Démonstration vidéo (section « Comment ça marche ») ---------- */
+  /* La lecture n'est lancée que lorsque la carte entre dans le viewport, et
+     suspendue dès qu'elle en sort : rien ne tourne en arrière-plan. En mouvement
+     réduit, aucune lecture automatique — la vidéo reste sur son poster et
+     l'utilisateur la déclenche avec le bouton. */
+  function initVideoDemo(scope) {
+    qsa(scope, '[data-hiw-video]').forEach(function (card) {
+      if (!guard(card, 'HiwVideo')) return;
+      var video = card.querySelector('video');
+      var toggle = card.querySelector('[data-hiw-toggle]');
+      if (!video) return;
+
+      var auto = !reduced();
+      var visible = false;
+      var userPaused = !auto;
+
+      function sync() {
+        var paused = video.paused;
+        card.classList.toggle('is-paused', paused);
+        if (toggle) toggle.setAttribute('aria-label', paused ? 'Lire la démonstration' : 'Mettre la démonstration en pause');
       }
-      function queue() { if (active && rafId === null) rafId = requestAnimationFrame(frame); }
-      var io = new IntersectionObserver(function (entries) {
-        active = entries[0].isIntersecting;
-        if (active) queue();
-      }, { rootMargin: '20% 0px 20% 0px' });
-      io.observe(root);
-      window.addEventListener('scroll', queue, { passive: true });
-      window.addEventListener('resize', queue, { passive: true });
-      onCleanup(root, function () {
-        io.disconnect();
-        active = false;
-        window.removeEventListener('scroll', queue);
-        window.removeEventListener('resize', queue);
-        if (rafId !== null) cancelAnimationFrame(rafId);
+      function tryPlay() {
+        var p = video.play();
+        if (p && typeof p.catch === 'function') p.catch(function () { sync(); });
+      }
+
+      video.addEventListener('play', sync);
+      video.addEventListener('pause', sync);
+      sync();
+
+      if (toggle) {
+        toggle.addEventListener('click', function () {
+          if (video.paused) { userPaused = false; tryPlay(); }
+          else { userPaused = true; video.pause(); }
+        });
+      }
+
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+          visible = entries[0].isIntersecting;
+          if (visible) { if (!userPaused) tryPlay(); }
+          else if (!video.paused) video.pause();
+        }, { threshold: 0.25 });
+        io.observe(card);
+        onCleanup(card, function () { io.disconnect(); });
+      } else if (auto) {
+        tryPlay();
+      }
+
+      onCleanup(card, function () {
+        video.removeEventListener('play', sync);
+        video.removeEventListener('pause', sync);
+        try { video.pause(); } catch (e) { /* noop */ }
       });
     });
   }
@@ -604,7 +613,7 @@
     initHeader(scope);
     initReveals(scope);
     initHeroParallax(scope);
-    initScrolly(scope);
+    initVideoDemo(scope);
     initSpotlight(scope);
     initFaq(scope);
     initBuyForms(scope);

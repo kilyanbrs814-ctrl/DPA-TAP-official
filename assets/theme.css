@@ -132,90 +132,51 @@ p{margin:0;text-wrap:pretty}
      feuille et de même spécificité, reprendrait la main. */
 }
 
-/* ============ Scrollytelling ============ */
-.scrolly{background:var(--c-bg);color:var(--c-paper);margin-top:0;border:0}
-.scrolly-track{height:380vh}
-.scrolly-sticky{position:sticky;top:0;height:100svh;overflow:clip;display:grid;align-items:center}
-.scrolly-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:48px;align-items:center}
-.scrolly-steps{display:flex;flex-direction:column;gap:8px}
-/* Sur-titre « Comment ça marche » : une seule ligne, taille fluide. Le
-   letter-spacing de .eyebrow est resserré à mesure que la police grandit pour
-   que la ligne tienne dans la colonne (~505 px) comme sous 360 px de viewport. */
-.scrolly-steps .eyebrow{font-size:clamp(.95rem,2.4vw,1.35rem);letter-spacing:.14em;white-space:nowrap}
-.scrolly-title{max-width:780px;margin:0 0 16px;font-size:clamp(2rem,2.8vw + 1.05rem,3.75rem);line-height:1.05;color:var(--c-paper)}
-.scrolly-step{font-family:"Space Grotesk",sans-serif;font-weight:600;letter-spacing:-.03em;font-size:clamp(2rem,4.6vw,3.8rem);line-height:1.05;color:color-mix(in srgb,var(--c-paper) 22%,transparent);transition:color .5s ease,transform .5s cubic-bezier(.2,.8,.2,1)}
-.scrolly-step h3{font-size:inherit;line-height:inherit;margin:0}
-.scrolly-step.is-active{color:var(--c-paper);transform:translateX(10px)}
-.scrolly-step small{display:block;font-family:inherit;font-weight:400;font-size:.85rem;letter-spacing:.16em;text-transform:uppercase;color:var(--c-grey);margin-bottom:6px}
-/* stage */
-.scrolly-stage{position:relative;height:min(72svh,640px);display:grid;place-items:center}
-.stage-plaque{position:absolute;width:min(320px,52%);border-radius:20px;box-shadow:0 40px 70px -25px rgba(0,0,0,.7);transform:translateX(-16%) rotateZ(-3deg)}
-.stage-phone{position:absolute;width:min(220px,34%);aspect-ratio:9/19;border-radius:34px;background:#161618;border:3px solid #2c2c30;box-shadow:0 30px 60px -20px rgba(0,0,0,.8);transform:translate(90%,60%) rotateZ(8deg);transition:none;overflow:hidden;z-index:3}
-.stage-phone::before{content:"";position:absolute;top:10px;left:50%;transform:translateX(-50%);width:34%;height:16px;border-radius:999px;background:#000;z-index:2}
-.phone-screen{position:absolute;inset:8px;border-radius:26px;background:#0e0e10;display:grid;place-items:center;overflow:hidden}
-/* NFC notification banner (iOS-like) */
-.nfc-banner{position:absolute;top:30px;left:7px;right:7px;z-index:4;display:flex;gap:9px;align-items:center;background:rgba(44,44,48,.94);border-radius:13px;padding:9px 11px;color:#fff;opacity:0;transform:translateY(-160%);transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .35s ease;box-shadow:0 8px 24px rgba(0,0,0,.45)}
-.nfc-ico{flex:none;width:26px;height:26px;border-radius:7px;background:var(--g-blue);color:#fff;display:grid;place-items:center;font:700 8.5px "Space Grotesk",sans-serif;letter-spacing:.04em}
-.nfc-txt{display:flex;flex-direction:column;line-height:1.3;min-width:0}
-.nfc-txt strong{font-size:.62rem;font-weight:600}
-.nfc-txt small{font-size:.54rem;color:rgba(255,255,255,.72)}
-.scrolly-stage[data-phase="2"] .nfc-banner{opacity:1;transform:none}
-.scrolly-stage[data-phase="2"] .phone-screen{animation:nfcBuzz .45s ease}
-@keyframes nfcBuzz{0%,100%{transform:translateX(0)}20%{transform:translateX(-2px)}40%{transform:translateX(2px)}60%{transform:translateX(-1.5px)}80%{transform:translateX(1.5px)}}
-@media (prefers-reduced-motion:reduce){.nfc-banner{transition:none}.scrolly-stage[data-phase="2"] .phone-screen{animation:none}}
-/* driven by --p (0..1) */
-.scrolly-stage{--p:0}
-.stage-phone{transform:translate(calc(95% - min(var(--p),.38)*185%),calc(64% - min(var(--p),.38)*158%)) rotateZ(calc(8deg - min(var(--p),.38)*15deg))}
-/* waves */
-.nfc-waves{position:absolute;z-index:2;width:200px;height:200px;transform:translate(6%,-4%);pointer-events:none}
-.nfc-waves span{position:absolute;inset:0;margin:auto;border-radius:50%;border:2.5px solid #66b7ff;box-shadow:0 0 8px rgba(102,183,255,.72),inset 0 0 6px rgba(102,183,255,.38);opacity:0;width:40px;height:40px}
-.scrolly-stage[data-phase="2"] .nfc-waves span{animation:wave 1.6s ease-out infinite}
-.scrolly-stage[data-phase="2"] .nfc-waves span:nth-child(2){animation-delay:.4s}
-.scrolly-stage[data-phase="2"] .nfc-waves span:nth-child(3){animation-delay:.8s}
-@keyframes wave{0%{width:40px;height:40px;opacity:1}68%{opacity:.82}88%{opacity:.34}100%{width:190px;height:190px;opacity:0}}
-/* review ui inside phone */
-.review-ui{width:82%;background:#fff;color:#1c1c1e;border-radius:14px;padding:16px 14px;text-align:center;box-shadow:0 18px 40px rgba(0,0,0,.5);opacity:0;transform:translateY(26px) scale(.94);transition:opacity .5s ease,transform .5s cubic-bezier(.2,.8,.2,1)}
-.scrolly-stage[data-phase="3"] .review-ui{opacity:1;transform:none}
-.review-ui .rv-name{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:.82rem}
-.review-ui .rv-sub{font-size:.62rem;color:#7a7a80;margin-top:2px}
-.rv-stars{display:flex;justify-content:center;gap:5px;margin:12px 0 10px}
-.rv-stars svg{width:22px;height:22px;fill:#e3e3e6;transition:fill .3s ease,transform .3s ease;transform:scale(.8)}
-.scrolly-stage[data-phase="3"] .rv-stars svg{fill:var(--g-yellow);transform:scale(1)}
-.scrolly-stage[data-phase="3"] .rv-stars svg:nth-child(1){transition-delay:.15s}
-.scrolly-stage[data-phase="3"] .rv-stars svg:nth-child(2){transition-delay:.3s}
-.scrolly-stage[data-phase="3"] .rv-stars svg:nth-child(3){transition-delay:.45s}
-.scrolly-stage[data-phase="3"] .rv-stars svg:nth-child(4){transition-delay:.6s}
-.scrolly-stage[data-phase="3"] .rv-stars svg:nth-child(5){transition-delay:.75s}
-.rv-btn{display:inline-block;background:var(--g-blue);color:#fff;font-size:.68rem;font-weight:600;border-radius:999px;padding:7px 18px}
-/* progress rail */
-.scrolly-rail{position:absolute;left:0;top:50%;transform:translateY(-50%);width:2px;height:180px;background:rgba(255,255,255,.12);border-radius:2px;overflow:hidden}
-.scrolly-rail::after{content:"";position:absolute;inset:0;background:var(--g-blue);transform-origin:top;transform:scaleY(var(--p,0))}
-/* scroll hint */
-.scrolly-hint{align-self:flex-start;display:inline-flex;align-items:center;gap:10px;margin:-6px 0 12px;padding:10px 16px;border-radius:999px;background:var(--g-blue);color:#fff;box-shadow:0 10px 28px -8px rgba(66,133,244,.55);font-family:"Space Grotesk",sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;max-width:100%;pointer-events:none;transition:opacity .5s ease,transform .5s ease}
-.scrolly.is-begun .scrolly-hint{opacity:0;transform:translateY(-6px)}
-.scrolly-hint .hint-svg{flex:none;color:#fff}
-.hint-svg--mouse{width:13px;height:20px;display:none}
-.hint-svg--swipe{width:18px;height:18px}
-.hint-svg--chevron{width:12px;height:7px}
-.hint-txt--desktop{display:none}
-@media (hover:hover) and (pointer:fine){
-  .hint-svg--mouse,.hint-txt--desktop{display:block}
-  .hint-svg--swipe,.hint-txt--mobile{display:none}
+/* ============ Comment ça marche (démonstration vidéo) ============ */
+/* Remplace l'ancien scrollytelling (piste de 380 vh, téléphone et fiche d'avis
+   reconstitués en CSS). Tout est scopé sous `.hiw`. L'ordre du DOM est l'ordre
+   mobile ; le bureau repasse en deux colonnes via `grid-template-areas`, sans
+   réordonner le balisage. */
+.hiw{--hiw-bg:var(--c-bg);--hiw-fg:var(--c-paper);background:var(--hiw-bg);color:var(--hiw-fg);padding:120px 0}
+.hiw-eyebrow{color:color-mix(in srgb,var(--hiw-fg) 60%,transparent)}
+.hiw-title{margin:14px 0 0;color:var(--hiw-fg)}
+.hiw-text{margin-top:18px;max-width:46ch;font-size:1.05rem;line-height:1.6;color:color-mix(in srgb,var(--hiw-fg) 78%,transparent)}
+.hiw-media{margin:32px 0 0;display:flex;justify-content:center}
+.hiw-card{position:relative;width:min(320px,100%);border-radius:26px;overflow:hidden;background:#000;border:1px solid color-mix(in srgb,var(--hiw-fg) 12%,transparent);box-shadow:0 30px 70px -32px rgba(0,0,0,.8)}
+.hiw-video{display:block;width:100%;height:auto;aspect-ratio:9/16;object-fit:cover}
+.hiw-badge{position:absolute;top:12px;left:12px;padding:7px 12px;border-radius:999px;background:color-mix(in srgb,var(--c-bg) 70%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.16);color:#fff;font-family:"Space Grotesk",sans-serif;font-size:.66rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.hiw-toggle{position:absolute;right:12px;bottom:12px;display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid rgba(255,255,255,.18);border-radius:50%;background:rgba(12,12,14,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;cursor:pointer;transition:background .2s,border-color .2s}
+.hiw-toggle:hover{background:rgba(12,12,14,.85);border-color:rgba(255,255,255,.4)}
+.hiw-ico{width:16px;height:16px;fill:currentColor}
+.hiw-ico--play{display:none}
+.hiw-card.is-paused .hiw-ico--pause{display:none}
+.hiw-card.is-paused .hiw-ico--play{display:block}
+.hiw-steps{margin:32px 0 0;padding:0;list-style:none;display:grid;gap:12px}
+.hiw-steps li{display:flex;align-items:center;gap:14px;font-family:"Space Grotesk",sans-serif;font-weight:500;font-size:1.05rem;line-height:1.3;color:var(--hiw-fg)}
+.hiw-num{flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--g-blue);color:#fff;font-size:.85rem;font-weight:600}
+.hiw-reassure{margin:26px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:8px}
+.hiw-reassure li{padding:7px 14px;border-radius:999px;border:1px solid color-mix(in srgb,var(--hiw-fg) 20%,transparent);font-size:.82rem;color:color-mix(in srgb,var(--hiw-fg) 82%,transparent)}
+.hiw-cta{margin-top:32px}
+@media (min-width:901px){
+  .hiw{padding:130px 0}
+  .hiw-grid{display:grid;align-content:center;column-gap:clamp(40px,5vw,80px);grid-template-columns:minmax(0,1fr) minmax(0,clamp(280px,26vw,340px));grid-template-areas:"eyebrow video" "title video" "text video" "steps video" "reassure video" "cta video"}
+  .hiw-eyebrow{grid-area:eyebrow}
+  .hiw-title{grid-area:title}
+  .hiw-text{grid-area:text}
+  .hiw-media{grid-area:video;align-self:center;margin:0}
+  .hiw-steps{grid-area:steps}
+  .hiw-reassure{grid-area:reassure}
+  .hiw-cta{grid-area:cta}
+  .hiw-card{width:100%}
 }
-/* static fallback */
-.scrolly.is-static .scrolly-track{height:auto}
-.scrolly.is-static .scrolly-sticky{position:static;height:auto;padding:100px 0}
-.scrolly.is-static .scrolly-step{color:var(--c-paper)}
-.scrolly.is-static .stage-phone{transform:translate(24%,4%) rotateZ(-6deg)}
-.scrolly.is-static .review-ui{opacity:1;transform:none}
-.scrolly.is-static .rv-stars svg{fill:var(--g-yellow);transform:scale(1)}
-.scrolly.is-static .scrolly-hint{display:none}
 @media (max-width:900px){
-  .scrolly-grid{grid-template-columns:1fr;gap:12px;align-content:center}
-  .scrolly-step{font-size:clamp(1.5rem,6vw,2.2rem)}
-  .scrolly-stage{height:52svh}
-  .stage-plaque{width:min(230px,58%)}
-  .stage-phone{width:min(150px,38%)}
+  .hiw{padding:84px 0}
+  .hiw-text{margin-top:16px;font-size:1rem}
+  .hiw-media{margin-top:28px}
+  .hiw-card{width:min(300px,88%)}
+  .hiw-steps{margin-top:28px;gap:10px}
+  .hiw-steps li{font-size:1rem}
+  .hiw-cta .btn{width:100%}
 }
 
 /* ============ Benefits ============ */
@@ -449,20 +410,6 @@ p{margin:0;text-wrap:pretty}
 .hero .hero-sub.reveal{transition-delay:.22s}
 .hero .hero-cta.reveal{transition-delay:.36s}
 
-/* --- Scrollytelling : indication de scroll --- */
-.hint-wheel{animation:hintWheel 1.8s ease-in-out infinite}
-@keyframes hintWheel{0%,100%{transform:translateY(0);opacity:1}50%{transform:translateY(4px);opacity:.35}}
-.hint-svg--swipe{animation:hintSwipe 1.8s ease-in-out infinite}
-@keyframes hintSwipe{0%,100%{transform:translateY(2px)}50%{transform:translateY(-2px)}}
-.hint-svg--chevron{animation:hintChevron 1.8s ease-in-out infinite}
-@keyframes hintChevron{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(3px);opacity:1}}
-
-/* --- Scrollytelling : étapes --- */
-.scrolly-step small{transition:color .5s ease}
-.scrolly-step.is-active small{color:var(--g-blue)}
-.scrolly-step.is-done{color:color-mix(in srgb,var(--c-paper) 48%,transparent)}
-.stage-plaque{transform:translateX(-16%) rotateZ(-3deg) translateY(calc(var(--p,0)*-14px))}
-
 /* --- Bénéfices : révélation en cascade + élément courant --- */
 .bene-row{position:relative;transition:padding-left .3s cubic-bezier(.2,.8,.2,1),opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
 .bene-row.reveal:nth-child(2){transition-delay:0s,.07s,.07s}
@@ -525,9 +472,6 @@ p{margin:0;text-wrap:pretty}
 
 /* --- Mouvement réduit : tout est neutralisé --- */
 @media (prefers-reduced-motion:reduce){
-  .hint-wheel,.hint-svg--swipe,.hint-svg--chevron{animation:none}
-  .scrolly-hint{transition:none}
-  .stage-plaque{transform:translateX(-16%) rotateZ(-3deg)}
   .vcard.is-active .vcard-check,.buy-success:not([hidden]),.buy-error:not([hidden]),.buy-submit.is-shake,.hdr-cart [data-cart-count].is-bump{animation:none}
   .gal-item.reveal img,.install-step.reveal .install-img img{transform:none;transition:none}
   .bene-row,.bene-num,.bene-desc,.gal-item figcaption,.vcard img,.install-step.reveal{transition:none}
@@ -585,48 +529,6 @@ p{margin:0;text-wrap:pretty}
   .hero-sub{margin-top:20px;max-width:36ch;font-size:1rem;line-height:1.55}
   .hero-cta{margin-top:28px;gap:10px}
   .hero-cta .btn{flex:1 1 100%;width:100%;padding:14px 20px;min-height:52px}
-  .scrolly-track{height:330svh}
-  .scrolly-sticky{height:100svh;padding:72px 0 max(12px,env(safe-area-inset-bottom))}
-  .scrolly-hint{gap:7px;margin:-2px 0 8px;padding:9px 12px;font-size:.6rem;letter-spacing:.1em}
-  .scrolly-grid{height:100%;grid-template-rows:auto minmax(0,1fr);gap:10px}
-  .scrolly-steps{gap:6px}
-  .scrolly-steps .eyebrow{margin-bottom:12px!important}
-  .scrolly-title{margin-bottom:10px}
-  .scrolly-step{font-size:clamp(1.9rem,8.5vw,2.6rem);line-height:1.04;color:color-mix(in srgb,var(--c-paper) 27%,transparent)}
-  .scrolly-step.is-active{transform:translateX(6px)}
-  .scrolly-step.is-done{color:color-mix(in srgb,var(--c-paper) 45%,transparent)}
-  .scrolly-step small{font-size:clamp(.72rem,3.4vw,.85rem);margin-bottom:3px}
-  .scrolly-stage{--shift:clamp(22px,8vw,36px);width:100%;height:100%;min-height:280px;max-height:62svh;overflow:clip}
-  .stage-plaque{left:50%;top:50%;margin-left:var(--shift);width:min(clamp(210px,64vw,290px),40svh);transform:translate(-70%,-50%) rotateZ(-3deg) translateY(calc(var(--p,0)*-10px))}
-  .stage-phone{--pw:min(clamp(150px,46vw,196px),23.5svh);left:50%;top:50%;margin-left:var(--shift);width:var(--pw);transform:translate(calc(-50% + 14vw - min(var(--p),.38)*24vw),calc(-50% + 1.4svh - min(var(--p),.38)*4.5svh)) rotateZ(calc(7deg - min(var(--p),.38)*18deg))}
-  .nfc-waves{width:min(58vw,210px);height:min(58vw,210px);margin-left:var(--shift);transform:translate(-8%,-4%)}
-  /* Le badge d'aide passait a opacity:0 mais gardait ses 38px de hauteur et ses
-     marges : d'ou le vide entre le sur-titre et l'etape 1. On le replie en meme
-     temps qu'il s'efface, sans supprimer ni le badge ni sa transition. */
-  .scrolly-hint{overflow:hidden;max-height:64px;transition:opacity .45s ease,transform .45s ease,max-height .45s ease,margin .45s ease,padding .45s ease}
-  .scrolly.is-begun .scrolly-hint{max-height:0;margin-top:0;margin-bottom:0;padding-top:0;padding-bottom:0}
-  /* La plaque et le telephone etaient dimensionnes sur la hauteur du viewport
-     (svh) alors qu'ils doivent tenir dans le stage, dont la hauteur est le 1fr
-     restant de la grille. On plafonne donc sur la hauteur reelle du stage via
-     les unites de conteneur : plus aucun rognage par overflow:clip. */
-  .scrolly-stage{container-type:size}
-  .stage-plaque{width:min(clamp(210px,64vw,290px),40svh,60cqh)}
-  .stage-phone{--pw:min(clamp(150px,46vw,196px),23.5svh,43cqh)}
-  @keyframes wave{0%{width:32px;height:32px;opacity:1}68%{opacity:.82}88%{opacity:.34}100%{width:min(58vw,210px);height:min(58vw,210px);opacity:0}}
-  .nfc-banner{top:calc(var(--pw)*.09);left:calc(var(--pw)*.045);right:calc(var(--pw)*.045);gap:calc(var(--pw)*.032);padding:calc(var(--pw)*.032) calc(var(--pw)*.045);border-radius:calc(var(--pw)*.075)}
-  .nfc-ico{width:calc(var(--pw)*.125);height:calc(var(--pw)*.125);border-radius:calc(var(--pw)*.034);font-size:calc(var(--pw)*.044)}
-  .nfc-txt strong{font-size:calc(var(--pw)*.056)}
-  .nfc-txt small{font-size:calc(var(--pw)*.05)}
-  .review-ui{width:86%;padding:calc(var(--pw)*.06) calc(var(--pw)*.05);border-radius:calc(var(--pw)*.075)}
-  .review-ui .rv-name{font-size:calc(var(--pw)*.062)}
-  .review-ui .rv-sub{font-size:calc(var(--pw)*.05)}
-  .rv-stars{gap:calc(var(--pw)*.018);margin:calc(var(--pw)*.05) 0 calc(var(--pw)*.042)}
-  .rv-stars svg{width:calc(var(--pw)*.098);height:calc(var(--pw)*.098)}
-  .rv-btn{font-size:calc(var(--pw)*.054);padding:calc(var(--pw)*.03) calc(var(--pw)*.085)}
-  .scrolly-rail{left:2px;height:min(32svh,180px)}
-  .scrolly.is-static .scrolly-sticky{padding:80px 0}
-  .scrolly.is-static .stage-phone{left:50%;top:50%;transform:translate(-16%,-50%) rotateZ(-6deg)}
-  .scrolly.is-static .stage-plaque{transform:translate(-72%,-50%) rotateZ(-3deg)}
 }
 
 /* Le Hero mobile n'utilise plus d'image de fond portrait : le visuel carré de la
@@ -728,9 +630,6 @@ p{margin:0;text-wrap:pretty}
 }
 
 @media (max-width:360px){
-  /* Sous 360px, le decalage lateral du visuel poussait le telephone 3px hors
-     du stage, qui le rognait a droite. On resserre le decalage. */
-  .scrolly-stage{--shift:clamp(6px,2vw,14px)}
   .hdr-cart-label{display:none}
   .hdr-cart{padding:9px 11px}
   .hdr-menu-nav{right:-52px}
@@ -749,7 +648,6 @@ p{margin:0;text-wrap:pretty}
 
 @media (prefers-reduced-motion:reduce){
   .hdr-menu-icon span,.hdr-menu summary{transition:none}
-  .stage-phone,.nfc-waves span,.review-ui,.rv-stars svg{transition:none;animation:none!important}
 }
 /* ==================================================
    DPA TAP — BANNIÈRE COOKIES PC + MOBILE
