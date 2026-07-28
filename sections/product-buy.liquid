@@ -48,16 +48,18 @@
           {% endif %}
         </div>
         <div class="buy-form-col reveal">
-          <h3 class="buy-title">{{ product.title }}</h3>
-          {%- render 'product-reassurance' -%}
           {%- comment -%}
-            Emplacement 2 — sous le nom du produit, avant le prix (rendu par buy-form).
+            Emplacement 2 — au-dessus du nom du produit, comme sur la fiche
+            produit : la preuve sociale se lit avant le titre, puis le prix et
+            enfin le choix du modèle (rendus par buy-form).
             Portée produit : ce bloc parle de la plaque, la note et le compteur
             sont donc ceux du produit dans Judge.me. Le widget complet ne vit
             que sur la fiche produit, le lien y renvoie donc explicitement.
           {%- endcomment -%}
           {%- assign buy_reviews_link = product.url | append: '#judgeme_product_reviews' -%}
           {%- render 'judgeme-badge', scope: 'product', product: product, variant: 'home_product', href: buy_reviews_link -%}
+          <h3 class="buy-title">{{ product.title }}</h3>
+          {%- render 'product-reassurance' -%}
           {% render 'buy-form', product: product %}
         </div>
       </div>
