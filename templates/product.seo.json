@@ -149,12 +149,12 @@
         }
       },
       "block_order": [
-        "audience",
         "operation",
-        "programming",
+        "audience",
         "formats",
-        "compatibility",
+        "programming",
         "delivery",
+        "compatibility",
         "faq_1",
         "faq_2",
         "faq_3",
