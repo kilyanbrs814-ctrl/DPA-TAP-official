@@ -79,69 +79,12 @@
 
           {% when 'process' %}
             {% assign chapter = chapter | plus: 1 %}
-            <section class="sp-chapter sp-process" {{ block.shopify_attributes }}>
-              <div class="sp-head">
-                <p class="eyebrow sp-eyebrow"><span class="sp-index">0{{ chapter }}</span>{{ block.settings.eyebrow }}</p>
-                <h2 class="sp-title">{{ block.settings.heading }}</h2>
-              </div>
-              {%- comment -%}
-                Un visuel par étape. Le réglage `stepN_image` est prioritaire ;
-                tant qu'il est vide, l'image correspondante déjà en ligne sur le
-                CDN Shopify est servie (cf. snippet sp-media).
-              {%- endcomment -%}
-              {%- assign sp_step_sizes = '(min-width: 900px) 30vw, calc(100vw - 48px)' -%}
-              <ol class="sp-steps" role="list">
-                <li>
-                  {%- render 'sp-media',
-                    image: block.settings.step1_image,
-                    fallback_url: 'https://cdn.shopify.com/s/files/1/1058/4378/6073/files/ChatGPT_Image_13_juil._2026_14_05_27_1.png?v=1783944354',
-                    alt: 'Main approchant un smartphone de la plaque NFC',
-                    sizes: sp_step_sizes,
-                    class: 'sp-steps__media'
-                  -%}
-                  <span class="sp-steps__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2.4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M10 18.4h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
-                  <div>
-                    <span class="sp-steps__num">Étape 1</span>
-                    <h3>{{ block.settings.step1_title }}</h3>
-                    <p>{{ block.settings.step1_text }}</p>
-                  </div>
-                </li>
-                <li>
-                  {%- render 'sp-media',
-                    image: block.settings.step2_image,
-                    fallback_url: 'https://cdn.shopify.com/s/files/1/1058/4378/6073/files/ChatGPT_Image_13_juil._2026_14_05_27_2.png?v=1783944354',
-                    alt: 'Notification « Lien de l’avis disponible » affichée sur le téléphone posé près de la plaque',
-                    sizes: sp_step_sizes,
-                    class: 'sp-steps__media'
-                  -%}
-                  <span class="sp-steps__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 15.5c3.2-3.2 3.2-6.8 0-10M10.5 18c4.8-4.8 4.8-10.2 0-15M15 20.5c6.4-6.4 6.4-13.6 0-20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
-                  <div>
-                    <span class="sp-steps__num">Étape 2</span>
-                    <h3>{{ block.settings.step2_title }}</h3>
-                    <p>{{ block.settings.step2_text }}</p>
-                  </div>
-                </li>
-                <li>
-                  {%- render 'sp-media',
-                    image: block.settings.step3_image,
-                    fallback_url: 'https://cdn.shopify.com/s/files/1/1058/4378/6073/files/ChatGPT_Image_18_juil._2026_10_59_58.png?v=1784365218',
-                    alt: 'Formulaire d’avis Google ouvert sur le téléphone, note et commentaire prêts à être publiés',
-                    sizes: sp_step_sizes,
-                    class: 'sp-steps__media'
-                  -%}
-                  <span class="sp-steps__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 4 2.2 4.5 5 .72-3.6 3.5.85 4.95L12 15.3l-4.45 2.37.85-4.95-3.6-3.5 5-.72z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span>
-                  <div>
-                    <span class="sp-steps__num">Étape 3</span>
-                    <h3>{{ block.settings.step3_title }}</h3>
-                    <p>{{ block.settings.step3_text }}</p>
-                  </div>
-                </li>
-              </ol>
-              <aside class="sp-note">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 2.8V11c0 4.4-2.9 7.9-7 9.8C7.9 18.9 5 15.4 5 11V5.8z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m9.1 11.6 2 2 3.8-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                <p><b>{{ block.settings.note_title }}</b> {{ block.settings.note_text }}</p>
-              </aside>
-            </section>
+            {% render 'how-it-works-content',
+              settings: block.settings,
+              anchor_id: 'fonctionnement',
+              modifier_class: 'hiw--product',
+              editor_attributes: block.shopify_attributes
+            %}
 
           {% when 'preparation' %}
             {% assign chapter = chapter | plus: 1 %}
@@ -439,6 +382,12 @@
     gap: clamp(52px, 9vw, 80px) 20px;
     margin-top: clamp(72px, 10vw, 104px);
     font-family: "Space Grotesk", Helvetica, Arial, sans-serif;
+  }
+
+  /* Le composant partagé vit dans la grille éditoriale de la fiche produit.
+     Ces marges le font sortir du conteneur sans modifier son rendu interne. */
+  .hiw--product {
+    margin-inline: calc(50% - 50vw);
   }
 
   .sp-chapter {
@@ -1290,19 +1239,28 @@
       "name": "02 — Fonctionnement",
       "limit": 1,
       "settings": [
-        { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Fonctionnement" },
-        { "type": "text", "id": "heading", "label": "H2", "default": "Du contact NFC à la page d’avis Google" },
-        { "type": "image_picker", "id": "step1_image", "label": "Étape 1 — image", "info": "Laisser vide pour garder le visuel par défaut (main approchant un smartphone de la plaque)." },
-        { "type": "text", "id": "step1_title", "label": "Étape 1 — titre", "default": "Le client approche son téléphone" },
-        { "type": "textarea", "id": "step1_text", "label": "Étape 1 — texte", "default": "La zone NFC de son iPhone ou de son téléphone Android compatible passe au-dessus de la plaque." },
-        { "type": "image_picker", "id": "step2_image", "label": "Étape 2 — image", "info": "Laisser vide pour garder le visuel par défaut (plaque prête à l’emploi, sans application ni abonnement)." },
-        { "type": "text", "id": "step2_title", "label": "Étape 2 — titre", "default": "Une notification apparaît" },
-        { "type": "textarea", "id": "step2_text", "label": "Étape 2 — texte", "default": "Il la touche pour ouvrir le lien d’avis Google programmé dans la puce NFC." },
-        { "type": "image_picker", "id": "step3_image", "label": "Étape 3 — image", "info": "Laisser vide pour garder le visuel par défaut (avis 5 étoiles en hausse pour un commerce équipé)." },
-        { "type": "text", "id": "step3_title", "label": "Étape 3 — titre", "default": "La fiche Google s’affiche" },
-        { "type": "textarea", "id": "step3_text", "label": "Étape 3 — texte", "default": "Dans son navigateur ou son application : il choisit sa note et rédige, ou non, un commentaire." },
-        { "type": "text", "id": "note_title", "label": "Note — titre", "default": "Aucune publication automatique." },
-        { "type": "textarea", "id": "note_text", "label": "Note — texte", "default": "La plaque ne publie rien à la place du client : il reste libre d’ouvrir le lien, de choisir sa note et de laisser ou non un avis." }
+        { "type": "text", "id": "eyebrow", "label": "Sur-titre", "default": "COMMENT ÇA MARCHE" },
+        { "type": "text", "id": "title", "label": "Titre", "default": "Un geste. Un avis Google." },
+        { "type": "textarea", "id": "text", "label": "Texte", "default": "Approchez simplement le téléphone de la plaque NFC : la fiche Google de votre établissement s’ouvre instantanément, sans application." },
+        { "type": "header", "content": "Vidéo" },
+        { "type": "video", "id": "video", "label": "Vidéo", "info": "Laisser vide pour utiliser la démonstration optimisée livrée avec le thème (MP4 1080 × 1350, format 4:5, sans son)." },
+        { "type": "image_picker", "id": "poster", "label": "Image d’aperçu (poster)", "info": "Format vertical 4:5. Laisser vide pour utiliser le poster livré avec le thème." },
+        { "type": "text", "id": "badge", "label": "Badge", "default": "Démonstration réelle" },
+        { "type": "textarea", "id": "video_label", "label": "Description accessible de la vidéo", "default": "Démonstration réelle : un téléphone est approché de la plaque NFC, la fiche Google de l’établissement s’ouvre et le client laisse un avis cinq étoiles." },
+        { "type": "header", "content": "Étapes" },
+        { "type": "text", "id": "step_1", "label": "Étape 1 — titre", "default": "Approchez le téléphone" },
+        { "type": "textarea", "id": "step_1_text", "label": "Étape 1 — description", "default": "Le smartphone détecte automatiquement la puce NFC intégrée, sans application." },
+        { "type": "text", "id": "step_2", "label": "Étape 2 — titre", "default": "La fiche Google s’ouvre" },
+        { "type": "textarea", "id": "step_2_text", "label": "Étape 2 — description", "default": "La notification dirige directement le client vers la page d’avis Google de votre établissement." },
+        { "type": "text", "id": "step_3", "label": "Étape 3 — titre", "default": "Le client laisse son avis" },
+        { "type": "textarea", "id": "step_3_text", "label": "Étape 3 — description", "default": "Il choisit ses étoiles, ajoute un commentaire s’il le souhaite, puis publie son avis." },
+        { "type": "header", "content": "Réassurances" },
+        { "type": "text", "id": "reassure_1", "label": "Réassurance 1", "default": "Sans application" },
+        { "type": "text", "id": "reassure_2", "label": "Réassurance 2", "default": "Sans abonnement" },
+        { "type": "text", "id": "reassure_3", "label": "Réassurance 3", "default": "Prête à l’emploi" },
+        { "type": "header", "content": "Couleurs" },
+        { "type": "color", "id": "color_bg", "label": "Fond", "info": "Laisser vide pour le fond sombre du thème." },
+        { "type": "color", "id": "color_text", "label": "Texte", "info": "Laisser vide pour la couleur de texte du thème." }
       ]
     },
     {
