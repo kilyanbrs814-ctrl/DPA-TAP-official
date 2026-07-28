@@ -7,6 +7,7 @@
     <a href="{{ section.settings.link_how | default: '/#fonctionnement' }}">{{ section.settings.label_how | default: 'Fonctionnement' }}</a>
     <a href="{{ section.settings.link_models | default: '/#modeles' }}">{{ section.settings.label_models | default: 'Modèles' }}</a>
     <a href="{{ section.settings.link_faq | default: '/#faq' }}">{{ section.settings.label_faq | default: 'FAQ' }}</a>
+    <a class="hdr-contact" href="{{ section.settings.link_contact | default: '/pages/contact' }}">{{ section.settings.label_contact | default: 'Contact' }}</a>
   </nav>
   <details class="hdr-menu">
     <summary>
@@ -18,6 +19,7 @@
       <a href="{{ section.settings.link_how | default: '/#fonctionnement' }}">{{ section.settings.label_how | default: 'Fonctionnement' }}</a>
       <a href="{{ section.settings.link_models | default: '/#modeles' }}">{{ section.settings.label_models | default: 'Modèles' }}</a>
       <a href="{{ section.settings.link_faq | default: '/#faq' }}">{{ section.settings.label_faq | default: 'FAQ' }}</a>
+      <a href="{{ section.settings.link_contact | default: '/pages/contact' }}">{{ section.settings.label_contact | default: 'Contact' }}</a>
     </nav>
   </details>
   <a class="hdr-cart" href="{{ routes.cart_url }}">
@@ -39,7 +41,9 @@
     { "type": "text", "id": "label_models", "label": "Libellé — modèles", "default": "Modèles" },
     { "type": "url", "id": "link_models", "label": "Lien — modèles" },
     { "type": "text", "id": "label_faq", "label": "Libellé — FAQ", "default": "FAQ" },
-    { "type": "url", "id": "link_faq", "label": "Lien — FAQ" }
+    { "type": "url", "id": "link_faq", "label": "Lien — FAQ" },
+    { "type": "text", "id": "label_contact", "label": "Libellé — contact", "default": "Contact" },
+    { "type": "url", "id": "link_contact", "label": "Lien — contact (défaut : /pages/contact)" }
   ]
 }
 {% endschema %}

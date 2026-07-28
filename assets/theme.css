@@ -407,6 +407,21 @@ p{margin:0;text-wrap:pretty}
 
 /* ============ Product page / cart / generic ============ */
 .page-pad{padding:160px 0 100px}
+/* Formulaire de contact natif. Les pages de contenu sont sur fond clair : les
+   champs reprennent la convention déjà utilisée par le panier et la recherche
+   (fond blanc, bordure `--c-ink` à 20 %, focus bleu) plutôt que `.buy-field`,
+   qui est la variante sombre de la fiche produit. Le bouton est un `.btn--ink`
+   existant, comme les autres actions des pages claires. */
+.page-form{max-width:70ch;margin-top:44px}
+.page-form .field{margin-top:22px}
+.page-form label{display:block;font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;color:var(--c-grey);margin-bottom:8px}
+.page-form input,.page-form textarea{width:100%;background:#fff;border:1px solid color-mix(in srgb,var(--c-ink) 20%,transparent);border-radius:12px;color:var(--c-ink);padding:14px 16px;font:inherit;transition:border-color .2s}
+.page-form input:focus,.page-form textarea:focus{border-color:var(--g-blue);outline:none}
+.page-form textarea{min-height:120px;resize:vertical}
+.page-form .hint{display:block;font-size:.78rem;color:var(--c-grey);margin-top:6px}
+.page-form .btn{margin-top:24px}
+.page-form .form-ok{margin-top:18px;padding:14px 16px;border-radius:12px;background:color-mix(in srgb,var(--g-green) 14%,transparent);border:1px solid color-mix(in srgb,var(--g-green) 45%,transparent);font-size:.92rem}
+.page-form .form-error{margin-top:18px;color:var(--g-red);font-size:.9rem}
 .prod-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:start}
 .prod-media img{border-radius:24px}
 @media (max-width:900px){.prod-grid{grid-template-columns:1fr}}
@@ -548,6 +563,12 @@ p{margin:0;text-wrap:pretty}
   .hdr-menu-nav{position:absolute;top:calc(100% + 10px);right:-58px;width:min(280px,calc(100vw - 32px));display:grid;gap:4px;padding:10px;border:1px solid rgba(255,255,255,.12);border-radius:18px;background:color-mix(in srgb,var(--c-bg) 96%,transparent);box-shadow:0 24px 60px rgba(0,0,0,.42);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
   .hdr-menu-nav a{display:flex;align-items:center;min-height:48px;padding:10px 14px;border-radius:12px;color:var(--c-paper);font-family:"Space Grotesk",sans-serif;font-weight:500;text-decoration:none}
   .hdr-menu-nav a:hover,.hdr-menu-nav a:focus-visible{color:var(--c-paper);background:rgba(255,255,255,.08)}
+  /* Le menu hamburger apparaît dès 900 px alors que `.hdr-nav` reste affichée
+     jusqu'à 820 px. Sur cette bande, le cinquième lien faisait passer
+     « Plaque NFC » sur deux lignes et l'en-tête de 60 à 79 px de haut. Contact
+     est donc retiré de la barre là où il est déjà accessible dans le menu ;
+     `.hdr-contact` ne sert qu'à ça, le lien garde l'apparence des autres. */
+  .hdr-nav .hdr-contact{display:none}
   .hdr-cart{min-width:44px;min-height:44px;padding:9px 13px}
   .shopify-payment-button__more-options{min-height:44px}
   .hdr-cart-icon{display:block;width:20px;height:20px}
@@ -639,6 +660,9 @@ p{margin:0;text-wrap:pretty}
   .prod-reassure span{font-size:.82rem;white-space:normal}
   .buy-field{margin-top:18px}
   .buy-field input,.buy-field textarea{min-height:50px;font-size:16px;padding:13px 14px}
+  /* 16 px : évite le zoom automatique d'iOS à la mise au point du champ. */
+  .page-form input,.page-form textarea{min-height:50px;font-size:16px;padding:13px 14px}
+  .page-form .field{margin-top:18px}
   .buy-submit{position:sticky;z-index:20;bottom:max(8px,env(safe-area-inset-bottom));min-height:56px;margin-top:24px;box-shadow:0 14px 34px rgba(0,0,0,.36)}
   .reassure{display:grid;grid-template-columns:1fr;gap:10px;margin-top:28px}
   .install-grid{margin-top:40px}

@@ -6,7 +6,49 @@
   donc rendu que lorsque le contenu n'en fournit pas déjà un — rien ne change à
   l'écran, il n'y a simplement plus de second H1 caché dans le document.
 {%- endcomment -%}
-<section class="page-pad"><div class="container">{% unless page.content contains '<h1' %}<h1 class="h-lg">{{ page.title }}</h1>{% endunless %}<div style="margin-top:28px;max-width:70ch">{{ page.content }}</div></div></section>
+{%- comment -%}
+  La page Contact donnait uniquement l'e-mail et le téléphone. Le formulaire
+  natif Shopify (balise Liquid `form` de type `contact`) est ajouté à la suite
+  de son contenu, et uniquement pour elle : les autres pages sont rendues
+  exactement comme avant. Les champs suivent la convention des pages claires du
+  thème (fond blanc, bordure `--c-ink`, bouton `.btn--ink`), comme le panier et
+  la recherche.
+{%- endcomment -%}
+{%- assign is_contact_page = false -%}
+{%- if page.template_suffix == 'contact' or page.handle == 'contact' -%}{%- assign is_contact_page = true -%}{%- endif -%}
+<section class="page-pad"><div class="container">{% unless page.content contains '<h1' %}<h1 class="h-lg">{{ page.title }}</h1>{% endunless %}<div style="margin-top:28px;max-width:70ch">{{ page.content }}</div>
+  {%- if is_contact_page -%}
+    <div class="page-form">
+      <h2>Nous écrire</h2>
+      {% form 'contact' %}
+        {% if form.posted_successfully? %}
+          <p class="form-ok" role="status">Message envoyé. Nous répondons par e-mail, du lundi au vendredi.</p>
+        {% endif %}
+        {% if form.errors %}
+          <p class="form-error" role="alert">{{ form.errors | default_errors }}</p>
+        {% endif %}
+        <div class="field">
+          <label for="contact-name">Nom</label>
+          <input type="text" id="contact-name" name="contact[name]" autocomplete="name" value="{{ form.name }}" required>
+        </div>
+        <div class="field">
+          <label for="contact-email">E-mail</label>
+          <input type="email" id="contact-email" name="contact[email]" autocomplete="email" value="{{ form.email }}" required>
+        </div>
+        <div class="field">
+          <label for="contact-phone">Téléphone (facultatif)</label>
+          <input type="tel" id="contact-phone" name="contact[phone]" autocomplete="tel" value="{{ form.phone }}">
+        </div>
+        <div class="field">
+          <label for="contact-body">Message</label>
+          <textarea id="contact-body" name="contact[body]" rows="6" required>{{ form.body }}</textarea>
+          <span class="hint">Numéro de commande ou nom de votre établissement : la réponse est plus rapide.</span>
+        </div>
+        <button type="submit" class="btn btn--ink">Envoyer le message</button>
+      {% endform %}
+    </div>
+  {%- endif -%}
+</div></section>
 
 {% schema %}
 { "name": "Page", "settings": [] }
