@@ -1,40 +1,209 @@
 {%- comment -%}
-  Section avis de la page d'accueil — carrousel officiel Judge.me.
+  Section avis de la page d'accueil — cartes rendues par le thème à partir des
+  avis Judge.me.
 
-  Le contenu vient de shop.metafields.judgeme.featured_carousel : Judge.me y
-  publie le carrousel déjà rendu à partir des seuls avis publiés dans
-  l'application. Aucun témoignage n'est écrit dans le thème, aucun nom, aucune
-  date et aucun commentaire ne sont saisis à la main : ajouter ou retirer un
-  avis dans Judge.me met la section à jour toute seule.
+  Source des données : shop.metafields.judgeme.reviews_grid, le metafield JSON
+  que Judge.me tient à jour pour la boutique. On y lit `store_reviews` (avis
+  boutique) puis `product_reviews` (avis produit) : chaque entrée porte son
+  identifiant `uuid`, sa note, son texte, son éventuel titre, ses photos client
+  (`pictures_urls`) et `verified_buyer`. Aucun témoignage n'est écrit dans le
+  thème, aucun nom, aucune date et aucun commentaire ne sont saisis à la main :
+  ajouter ou retirer un avis dans Judge.me met la section à jour toute seule.
 
-  Le titre et le chapô restent éditables parce qu'ils relèvent du discours de
-  la marque, pas de la preuve sociale elle-même.
+  Deux raisons d'avoir quitté le carrousel livré par Judge.me
+  (`featured_carousel`, conservé plus bas en repli) :
 
-  Le HTML du carrousel est livré avec la page (pas d'appel réseau bloquant, pas
-  de décalage de mise en page) ; le script de l'App Embed « judgeme_core »,
-  chargé une seule fois pour toute la boutique, ne fait qu'activer le défilement.
+  1. Vignette produit. Judge.me marque les avis rattachés à un produit avec
+     `product_pictures_url` et affiche cette image du produit dans la carte.
+     Ce n'est pas une photo du client : elle est injectée automatiquement. Ici,
+     on n'affiche que `pictures_urls`, c'est-à-dire les seules images réellement
+     jointes à l'avis par son auteur. Sans photo client, aucune zone n'est
+     réservée.
 
-  Sans avis publié, Judge.me ne renvoie rien : la section entière disparaît au
-  lieu de laisser un cadre vide.
+  2. Doublon. Les huit avis importés depuis Google
+     (`review_collected_from_another_provider`) existent aussi en avis boutique
+     (`review_written_in_google_business`) : deux entrées, deux `uuid`, le même
+     auteur et le même texte. Le carrousel Judge.me les affichait côte à côte.
+     Le dédoublonnage ci-dessous écarte la seconde occurrence, sur l'`uuid`
+     quand il se répète, sinon sur la paire auteur + texte. Rien n'est modifié
+     dans Judge.me : seul l'affichage est filtré.
+
+  Le carrousel est un défilement horizontal natif avec `scroll-snap` : sans
+  JavaScript, la piste reste parcourable au doigt, au trackpad et au clavier ;
+  le script du thème ne fait qu'ajouter les flèches et leur état désactivé.
+
+  Aucune donnée structurée n'est émise ici : la note et les avis sont portés
+  uniquement par snippets/product-structured-data.liquid, sous peine de
+  recréer les doublons d'extraits d'avis dans la Search Console.
 {%- endcomment -%}
 
-{%- assign jc_carousel = shop.metafields.judgeme.featured_carousel -%}
-{%- if jc_carousel != blank -%}
-  <section class="jdgm-sec" id="avis-clients">
-    <div class="container">
-      <header class="jdgm-sec__head">
-        {%- if section.settings.eyebrow != blank -%}
-          <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+{%- liquid
+  assign jc_grid = shop.metafields.judgeme.reviews_grid.value
+  assign jc_reviews = '' | split: ''
+  assign jc_store = jc_grid.store_reviews.reviews
+  assign jc_product = jc_grid.product_reviews.reviews
+  if jc_store
+    assign jc_reviews = jc_reviews | concat: jc_store
+  endif
+  if jc_product
+    assign jc_reviews = jc_reviews | concat: jc_product
+  endif
+  if jc_reviews.size == 0
+    assign jc_all = jc_grid.all_reviews.reviews
+    if jc_all
+      assign jc_reviews = jc_reviews | concat: jc_all
+    endif
+  endif
+  assign jc_initial_letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÄÅÇÈÉÊËÎÏÔÖÙÚÛÜ'
+-%}
+
+{%- capture jc_cards -%}
+  {%- assign jc_seen = '' -%}
+  {%- assign jc_kept = 0 -%}
+  {%- for jc_r in jc_reviews -%}
+    {%- if jc_kept >= 24 -%}{%- break -%}{%- endif -%}
+
+    {%- assign jc_name = jc_r.reviewer_name | default: '' | strip -%}
+    {%- assign jc_title = jc_r.title | default: '' | strip -%}
+    {%- assign jc_body = jc_r.body | default: '' | strip -%}
+    {%- if jc_body == blank and jc_title == blank -%}{%- continue -%}{%- endif -%}
+
+    {%- comment -%}
+      Deux clés : l'identifiant stable Judge.me, et un repli auteur + titre +
+      texte pour les avis dupliqués entre boutique et produit, qui portent deux
+      `uuid` différents. Les `#` délimitent chaque clé pour qu'une clé courte ne
+      puisse pas être trouvée à l'intérieur d'une plus longue.
+    {%- endcomment -%}
+    {%- assign jc_key_id = jc_r.uuid | default: '' | strip -%}
+    {%- capture jc_key_text -%}{{ jc_name }}~{{ jc_title }}~{{ jc_body }}{%- endcapture -%}
+    {%- assign jc_key_text = jc_key_text | downcase | strip_newlines | replace: ' ', '' -%}
+    {%- assign jc_k1 = '#' | append: jc_key_id | append: '#' -%}
+    {%- assign jc_k2 = '#' | append: jc_key_text | append: '#' -%}
+    {%- if jc_key_id != blank and jc_seen contains jc_k1 -%}{%- continue -%}{%- endif -%}
+    {%- if jc_seen contains jc_k2 -%}{%- continue -%}{%- endif -%}
+    {%- assign jc_seen = jc_seen | append: jc_k1 | append: jc_k2 -%}
+    {%- assign jc_kept = jc_kept | plus: 1 -%}
+
+    <li class="revw-card">
+      {%- if jc_r.rating -%}
+        {%- assign jc_rating = jc_r.rating | round -%}
+        <span class="revw-card__stars" role="img" aria-label="Noté {{ jc_rating }} sur 5">
+          {%- for jc_i in (1..5) -%}
+            <span class="revw-card__star{% if jc_i > jc_rating %} revw-card__star--off{% endif %}" aria-hidden="true">★</span>
+          {%- endfor -%}
+        </span>
+      {%- endif -%}
+
+      {%- if jc_title != blank -%}
+        <h3 class="revw-card__title">{{ jc_title | escape }}</h3>
+      {%- endif -%}
+
+      {%- if jc_body != blank -%}
+        <p class="revw-card__body">{{ jc_body | escape | newline_to_br }}</p>
+      {%- endif -%}
+
+      {%- comment -%}
+        Photos ajoutées par le client uniquement. `product_pictures_url` et
+        `product_variant_image_url`, qui portent l'image du produit, ne sont
+        jamais lus. Aucune dimension n'est fournie par Judge.me : la miniature
+        garde sa taille naturelle, plafonnée en CSS, donc jamais agrandie.
+      {%- endcomment -%}
+      {%- assign jc_pics = jc_r.pictures_urls -%}
+      {%- if jc_pics and jc_pics.size > 0 -%}
+        <div class="revw-card__pics">
+          {%- for jc_pic in jc_pics limit: 3 -%}
+            {%- assign jc_thumb = jc_pic.compact | default: jc_pic.small | default: jc_pic.thumb | default: jc_pic.original | default: jc_pic.huge | default: jc_pic.url | default: jc_pic -%}
+            {%- assign jc_full = jc_pic.huge | default: jc_pic.original | default: jc_pic.url | default: jc_thumb -%}
+            {%- if jc_thumb == blank -%}{%- continue -%}{%- endif -%}
+            {%- capture jc_alt -%}Photo ajoutée à son avis par {{ jc_name | default: 'un client' }}{%- endcapture -%}
+            <a class="revw-card__pic" href="{{ jc_full }}" target="_blank" rel="noopener nofollow">
+              {%- comment -%}
+                Judge.me ne livre ni largeur ni hauteur pour les photos client.
+                Poser des valeurs arbitraires déformerait l'image ou mentirait
+                sur son ratio : la miniature est bornée en CSS.
+              {%- endcomment -%}
+              {% # theme-check-disable ImgWidthAndHeight %}
+              <img src="{{ jc_thumb }}" alt="{{ jc_alt | escape }}" loading="lazy" decoding="async">
+              {% # theme-check-enable ImgWidthAndHeight %}
+            </a>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- if jc_name != blank -%}
+        {%- comment -%}
+          Pastille d'initiales en CSS : jamais une photo, jamais un avatar
+          inventé. La seconde initiale n'est reprise que si c'est bien une
+          lettre, sinon un pseudo comme « Skyom814 _ » afficherait « S_ ».
+        {%- endcomment -%}
+        {%- assign jc_parts = jc_name | split: ' ' -%}
+        {%- assign jc_ini = jc_parts[0] | slice: 0, 1 | upcase -%}
+        {%- if jc_parts.size > 1 -%}
+          {%- assign jc_ini2 = jc_parts[1] | slice: 0, 1 | upcase -%}
+          {%- if jc_initial_letters contains jc_ini2 -%}
+            {%- assign jc_ini = jc_ini | append: jc_ini2 -%}
+          {%- endif -%}
         {%- endif -%}
-        <h2 class="h-lg">{{ section.settings.title | default: 'Ce qu’en disent nos clients' }}</h2>
-        {%- if section.settings.intro != blank -%}
-          <p class="jdgm-sec__intro">{{ section.settings.intro }}</p>
+        <footer class="revw-card__author">
+          <span class="revw-card__avatar" aria-hidden="true">{{ jc_ini }}</span>
+          <span class="revw-card__identity">
+            <span class="revw-card__name">{{ jc_name | escape }}</span>
+            {%- if jc_r.verified_buyer -%}
+              <span class="revw-card__verified">Achat vérifié</span>
+            {%- endif -%}
+          </span>
+        </footer>
+      {%- endif -%}
+    </li>
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- assign jc_carousel = shop.metafields.judgeme.featured_carousel -%}
+
+{%- if jc_cards != blank or jc_carousel != blank -%}
+  <section class="jdgm-sec" id="avis-clients" data-revw>
+    <div class="container">
+      <header class="revw-head">
+        <div class="revw-head__text">
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+          {%- endif -%}
+          <h2 class="h-lg">{{ section.settings.title | default: 'Ce qu’en disent nos clients' }}</h2>
+          {%- if section.settings.intro != blank -%}
+            <p class="revw-head__intro">{{ section.settings.intro }}</p>
+          {%- endif -%}
+        </div>
+
+        {%- if jc_cards != blank -%}
+          {%- comment -%}
+            Les flèches sont livrées masquées : le script du thème ne les révèle
+            que si la piste déborde réellement. Sans JavaScript, elles ne
+            s'affichent donc jamais et le défilement natif suffit.
+          {%- endcomment -%}
+          <div class="revw-nav" data-revw-nav hidden>
+            <button type="button" class="revw-nav__btn" data-revw-prev aria-label="Voir les avis précédents" aria-controls="revw-track-{{ section.id }}">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button type="button" class="revw-nav__btn" data-revw-next aria-label="Voir les avis suivants" aria-controls="revw-track-{{ section.id }}">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
         {%- endif -%}
       </header>
 
-      <div class="dpa-jdgm dpa-jdgm-carousel">
-        {{ jc_carousel }}
-      </div>
+      {%- if jc_cards != blank -%}
+        <ul class="revw-track" id="revw-track-{{ section.id }}" data-revw-track tabindex="0" aria-label="Avis clients publiés sur Judge.me">
+          {{ jc_cards }}
+        </ul>
+      {%- else -%}
+        {%- comment -%}
+          Repli : si le metafield JSON de Judge.me n'est pas encore renseigné,
+          on réaffiche son carrousel officiel plutôt que de laisser un vide.
+        {%- endcomment -%}
+        <div class="dpa-jdgm dpa-jdgm-carousel">
+          {{ jc_carousel }}
+        </div>
+      {%- endif -%}
     </div>
   </section>
 {%- endif -%}

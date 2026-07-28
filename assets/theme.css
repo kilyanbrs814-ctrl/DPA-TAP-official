@@ -1063,14 +1063,100 @@ p{margin:0;text-wrap:pretty}
   .dpa-jdgm-badge--hero{margin-top:25px;font-size:1.0125rem}
 }
 
-/* ---- Section avis de la page d'accueil (carrousel Judge.me) ---- */
+/* ---- Section avis de la page d'accueil ---- */
 .jdgm-sec{background:var(--c-bg);color:var(--c-paper);padding:96px 0}
-.jdgm-sec__head{max-width:64ch;margin-bottom:40px}
 .jdgm-sec h2{color:var(--c-paper);margin:10px 0 18px}
-.jdgm-sec__intro{margin:0;font-size:.95rem;color:color-mix(in srgb,var(--c-paper) 66%,transparent)}
 
-/* Le carrousel Judge.me est large : on le laisse respirer dans le conteneur du
-   thème et on lui donne les cartes sombres du reste de la page. */
+/* En-tête : le texte à gauche, les flèches du rail en haut à droite dès qu'on a
+   la place de les poser sur la même ligne de base. En dessous, elles n'existent
+   pas : le défilement se fait au doigt. */
+.revw-head{display:grid;gap:4px;margin-bottom:34px}
+.revw-head__text{max-width:56ch}
+.revw-head__intro{margin:0;font-size:.95rem;color:color-mix(in srgb,var(--c-paper) 66%,transparent)}
+.revw-nav{display:none;gap:10px}
+.revw-nav[hidden]{display:none}
+.revw-nav__btn{
+  width:44px;height:44px;border-radius:50%;
+  display:grid;place-items:center;
+  background:transparent;border:1px solid rgba(255,255,255,.18);color:var(--c-paper);
+  transition:background .25s,border-color .25s;
+}
+.revw-nav__btn:hover:not(:disabled){background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.4)}
+.revw-nav__btn:disabled{opacity:.32;cursor:default}
+.revw-nav__btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8}
+/* Même seuil que le passage à deux cartes : les flèches apparaissent dès qu'une
+   carte est masquée hors champ, jamais avant. */
+@media (min-width:700px){
+  .revw-head{grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:24px}
+  .revw-nav{display:flex;padding-bottom:6px}
+}
+
+/* Piste : défilement horizontal natif. `scroll-snap` cale chaque carte sur le
+   bord gauche du conteneur, donc aucune carte ne s'arrête à moitié. La barre de
+   défilement est retirée parce que les flèches (bureau) et le doigt (mobile)
+   suffisent ; le conteneur reste focusable pour la navigation au clavier. */
+.revw-track{
+  display:flex;align-items:flex-start;gap:20px;
+  margin:0;padding:0 0 2px;list-style:none;
+  overflow-x:auto;overscroll-behavior-x:contain;
+  scroll-snap-type:x mandatory;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;
+}
+.revw-track::-webkit-scrollbar{display:none}
+@media (prefers-reduced-motion:no-preference){.revw-track{scroll-behavior:smooth}}
+.revw-track:focus-visible{outline:2px solid var(--g-blue);outline-offset:6px;border-radius:4px}
+
+/* Les cartes ne sont pas étirées à la hauteur de la plus haute : un avis d'une
+   ligne garde une carte d'une ligne, c'est ce qui évite les grands vides. */
+.revw-card{
+  flex:0 0 min(88%,340px);
+  scroll-snap-align:start;
+  display:flex;flex-direction:column;gap:14px;
+  padding:24px;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,.09);
+  background:#131315;
+  color:var(--c-paper);
+  text-align:left;
+}
+@media (min-width:700px){.revw-card{flex-basis:calc((100% - 20px) / 2)}}
+@media (min-width:1000px){.revw-card{flex-basis:calc((100% - 40px) / 3)}}
+@media (hover:hover) and (min-width:700px){
+  .revw-card{transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .3s,background .3s}
+  .revw-card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.18);background:#17171a}
+}
+@media (prefers-reduced-motion:reduce){
+  .revw-card{transition:none}
+  .revw-card:hover{transform:none}
+}
+
+.revw-card__stars{display:inline-flex;gap:2px;line-height:1;font-size:1rem;color:var(--g-yellow)}
+.revw-card__star--off{color:color-mix(in srgb,var(--c-paper) 22%,transparent)}
+.revw-card__title{font-family:"Space Grotesk",sans-serif;font-size:1.02rem;font-weight:600;line-height:1.3;letter-spacing:-.01em;color:var(--c-paper)}
+.revw-card__body{margin:0;font-size:.95rem;line-height:1.6;color:color-mix(in srgb,var(--c-paper) 78%,transparent);overflow-wrap:anywhere}
+
+/* Photos client : taille naturelle plafonnée, jamais agrandie, ratio conservé.
+   Aucune règle ne réserve d'espace quand l'avis n'en contient pas. */
+.revw-card__pics{display:flex;flex-wrap:wrap;gap:8px}
+.revw-card__pic{display:inline-flex;line-height:0;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.1);transition:border-color .25s}
+.revw-card__pic:hover{border-color:rgba(255,255,255,.32)}
+.revw-card__pic img{width:auto;max-width:100%;height:auto;max-height:140px;object-fit:contain}
+
+/* Bloc auteur : poussé en bas de carte si la carte a été étirée, collé au
+   contenu sinon. */
+.revw-card__author{display:flex;align-items:center;gap:12px;margin-top:auto;padding-top:4px}
+.revw-card__avatar{
+  flex:none;width:36px;height:36px;border-radius:50%;
+  display:grid;place-items:center;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);
+  font-family:"Space Grotesk",sans-serif;font-size:.8rem;font-weight:600;line-height:1;color:var(--c-paper);
+}
+.revw-card__identity{display:flex;flex-direction:column;gap:2px;min-width:0}
+.revw-card__name{font-family:"Space Grotesk",sans-serif;font-size:.94rem;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.revw-card__verified{font-size:.76rem;color:color-mix(in srgb,var(--c-paper) 62%,transparent)}
+
+/* Repli : carrousel officiel Judge.me, affiché seulement si le metafield JSON
+   des avis n'est pas encore renseigné. */
 .dpa-jdgm-carousel{position:relative}
 .dpa-jdgm-carousel .jdgm-carousel-item{
   border-radius:22px;
@@ -1151,6 +1237,9 @@ p{margin:0;text-wrap:pretty}
 
 @media (max-width:600px){
   .jdgm-sec{padding:72px 0}
+  .revw-head{margin-bottom:26px}
+  .revw-track{gap:14px}
+  .revw-card{flex-basis:min(90%,320px);padding:20px;border-radius:18px;gap:12px}
   .dpa-jdgm-reviews{margin-top:48px}
   .dpa-jdgm-reviews .jdgm-rev-widg{padding:20px;border-radius:20px}
   .dpa-jdgm-reviews .jdgm-write-rev-link,

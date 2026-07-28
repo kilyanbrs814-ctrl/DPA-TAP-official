@@ -185,6 +185,56 @@
     });
   }
 
+  /* ---------- Rail d'avis Judge.me (section judgeme-carousel) ----------
+     Le défilement lui-même est natif (scroll-snap) : sans ce script, la piste
+     reste parcourable au doigt, au trackpad et au clavier. On n'ajoute ici que
+     les flèches, livrées masquées, et leur état désactivé aux extrémités. */
+  function initReviewsRail(scope) {
+    qsa(scope, '[data-revw]').forEach(function (root) {
+      if (!guard(root, 'Revw')) return;
+      var track = root.querySelector('[data-revw-track]');
+      var nav = root.querySelector('[data-revw-nav]');
+      if (!track || !nav) return;
+      var prev = nav.querySelector('[data-revw-prev]');
+      var next = nav.querySelector('[data-revw-next]');
+      if (!prev || !next) return;
+      var raf = null;
+
+      /* Un pas = une carte + l'espace qui la suit, donc l'arrêt tombe toujours
+         sur un point de calage. */
+      function stepWidth() {
+        var card = track.querySelector('.revw-card');
+        if (!card) return track.clientWidth;
+        var gap = parseFloat(window.getComputedStyle(track).columnGap) || 0;
+        return card.getBoundingClientRect().width + gap;
+      }
+      function sync() {
+        raf = null;
+        var max = track.scrollWidth - track.clientWidth;
+        nav.hidden = max <= 4;
+        if (nav.hidden) return;
+        prev.disabled = track.scrollLeft <= 2;
+        next.disabled = track.scrollLeft >= max - 2;
+      }
+      function queue() { if (raf === null) raf = requestAnimationFrame(sync); }
+      function go(dir) {
+        track.scrollBy({ left: dir * stepWidth(), behavior: reduced() ? 'auto' : 'smooth' });
+      }
+      var onPrev = function () { go(-1); };
+      var onNext = function () { go(1); };
+
+      prev.addEventListener('click', onPrev);
+      next.addEventListener('click', onNext);
+      track.addEventListener('scroll', queue, { passive: true });
+      window.addEventListener('resize', queue);
+      onCleanup(root, function () {
+        window.removeEventListener('resize', queue);
+        if (raf !== null) { cancelAnimationFrame(raf); raf = null; }
+      });
+      sync();
+    });
+  }
+
   /* ---------- FAQ (ouverture/fermeture animée, <details> conservé) ---------- */
   function initFaq(scope) {
     qsa(scope, '.faq-item').forEach(function (d) {
@@ -600,6 +650,7 @@
     initHeroParallax(scope);
     initVideoDemo(scope);
     initSpotlight(scope);
+    initReviewsRail(scope);
     initFaq(scope);
     initBuyForms(scope);
   }
