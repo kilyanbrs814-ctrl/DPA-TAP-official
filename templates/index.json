@@ -78,9 +78,12 @@
         "step_2_text": "La notification dirige directement le client vers la page d’avis Google de votre établissement.",
         "step_3": "Le client laisse son avis",
         "step_3_text": "Il choisit ses étoiles, ajoute un commentaire s’il le souhaite, puis publie son avis.",
-        "reassure_1": "Sans application",
-        "reassure_2": "Sans abonnement",
-        "reassure_3": "Prête à l’emploi",
+        "feat_1_title": "Redirection instantanée",
+        "feat_1_text": "La page d’avis Google s’ouvre en un seul geste.",
+        "feat_2_title": "Prête à l’emploi",
+        "feat_2_text": "Votre plaque est programmée avant son expédition.",
+        "feat_3_title": "Plus d’avis, plus de confiance",
+        "feat_3_text": "Récupérez l’avis de vos clients avant leur départ.",
         "color_bg": "",
         "color_text": ""
       }

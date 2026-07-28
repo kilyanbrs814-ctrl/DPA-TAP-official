@@ -82,10 +82,44 @@
       </li>
     </ol>
 
-    <ul class="hiw-reassure reveal">
-      {%- if settings.reassure_1 != blank -%}<li>{{ settings.reassure_1 }}</li>{%- endif -%}
-      {%- if settings.reassure_2 != blank -%}<li>{{ settings.reassure_2 }}</li>{%- endif -%}
-      {%- if settings.reassure_3 != blank -%}<li>{{ settings.reassure_3 }}</li>{%- endif -%}
+    {%- comment -%}
+      Atouts de la section — remplacent les trois anciennes pastilles « Sans
+      application / Sans abonnement / Prête à l'emploi ».
+
+      Chaque atout est une icône au trait, un titre court et une phrase. Les
+      icônes viennent du jeu du thème (snippets/dpa-marquee-icon.liquid) : même
+      viewBox, même épaisseur de trait, mêmes extrémités, donc trois icônes
+      rigoureusement homogènes. Le choix de l'icône n'est pas réglable — il fait
+      partie du sens de chaque atout ; seuls les textes le sont.
+
+      La liste est le dernier élément du balisage : sur mobile elle se place donc
+      naturellement après les étapes, et sur bureau `grid-template-areas` la fait
+      passer sous l'ensemble texte + vidéo, sur toute la largeur.
+    {%- endcomment -%}
+    {%- liquid
+      assign f1_title = settings.feat_1_title | default: 'Redirection instantanée'
+      assign f1_text = settings.feat_1_text | default: 'La page d’avis Google s’ouvre en un seul geste.'
+      assign f2_title = settings.feat_2_title | default: 'Prête à l’emploi'
+      assign f2_text = settings.feat_2_text | default: 'Votre plaque est programmée avant son expédition.'
+      assign f3_title = settings.feat_3_title | default: 'Plus d’avis, plus de confiance'
+      assign f3_text = settings.feat_3_text | default: 'Récupérez l’avis de vos clients avant leur départ.'
+    -%}
+    <ul class="hiw-feats reveal">
+      <li class="hiw-feat">
+        {%- render 'dpa-marquee-icon', name: 'bolt', class: 'hiw-feat__ico' -%}
+        <span class="hiw-feat__title">{{ f1_title }}</span>
+        <span class="hiw-feat__text">{{ f1_text }}</span>
+      </li>
+      <li class="hiw-feat">
+        {%- render 'dpa-marquee-icon', name: 'plate-check', class: 'hiw-feat__ico' -%}
+        <span class="hiw-feat__title">{{ f2_title }}</span>
+        <span class="hiw-feat__text">{{ f2_text }}</span>
+      </li>
+      <li class="hiw-feat">
+        {%- render 'dpa-marquee-icon', name: 'review-star', class: 'hiw-feat__ico' -%}
+        <span class="hiw-feat__title">{{ f3_title }}</span>
+        <span class="hiw-feat__text">{{ f3_text }}</span>
+      </li>
     </ul>
   </div>
 </section>
