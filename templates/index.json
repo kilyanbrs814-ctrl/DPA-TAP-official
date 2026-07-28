@@ -60,7 +60,7 @@
         "gap_mobile": 30,
         "speed": 60,
         "tighten_neighbours": true,
-        "space_above": 28,
+        "space_above": 32,
         "space_above_mobile": 20
       }
     },
