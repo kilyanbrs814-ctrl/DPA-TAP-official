@@ -54,6 +54,15 @@
     </div>
 
     <div class="seo-product__content" data-sp-content>
+      {%- liquid
+        assign has_professional_block = false
+        for sp_block in section.blocks
+          if sp_block.type == 'professional'
+            assign has_professional_block = true
+            break
+          endif
+        endfor
+      -%}
       {% assign chapter = 0 %}
       {% for block in section.blocks %}
         {% case block.type %}
@@ -117,6 +126,26 @@
                 </div>
               </aside>
             </section>
+            {%- unless has_professional_block -%}
+              {%- comment -%}
+                Repli pour les thèmes dont le modèle JSON n'a pas encore
+                synchronisé le bloc « professional ». Dès que ce bloc est
+                présent, ce rendu disparaît afin d'éviter tout doublon.
+              {%- endcomment -%}
+              <section class="sp-chapter sp-pro">
+                <div class="sp-pro__body">
+                  <p class="eyebrow sp-pro__eyebrow">RÉSEAUX · FRANCHISES · MULTISITES</p>
+                  <h2 class="sp-pro__title">Plusieurs établissements ? Équipez tout votre réseau.</h2>
+                  <p class="sp-pro__text">Dès 5 plaques, profitez de tarifs dégressifs, choisissez vos couleurs et associez un lien Google différent à chaque établissement.</p>
+                  <ul class="sp-pro__chips" role="list">
+                    <li>Dès 5 plaques</li>
+                    <li>Un lien Google par établissement</li>
+                    <li>Tarifs dégressifs</li>
+                  </ul>
+                </div>
+                <a class="btn btn--paper sp-pro__button" href="/pages/offre-professionnelle">Découvrir l’offre professionnelle</a>
+              </section>
+            {%- endunless -%}
 
           {% when 'formats' %}
             {% assign chapter = chapter | plus: 1 %}
