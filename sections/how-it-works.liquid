@@ -19,83 +19,10 @@
   clic sur la carte la lance, sans bouton permanent.
 {%- endcomment -%}
 
-{%- liquid
-  assign vid = section.settings.video
-  assign poster_url = ''
-  if section.settings.poster != blank
-    assign poster_url = section.settings.poster | image_url: width: 1080
-  else
-    assign poster_url = 'demo-plaque-nfc-poster.webp' | asset_url
-  endif
--%}
-
-<section
-  class="hiw"
-  id="fonctionnement"
-  {% if section.settings.color_bg != blank or section.settings.color_text != blank %}style="{% if section.settings.color_bg != blank %}--hiw-bg:{{ section.settings.color_bg }};{% endif %}{% if section.settings.color_text != blank %}--hiw-fg:{{ section.settings.color_text }};{% endif %}"{% endif %}
->
-  <div class="container hiw-grid">
-    <p class="eyebrow hiw-eyebrow reveal">{{ section.settings.eyebrow | default: 'COMMENT ÇA MARCHE' }}</p>
-
-    <h2 class="h-lg hiw-title reveal">{{ section.settings.title | default: 'Un geste. Un avis Google.' }}</h2>
-
-    <p class="hiw-text reveal">{{ section.settings.text | default: 'Approchez simplement le téléphone de la plaque NFC : la fiche Google de votre établissement s’ouvre instantanément, sans application.' }}</p>
-
-    <figure class="hiw-media reveal">
-      <div class="hiw-card" data-hiw-video>
-        <video
-          class="hiw-video"
-          width="1080"
-          height="1350"
-          muted
-          loop
-          playsinline
-          preload="metadata"
-          poster="{{ poster_url }}"
-          aria-label="{{ section.settings.video_label | default: 'Démonstration réelle : un téléphone est approché de la plaque NFC, la fiche Google de l’établissement s’ouvre et le client laisse un avis cinq étoiles.' }}"
-        >
-          {%- if vid != blank -%}
-            {%- for src in vid.sources -%}
-              {%- if src.format == 'mp4' -%}
-                <source src="{{ src.url }}" type="{{ src.mime_type }}">
-              {%- endif -%}
-            {%- endfor -%}
-          {%- else -%}
-            <source src="{{ 'demo-plaque-nfc.mp4' | asset_url }}" type="video/mp4">
-          {%- endif -%}
-        </video>
-
-        {%- if section.settings.badge != blank -%}
-          <span class="hiw-badge">{{ section.settings.badge }}</span>
-        {%- endif -%}
-      </div>
-    </figure>
-
-    <ol class="hiw-steps reveal">
-      <li>
-        <span class="hiw-num" aria-hidden="true">1</span>
-        <span class="hiw-step-title">{{ section.settings.step_1 | default: 'Approchez le téléphone' }}</span>
-        <span class="hiw-step-text">{{ section.settings.step_1_text | default: 'Le smartphone détecte automatiquement la puce NFC intégrée, sans application.' }}</span>
-      </li>
-      <li>
-        <span class="hiw-num" aria-hidden="true">2</span>
-        <span class="hiw-step-title">{{ section.settings.step_2 | default: 'La fiche Google s’ouvre' }}</span>
-        <span class="hiw-step-text">{{ section.settings.step_2_text | default: 'La notification dirige directement le client vers la page d’avis Google de votre établissement.' }}</span>
-      </li>
-      <li>
-        <span class="hiw-num" aria-hidden="true">3</span>
-        <span class="hiw-step-title">{{ section.settings.step_3 | default: 'Le client laisse son avis' }}</span>
-        <span class="hiw-step-text">{{ section.settings.step_3_text | default: 'Il choisit ses étoiles, ajoute un commentaire s’il le souhaite, puis publie son avis.' }}</span>
-      </li>
-    </ol>
-
-    <ul class="hiw-reassure reveal">
-      {%- if section.settings.reassure_1 != blank -%}<li>{{ section.settings.reassure_1 }}</li>{%- endif -%}
-      {%- if section.settings.reassure_2 != blank -%}<li>{{ section.settings.reassure_2 }}</li>{%- endif -%}
-      {%- if section.settings.reassure_3 != blank -%}<li>{{ section.settings.reassure_3 }}</li>{%- endif -%}
-    </ul>
-  </div>
-</section>
+{% render 'how-it-works-content',
+  settings: section.settings,
+  anchor_id: 'fonctionnement'
+%}
 
 {% schema %}
 {
