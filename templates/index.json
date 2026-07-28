@@ -60,7 +60,7 @@
         "gap_mobile": 30,
         "speed": 60,
         "tighten_neighbours": true,
-        "space_above": 28,
+        "space_above": 60,
         "space_above_mobile": 20
       }
     },
@@ -80,12 +80,15 @@
         "step_3_text": "Il choisit ses étoiles, ajoute un commentaire s’il le souhaite, puis publie son avis.",
         "reassure_1": "Sans application",
         "reassure_2": "Sans abonnement",
-        "reassure_3": "Prête à l’emploi"
+        "reassure_3": "Prête à l’emploi",
+        "color_bg": "",
+        "color_text": ""
       }
     },
     "buy": {
       "type": "product-buy",
       "settings": {
+        "eyebrow": "Modèles",
         "title_line1": "Facilitez la collecte",
         "title_line2": "d’avis Google.",
         "text": "Les deux modèles embarquent la même puce NFC, programmée avec le lien d’avis de votre établissement avant l’envoi. À l’unité ou en pack de deux.",

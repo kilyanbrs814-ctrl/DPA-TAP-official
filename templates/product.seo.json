@@ -57,22 +57,7 @@
             "fact1_label": "application à installer pour le commerçant",
             "fact2_value": "0",
             "fact2_label": "abonnement à renouveler",
-            "note_text": "Si le lien change par la suite, la puce peut être reprogrammée avec un smartphone compatible.",
-            "review_notice_title": "Le client reste libre de son avis.",
-            "review_notice_text": "La plaque ouvre la page Google, mais elle ne publie rien automatiquement. DPA TAP ne contrôle ni la note ni le commentaire laissés par le client."
-          }
-        },
-        "professional": {
-          "type": "professional",
-          "settings": {
-            "eyebrow": "RÉSEAUX · FRANCHISES · MULTISITES",
-            "heading": "Plusieurs établissements ? Équipez tout votre réseau.",
-            "text": "Dès 5 plaques, profitez de tarifs dégressifs, choisissez vos couleurs et associez un lien Google différent à chaque établissement.",
-            "reassure_1": "Dès 5 plaques",
-            "reassure_2": "Un lien Google par établissement",
-            "reassure_3": "Tarifs dégressifs",
-            "button_label": "Découvrir l’offre professionnelle",
-            "button_link": "/pages/offre-professionnelle"
+            "note_text": "Si le lien change par la suite, la puce peut être reprogrammée avec un smartphone compatible."
           }
         },
         "formats": {
@@ -168,7 +153,6 @@
         "audience",
         "formats",
         "programming",
-        "professional",
         "delivery",
         "compatibility",
         "faq_1",
