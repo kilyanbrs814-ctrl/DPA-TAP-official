@@ -136,47 +136,54 @@ p{margin:0;text-wrap:pretty}
 /* Remplace l'ancien scrollytelling (piste de 380 vh, téléphone et fiche d'avis
    reconstitués en CSS). Tout est scopé sous `.hiw`. L'ordre du DOM est l'ordre
    mobile ; le bureau repasse en deux colonnes via `grid-template-areas`, sans
-   réordonner le balisage. */
-.hiw{--hiw-bg:var(--c-bg);--hiw-fg:var(--c-paper);background:var(--hiw-bg);color:var(--hiw-fg);padding:120px 0}
+   réordonner le balisage. Aucun contrôle visible sur la vidéo : la lecture
+   suit l'entrée et la sortie du viewport. */
+.hiw{--hiw-bg:var(--c-bg);--hiw-fg:var(--c-paper);background:var(--hiw-bg);color:var(--hiw-fg);padding:110px 0}
 .hiw-eyebrow{color:color-mix(in srgb,var(--hiw-fg) 60%,transparent)}
 .hiw-title{margin:14px 0 0;color:var(--hiw-fg)}
 .hiw-text{margin-top:18px;max-width:46ch;font-size:1.05rem;line-height:1.6;color:color-mix(in srgb,var(--hiw-fg) 78%,transparent)}
-.hiw-media{margin:32px 0 0;display:flex;justify-content:center}
-.hiw-card{position:relative;width:min(320px,100%);border-radius:26px;overflow:hidden;background:#000;border:1px solid color-mix(in srgb,var(--hiw-fg) 12%,transparent);box-shadow:0 30px 70px -32px rgba(0,0,0,.8)}
-.hiw-video{display:block;width:100%;height:auto;aspect-ratio:9/16;object-fit:cover}
+.hiw-media{margin:30px 0 0;display:flex;justify-content:center}
+/* Le fichier est recadré en 4:5 à l'encodage : la carte suit le ratio réel de
+   la vidéo, donc aucun rognage à l'affichage. */
+.hiw-card{position:relative;width:100%;max-width:440px;aspect-ratio:4/5;border-radius:26px;overflow:hidden;background:#000;border:1px solid color-mix(in srgb,var(--hiw-fg) 12%,transparent);box-shadow:0 30px 70px -32px rgba(0,0,0,.8)}
+.hiw-video{display:block;width:100%;height:100%;object-fit:contain}
 .hiw-badge{position:absolute;top:12px;left:12px;padding:7px 12px;border-radius:999px;background:color-mix(in srgb,var(--c-bg) 70%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.16);color:#fff;font-family:"Space Grotesk",sans-serif;font-size:.66rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
-.hiw-toggle{position:absolute;right:12px;bottom:12px;display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid rgba(255,255,255,.18);border-radius:50%;background:rgba(12,12,14,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;cursor:pointer;transition:background .2s,border-color .2s}
-.hiw-toggle:hover{background:rgba(12,12,14,.85);border-color:rgba(255,255,255,.4)}
-.hiw-ico{width:16px;height:16px;fill:currentColor}
-.hiw-ico--play{display:none}
-.hiw-card.is-paused .hiw-ico--pause{display:none}
-.hiw-card.is-paused .hiw-ico--play{display:block}
-.hiw-steps{margin:32px 0 0;padding:0;list-style:none;display:grid;gap:12px}
-.hiw-steps li{display:flex;align-items:center;gap:14px;font-family:"Space Grotesk",sans-serif;font-weight:500;font-size:1.05rem;line-height:1.3;color:var(--hiw-fg)}
-.hiw-num{flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--g-blue);color:#fff;font-size:.85rem;font-weight:600}
-.hiw-reassure{margin:26px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:8px}
-.hiw-reassure li{padding:7px 14px;border-radius:999px;border:1px solid color-mix(in srgb,var(--hiw-fg) 20%,transparent);font-size:.82rem;color:color-mix(in srgb,var(--hiw-fg) 82%,transparent)}
-.hiw-cta{margin-top:32px}
+/* Étapes : le numéro occupe la première colonne, titre et description la
+   seconde, donc la description s'aligne sur le titre et non sous le numéro. */
+.hiw-steps{margin:34px 0 0;padding:0;list-style:none;display:grid;gap:22px}
+.hiw-steps li{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;column-gap:14px;row-gap:5px}
+.hiw-num{display:grid;place-items:center;width:30px;height:30px;margin-top:1px;border-radius:50%;background:var(--g-blue);color:#fff;font-family:"Space Grotesk",sans-serif;font-size:.85rem;font-weight:600}
+.hiw-step-title{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:1.05rem;line-height:1.35;color:var(--hiw-fg)}
+.hiw-step-text{grid-column:2;max-width:48ch;font-size:.92rem;line-height:1.55;color:color-mix(in srgb,var(--hiw-fg) 68%,transparent)}
+/* Réassurances : centrées, dans le bleu DPA TAP (`--g-blue`, celui des numéros
+   d'étape) pour le texte, la bordure et la pastille. */
+.hiw-reassure{margin:32px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.hiw-reassure li{display:inline-flex;align-items:center;gap:9px;padding:9px 16px;border-radius:999px;background:color-mix(in srgb,var(--g-blue) 12%,transparent);border:1px solid color-mix(in srgb,var(--g-blue) 52%,transparent);color:var(--g-blue);font-family:"Space Grotesk",sans-serif;font-size:.85rem;font-weight:600}
+.hiw-reassure li::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:currentColor}
 @media (min-width:901px){
-  .hiw{padding:130px 0}
-  .hiw-grid{display:grid;align-content:center;column-gap:clamp(40px,5vw,80px);grid-template-columns:minmax(0,1fr) minmax(0,clamp(280px,26vw,340px));grid-template-areas:"eyebrow video" "title video" "text video" "steps video" "reassure video" "cta video"}
+  .hiw{padding:120px 0}
+  .hiw-grid{display:grid;align-content:center;column-gap:clamp(40px,5vw,72px);grid-template-columns:minmax(0,1fr) minmax(0,clamp(420px,34vw,500px));grid-template-areas:"eyebrow video" "title video" "text video" "steps video" "reassure video"}
   .hiw-eyebrow{grid-area:eyebrow}
   .hiw-title{grid-area:title}
   .hiw-text{grid-area:text}
   .hiw-media{grid-area:video;align-self:center;margin:0}
   .hiw-steps{grid-area:steps}
   .hiw-reassure{grid-area:reassure}
-  .hiw-cta{grid-area:cta}
-  .hiw-card{width:100%}
+  .hiw-card{max-width:500px}
 }
 @media (max-width:900px){
-  .hiw{padding:84px 0}
+  .hiw{padding:78px 0}
   .hiw-text{margin-top:16px;font-size:1rem}
-  .hiw-media{margin-top:28px}
-  .hiw-card{width:min(300px,88%)}
-  .hiw-steps{margin-top:28px;gap:10px}
-  .hiw-steps li{font-size:1rem}
-  .hiw-cta .btn{width:100%}
+  .hiw-media{margin-top:26px}
+  .hiw-card{max-width:460px}
+  .hiw-steps{margin-top:30px;gap:18px}
+  .hiw-step-title{font-size:1rem}
+  .hiw-step-text{font-size:.88rem}
+}
+/* Mouvement réduit : pas de lecture automatique, le poster reste affiché et un
+   clic sur la carte lance la démonstration, sans contrôle permanent. */
+@media (prefers-reduced-motion:reduce){
+  .hiw-card{cursor:pointer}
 }
 
 /* ============ Benefits ============ */

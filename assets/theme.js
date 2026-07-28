@@ -126,46 +126,32 @@
   }
 
   /* ---------- Démonstration vidéo (section « Comment ça marche ») ---------- */
-  /* La lecture n'est lancée que lorsque la carte entre dans le viewport, et
-     suspendue dès qu'elle en sort : rien ne tourne en arrière-plan. En mouvement
-     réduit, aucune lecture automatique — la vidéo reste sur son poster et
-     l'utilisateur la déclenche avec le bouton. */
+  /* La lecture démarre quand la carte entre dans le viewport et s'arrête dès
+     qu'elle en sort : rien ne tourne en arrière-plan. Aucun contrôle visible.
+     En mouvement réduit, aucune lecture automatique — la vidéo reste sur son
+     poster et un clic sur la carte la lance. */
   function initVideoDemo(scope) {
     qsa(scope, '[data-hiw-video]').forEach(function (card) {
       if (!guard(card, 'HiwVideo')) return;
       var video = card.querySelector('video');
-      var toggle = card.querySelector('[data-hiw-toggle]');
       if (!video) return;
 
       var auto = !reduced();
-      var visible = false;
-      var userPaused = !auto;
+      var wanted = auto;
 
-      function sync() {
-        var paused = video.paused;
-        card.classList.toggle('is-paused', paused);
-        if (toggle) toggle.setAttribute('aria-label', paused ? 'Lire la démonstration' : 'Mettre la démonstration en pause');
-      }
       function tryPlay() {
         var p = video.play();
-        if (p && typeof p.catch === 'function') p.catch(function () { sync(); });
+        if (p && typeof p.catch === 'function') p.catch(function () { /* noop */ });
       }
-
-      video.addEventListener('play', sync);
-      video.addEventListener('pause', sync);
-      sync();
-
-      if (toggle) {
-        toggle.addEventListener('click', function () {
-          if (video.paused) { userPaused = false; tryPlay(); }
-          else { userPaused = true; video.pause(); }
-        });
+      function onClick() {
+        if (video.paused) { wanted = true; tryPlay(); }
+        else { wanted = false; video.pause(); }
       }
+      card.addEventListener('click', onClick);
 
       if ('IntersectionObserver' in window) {
         var io = new IntersectionObserver(function (entries) {
-          visible = entries[0].isIntersecting;
-          if (visible) { if (!userPaused) tryPlay(); }
+          if (entries[0].isIntersecting) { if (wanted) tryPlay(); }
           else if (!video.paused) video.pause();
         }, { threshold: 0.25 });
         io.observe(card);
@@ -175,8 +161,7 @@
       }
 
       onCleanup(card, function () {
-        video.removeEventListener('play', sync);
-        video.removeEventListener('pause', sync);
+        card.removeEventListener('click', onClick);
         try { video.pause(); } catch (e) { /* noop */ }
       });
     });
