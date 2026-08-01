@@ -4,7 +4,12 @@
   var RMQ = window.matchMedia('(prefers-reduced-motion: reduce)');
   function reduced() { return RMQ.matches; }
   var DPA = window.DPA || {};
-  var routes = DPA.routes || { cartAdd: '/cart/add.js', cart: '/cart', cartJs: '/cart.js' };
+  var routes = DPA.routes || {};
+  if (!routes.cartAdd) routes.cartAdd = '/cart/add.js';
+  if (!routes.cart) routes.cart = '/cart';
+  if (!routes.cartJs) routes.cartJs = '/cart.js';
+  if (!routes.cartChange) routes.cartChange = '/cart/change.js';
+  if (!routes.cartUpdate) routes.cartUpdate = '/cart/update.js';
   var EASE = 'cubic-bezier(.2,.8,.2,1)';
 
   /* ---------- helpers (Shopify editor safe) ---------- */
@@ -643,6 +648,301 @@
     });
   }
 
+  /* ---------- Panier ----------
+     Toutes les commandes du panier passent par /cart/change.js ou
+     /cart/update.js, puis redemandent cette même section à Shopify
+     (Section Rendering API). Les prix de ligne, la réduction pack et le total
+     restent donc calculés par Liquid : aucune règle de remise n'est réécrite
+     ici. Les écouteurs sont délégués sur la section, qui n'est jamais
+     remplacée — seul son contenu l'est — donc ils survivent à chaque rendu. */
+  function initCart(scope) {
+    qsa(scope, '[data-cart-root]').forEach(function (root) {
+      if (!guard(root, 'Cart')) return;
+
+      var NOTE_DEBOUNCE = 600;
+      var sectionId = root.getAttribute('data-section-id');
+      var busy = false;
+      var resubmitting = false;
+      var lastSubmitter = null;
+      var pending = Object.create(null);
+      var pendingCount = 0;
+      var qtyTimer = null;
+      var waiters = [];
+      var noteTimer = null;
+      var noteChain = Promise.resolve();
+      var noteSaved = null;
+      var noteEl = root.querySelector('[data-cart-note]');
+      if (noteEl) noteSaved = noteEl.value;
+
+      function near(node, sel) {
+        return node && node.closest ? node.closest(sel) : null;
+      }
+      function pick(sel) { return root.querySelector(sel); }
+      function status(msg) {
+        var el = pick('[data-cart-note-status]');
+        if (el) el.textContent = msg || '';
+      }
+      function fail(msg) {
+        var el = pick('[data-cart-error]');
+        if (!el) return;
+        el.textContent = msg || '';
+        el.hidden = !msg;
+      }
+      function post(url, body) {
+        return fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(body)
+        }).then(function (res) {
+          return res.json().then(function (json) {
+            if (!res.ok) throw new Error(json.description || json.message || 'Le panier n’a pas pu être mis à jour.');
+            return json;
+          });
+        });
+      }
+
+      /* Rendu renvoyé par Shopify : on ne remplace que le contenu de la
+         section. Une note en cours de frappe n'est pas écrasée par la valeur
+         encore enregistrée côté serveur, et le curseur reste où il était. */
+      function render(cart) {
+        var sections = (cart && cart.sections) || {};
+        var html = sections[sectionId];
+        /* Une seule section est demandée : si la clé attendue manque, la seule
+           réponse présente est forcément la bonne. */
+        if (!html) {
+          for (var k in sections) { if (sections[k]) { html = sections[k]; break; } }
+        }
+        var next = null;
+        if (html) {
+          var doc = new DOMParser().parseFromString(html, 'text/html');
+          next = doc.querySelector('[data-cart-root]');
+        }
+        if (!next) { window.location.assign(routes.cart); return; }
+
+        var note = pick('[data-cart-note]');
+        var keep = null;
+        if (note && (note.value !== noteSaved || document.activeElement === note)) {
+          keep = {
+            value: note.value,
+            start: note.selectionStart,
+            end: note.selectionEnd,
+            focus: document.activeElement === note
+          };
+        }
+        root.innerHTML = next.innerHTML;
+        var fresh = pick('[data-cart-note]');
+        if (fresh && keep) {
+          fresh.value = keep.value;
+          if (keep.focus) {
+            fresh.focus();
+            try { fresh.setSelectionRange(keep.start, keep.end); } catch (e) { /* noop */ }
+          }
+        }
+        setCount(cart.item_count);
+      }
+
+      /* Les clics rapides sont absorbés : la valeur affichée change tout de
+         suite, les envois sont regroupés puis joués un par un. Une ligne est
+         désignée par sa clé, jamais par son rang, donc une suppression en cours
+         de file ne décale rien. Le rendu n'est appliqué qu'une fois la file
+         vide, pour ne pas faire clignoter une quantité déjà dépassée. */
+      function queueQty(key, quantity, input) {
+        if (!key) return;
+        if (input) input.value = quantity;
+        if (!(key in pending)) pendingCount++;
+        pending[key] = quantity;
+        if (qtyTimer) clearTimeout(qtyTimer);
+        qtyTimer = setTimeout(drain, 250);
+      }
+
+      function drain() {
+        qtyTimer = null;
+        if (busy || !pendingCount) return;
+        var key = null;
+        for (var k in pending) { key = k; break; }
+        if (key === null) return;
+        var quantity = pending[key];
+        delete pending[key];
+        pendingCount--;
+
+        busy = true;
+        root.setAttribute('aria-busy', 'true');
+        fail('');
+        post(routes.cartChange, {
+          id: key,
+          quantity: quantity,
+          sections: sectionId,
+          sections_url: routes.cart
+        }).then(function (cart) {
+          if (!pendingCount) render(cart);
+        }).catch(function (err) {
+          /* Le panier affiché ne doit jamais rester en avance sur le vrai :
+             on le redemande à Shopify, puis on explique l'échec. */
+          var msg = err.message;
+          pending = Object.create(null);
+          pendingCount = 0;
+          return post(routes.cartUpdate, { sections: sectionId, sections_url: routes.cart })
+            .then(render)
+            .catch(function () { /* noop */ })
+            .then(function () { fail(msg); });
+        }).finally(function () {
+          busy = false;
+          if (pendingCount) {
+            drain();
+          } else {
+            root.removeAttribute('aria-busy');
+            var waiting = waiters;
+            waiters = [];
+            waiting.forEach(function (fn) { fn(); });
+          }
+        });
+      }
+
+      /* Résout quand plus aucune quantité n'est en attente ni en vol. */
+      function flushQty() {
+        if (qtyTimer) { clearTimeout(qtyTimer); qtyTimer = null; drain(); }
+        if (!busy && !pendingCount) return Promise.resolve();
+        return new Promise(function (resolve) { waiters.push(resolve); });
+      }
+
+      /* Les enregistrements de note sont mis à la file : deux frappes rapprochées
+         ne peuvent pas arriver dans le désordre. La valeur est relue au moment
+         de l'envoi, donc c'est toujours la dernière qui part. */
+      function saveNote() {
+        noteChain = noteChain.then(function () {
+          var note = pick('[data-cart-note]');
+          if (!note || note.value === noteSaved) return;
+          var value = note.value;
+          status('Enregistrement…');
+          return post(routes.cartUpdate, { note: value }).then(function () {
+            noteSaved = value;
+            status('Note enregistrée');
+          });
+        }).catch(function () {
+          status('La note n’a pas pu être enregistrée. Elle partira au paiement.');
+        });
+        return noteChain;
+      }
+      function flushNote() {
+        if (noteTimer) { clearTimeout(noteTimer); noteTimer = null; }
+        return saveNote();
+      }
+
+      root.addEventListener('click', function (e) {
+        var ctl = near(e.target, '[data-qty-minus],[data-qty-plus],[data-qty-remove]');
+        if (!ctl) return;
+        var row = near(ctl, '[data-cart-key]');
+        if (!row) return;
+        e.preventDefault();
+        var key = row.getAttribute('data-cart-key');
+        var input = row.querySelector('[data-qty-input]');
+        var current = input ? parseInt(input.value, 10) : 0;
+        if (isNaN(current)) current = 0;
+        if (ctl.hasAttribute('data-qty-remove')) queueQty(key, 0, null);
+        else if (ctl.hasAttribute('data-qty-minus')) queueQty(key, Math.max(0, current - 1), input);
+        else queueQty(key, current + 1, input);
+      });
+
+      /* Le bouton réellement cliqué, pour les navigateurs sans event.submitter. */
+      root.addEventListener('click', function (e) {
+        var btn = near(e.target, 'button[type="submit"],input[type="submit"]');
+        if (btn) lastSubmitter = btn;
+      }, true);
+
+      root.addEventListener('change', function (e) {
+        var input = near(e.target, '[data-qty-input]');
+        if (!input) return;
+        var row = near(input, '[data-cart-key]');
+        if (!row) return;
+        var q = parseInt(input.value, 10);
+        if (isNaN(q) || q < 0) q = 0;
+        queueQty(row.getAttribute('data-cart-key'), q, null);
+      });
+
+      /* Entrée dans le champ quantité : le bouton de paiement est désormais le
+         premier bouton de soumission du formulaire, une validation clavier
+         partirait donc au checkout. On applique la quantité, rien de plus. */
+      root.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' && e.keyCode !== 13) return;
+        var input = near(e.target, '[data-qty-input]');
+        if (!input) return;
+        e.preventDefault();
+        input.blur();
+      });
+
+      root.addEventListener('input', function (e) {
+        if (!near(e.target, '[data-cart-note]')) return;
+        status('');
+        if (noteTimer) clearTimeout(noteTimer);
+        noteTimer = setTimeout(function () { noteTimer = null; saveNote(); }, NOTE_DEBOUNCE);
+      });
+
+      root.addEventListener('focusout', function (e) {
+        if (!near(e.target, '[data-cart-note]')) return;
+        flushNote();
+      });
+
+      /* Frappe — ou clic sur « + » / poubelle — suivie d'un clic immédiat sur
+         « Paiement sécurisé » : tout ce qui est en attente part d'abord, la
+         redirection ne se fait qu'ensuite. Le formulaire poste de toute façon
+         `note` et `updates[]` vers /cart, donc même un enregistrement AJAX en
+         échec ne perd rien : Shopify les applique dans la requête même qui
+         ouvre le checkout. */
+      root.addEventListener('submit', function (e) {
+        var form = near(e.target, '[data-cart-form]');
+        if (!form || resubmitting) return;
+        var submitter = e.submitter || lastSubmitter;
+        var name = submitter && submitter.name ? submitter.name : '';
+        var value = submitter && submitter.value ? submitter.value : '';
+        e.preventDefault();
+        root.setAttribute('aria-busy', 'true');
+
+        Promise.all([flushQty(), flushNote()]).then(function () {
+          /* Le rendu a pu remplacer le formulaire entre-temps : on repart de
+             celui qui est réellement dans la page. Panier vidé au passage,
+             donc plus de formulaire : il n'y a plus rien à payer. */
+          var live = root.querySelector('[data-cart-form]');
+          if (!live) { root.removeAttribute('aria-busy'); return; }
+          var btn = name ? live.querySelector('button[name="' + name + '"],input[type="submit"][name="' + name + '"]') : null;
+          resubmitting = true;
+          if (live.requestSubmit) {
+            try {
+              live.requestSubmit(btn || undefined);
+              return;
+            } catch (err) { /* on retombe sur la soumission classique */ }
+          }
+          /* form.submit() n'embarque aucun bouton : sans `checkout`, Shopify
+             se contenterait de mettre le panier à jour. */
+          if (name) {
+            var hidden = document.createElement('input');
+            hidden.type = 'hidden';
+            hidden.name = name;
+            hidden.value = value;
+            live.appendChild(hidden);
+          }
+          live.submit();
+        });
+      });
+
+      /* Départ de la page avec une frappe encore en attente : dernier envoi. */
+      function onLeave() {
+        var note = pick('[data-cart-note]');
+        if (!note || note.value === noteSaved || !navigator.sendBeacon) return;
+        try {
+          navigator.sendBeacon(
+            routes.cartUpdate,
+            new Blob([JSON.stringify({ note: note.value })], { type: 'application/json' })
+          );
+        } catch (err) { /* noop */ }
+      }
+      window.addEventListener('pagehide', onLeave);
+      onCleanup(root, function () {
+        window.removeEventListener('pagehide', onLeave);
+        if (noteTimer) clearTimeout(noteTimer);
+      });
+    });
+  }
+
   /* ---------- Boot + éditeur Shopify ---------- */
   function initAll(scope) {
     initHeader(scope);
@@ -653,6 +953,7 @@
     initReviewsRail(scope);
     initFaq(scope);
     initBuyForms(scope);
+    initCart(scope);
   }
   initAll(document);
   if (typeof DPA.cartCount === 'number') setCount(DPA.cartCount, true);

@@ -1,4 +1,21 @@
-<section class="page-pad">
+{%- comment -%}
+  Panier — mises à jour sans rechargement.
+
+  Le sélecteur de quantité porte trois commandes : une poubelle à gauche quand
+  la quantité vaut 1, un « − » à sa place dès 2, et un « + » à droite. Chaque
+  action appelle /cart/change.js puis redemande CETTE section à Shopify
+  (Section Rendering API) : quantités, prix de ligne, réduction pack et total
+  sont donc toujours recalculés par Liquid, jamais reconstruits en JavaScript.
+  Voir initCart() dans assets/theme.js.
+
+  Sans JavaScript la page reste utilisable : la poubelle est un vrai lien
+  (item.url_to_remove), la quantité reste un champ `updates[]` et la note un
+  champ `note` — le POST du bouton de paiement enregistre les deux avant
+  d'ouvrir le checkout. C'est aussi le filet de sécurité de la note : même si
+  l'enregistrement AJAX échouait, la note part avec la requête qui mène au
+  paiement.
+{%- endcomment -%}
+<section class="page-pad" data-cart-root data-section-id="{{ section.id }}">
   <div class="container">
     <h1 class="h-lg" style="margin-bottom:44px">Votre panier</h1>
     {% if cart.item_count == 0 %}
@@ -8,14 +25,19 @@
         <a class="btn btn--ink" href="{{ routes.root_url }}#modeles">Choisir ma plaque</a>
       </div>
     {% else %}
-      <form action="{{ routes.cart_url }}" method="post">
+      <form action="{{ routes.cart_url }}" method="post" data-cart-form>
         <table class="cart-table">
           <thead>
-            <tr><th scope="col">Produit</th><th scope="col">Quantité</th><th scope="col">Total</th><th scope="col"><span class="visually-hidden">Retirer</span></th></tr>
+            <tr><th scope="col">Produit</th><th scope="col">Quantité</th><th scope="col">Total</th><th scope="col"><span class="visually-hidden">Avis</span></th></tr>
           </thead>
           <tbody>
             {% for item in cart.items %}
-              <tr>
+              {%- comment -%}
+                La clé de ligne, et non son rang : elle ne bouge pas quand une
+                autre ligne est supprimée, donc deux commandes qui s'enchaînent
+                ne peuvent pas s'appliquer à la mauvaise ligne.
+              {%- endcomment -%}
+              <tr data-cart-key="{{ item.key }}">
                 <td data-label="Produit">
                   <div class="cart-item">
                     {% if item.image %}{{ item.image | image_url: width: 200 | image_tag: loading: 'lazy', alt: item.title }}{% endif %}
@@ -35,9 +57,23 @@
                   </div>
                 </td>
                 <td data-label="Quantité">
-                  <label class="visually-hidden" for="updates_{{ item.key }}">Quantité</label>
-                  <div class="qty" style="border-color:color-mix(in srgb,var(--c-ink) 20%,transparent)">
-                    <input id="updates_{{ item.key }}" style="color:var(--c-ink)" type="number" name="updates[]" value="{{ item.quantity }}" min="0" inputmode="numeric">
+                  <label class="visually-hidden" for="updates_{{ item.key }}">Quantité — {{ item.product.title }}</label>
+                  <div class="qty qty--cart">
+                    {%- if item.quantity <= 1 -%}
+                      <a class="qty-btn qty-btn--remove" href="{{ item.url_to_remove }}" data-qty-remove aria-label="Retirer {{ item.product.title | escape }} du panier">
+                        <svg class="qty-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                          <path d="M4.75 7h14.5"/>
+                          <path d="M9.75 7V5.7A1.2 1.2 0 0 1 10.95 4.5h2.1A1.2 1.2 0 0 1 14.25 5.7V7"/>
+                          <path d="M6.9 7l.72 11.15A1.6 1.6 0 0 0 9.22 19.5h5.56a1.6 1.6 0 0 0 1.6-1.35L17.1 7"/>
+                          <path d="M10.4 10.7v5.6"/>
+                          <path d="M13.6 10.7v5.6"/>
+                        </svg>
+                      </a>
+                    {%- else -%}
+                      <button type="button" class="qty-btn" data-qty-minus aria-label="Diminuer la quantité de {{ item.product.title | escape }}">−</button>
+                    {%- endif -%}
+                    <input id="updates_{{ item.key }}" class="qty-input" type="number" name="updates[]" value="{{ item.quantity }}" min="0" inputmode="numeric" data-qty-input>
+                    <button type="button" class="qty-btn" data-qty-plus aria-label="Augmenter la quantité de {{ item.product.title | escape }}">+</button>
                   </div>
                 </td>
                 <td data-label="Total">
@@ -48,7 +84,13 @@
                     {{ item.final_line_price | money }}
                   {% endif %}
                 </td>
-                <td data-label="Action"><a href="{{ item.url_to_remove }}" aria-label="Retirer {{ item.product.title | escape }}">Retirer</a></td>
+                {%- comment -%}
+                  Le badge de note prend la place exacte de l'ancien lien
+                  « Retirer » — la suppression passe désormais par la poubelle du
+                  sélecteur de quantité. Même snippet que partout ailleurs, avec
+                  le produit de la ligne : aucune copie du composant.
+                {%- endcomment -%}
+                <td data-label="Avis">{%- render 'judgeme-badge', product: item.product, variant: 'cart' -%}</td>
               </tr>
             {% endfor %}
           </tbody>
@@ -56,35 +98,87 @@
         <div class="cart-foot">
           <div class="cart-note">
             <label for="cart-note" class="eyebrow" style="display:block;margin-bottom:10px">Note pour la commande</label>
-            <textarea id="cart-note" name="note">{{ cart.note }}</textarea>
-            <p style="margin-top:16px"><button type="submit" class="btn btn--ghost" style="color:var(--c-ink);border-color:color-mix(in srgb,var(--c-ink) 30%,transparent)">Mettre à jour</button></p>
+            <textarea id="cart-note" name="note" data-cart-note aria-describedby="cart-note-status">{{ cart.note }}</textarea>
+            <p class="cart-note-status" id="cart-note-status" data-cart-note-status role="status" aria-live="polite"></p>
           </div>
           <div class="cart-summary">
-            {%- comment -%}
-              Réduction pack : montants issus de Shopify (cart.total_discount,
-              appliqué par la remise auto « Pack 2 plaques : -14,50 € » dès 2
-              plaques). Rien n'est codé en dur ; si aucune remise n'est active,
-              seul le sous-total s'affiche. T095.
-            {%- endcomment -%}
+            {%- liquid
+              comment
+                « Réduction pack » ne doit jamais se déclencher sur autre chose
+                que la remise du pack DPA TAP : ni code promotionnel, ni autre
+                remise automatique ajoutée un jour dans l'admin.
+                `cart.total_discount` agrège tout, il ne peut donc pas servir de
+                condition — il ne sert plus qu'à isoler le reliquat.
+
+                On repère l'application par deux critères conjoints :
+                  — `type == 'automatic'` : un code renvoie `discount_code`, une
+                    remise posée à la main `manual`. Les codes sont ainsi exclus
+                    par construction, pas par un test sur leur libellé.
+                  — l'intitulé contient « Pack 2 plaques », celui de la remise
+                    automatique réellement configurée dans l'admin,
+                    « Pack 2 plaques : -14,50 € » (minimum 2 articles). La
+                    comparaison porte sur ce fragment seul : elle survit à un
+                    changement de montant dans le titre et ne dépend pas du type
+                    d'espace avant les deux-points.
+
+                Cette remise est configurée « montant sur des produits » : elle
+                est donc allouée ligne par ligne. Les remises de commande sont
+                parcourues aussi, pour rester juste si elle était un jour
+                reconfigurée en « montant sur la commande » — les deux ensembles
+                sont disjoints, aucun montant n'est compté deux fois.
+
+                Le montant affiché est celui que Shopify a réellement alloué,
+                jamais le 1450 de buy-form.liquid : si la remise change dans
+                l'admin, le panier suit sans retouche du thème.
+
+                « Livraison — Gratuite » reprend la mise en page des autres
+                lignes (.row) à l'échelle secondaire des lignes intermédiaires,
+                pour que « Total » reste la seule ligne mise en avant. La
+                gratuité est réelle : profils d'expédition à 0 € pour toute la
+                France, domicile comme point relais, sans minimum.
+              endcomment
+
+              assign pack_discount_match = 'Pack 2 plaques'
+              assign pack_discount = 0
+
+              for application in cart.cart_level_discount_applications
+                if application.type == 'automatic' and application.title contains pack_discount_match
+                  assign pack_discount = pack_discount | plus: application.total_allocated_amount
+                endif
+              endfor
+
+              for line in cart.items
+                for allocation in line.line_level_discount_allocations
+                  if allocation.discount_application.type == 'automatic' and allocation.discount_application.title contains pack_discount_match
+                    assign pack_discount = pack_discount | plus: allocation.amount
+                  endif
+                endfor
+              endfor
+
+              assign other_discount = cart.total_discount | minus: pack_discount
+            -%}
             {% if cart.total_discount > 0 %}
               <div class="row row--muted"><span>Sous-total</span><span>{{ cart.original_total_price | money }}</span></div>
-              <div class="row row--save"><span>Réduction pack</span><span>−{{ cart.total_discount | money }}</span></div>
+              {% if pack_discount > 0 %}
+                <div class="row row--save"><span>Réduction pack</span><span>−{{ pack_discount | money }}</span></div>
+              {% endif %}
+              {%- comment -%}
+                Toute autre remise garde sa propre ligne, sans être appelée
+                « pack » : sans elle, le sous-total barré et le total ne se
+                répondraient plus.
+              {%- endcomment -%}
+              {% if other_discount > 0 %}
+                <div class="row row--save"><span>Réduction</span><span>−{{ other_discount | money }}</span></div>
+              {% endif %}
+              <div class="row row--ship"><span>Livraison</span><span>Gratuite</span></div>
               <div class="row"><span>Total</span><span>{{ cart.total_price | money }}</span></div>
             {% else %}
               <div class="row"><span>Sous-total</span><span>{{ cart.total_price | money }}</span></div>
+              <div class="row row--ship"><span>Livraison</span><span>Gratuite</span></div>
             {% endif %}
-            <p class="small">Livraison gratuite en France — à domicile ou en point relais · expédiée sous 24 h. Taxes calculées au paiement.</p>
             <p class="small cart-guarantee">🛡 <a href="{{ routes.root_url }}pages/garantie-a-vie" style="color:inherit">Garantie à vie</a> — panne ou casse remplacées gratuitement.</p>
             <p class="cart-verify">Avant de payer, vérifiez le nom de votre établissement, votre lien Google, la couleur et la quantité de chaque plaque.</p>
-            {%- comment -%}
-              Emplacement 5 — réassurance agrégée entre le sous-total et le
-              bouton de paiement. Le badge porte sur le produit réellement dans
-              le panier, pas sur un produit codé ici. Badge seul : aucune liste
-              d'avis n'est chargée dans le panier, il n'y en avait pas avant et
-              en ajouter une éloignerait du paiement. Pas de lien non plus,
-              pour ne pas faire sortir du tunnel juste avant de payer.
-            {%- endcomment -%}
-            {%- render 'judgeme-badge', product: cart.items.first.product, variant: 'cart' -%}
+            <p class="cart-error" data-cart-error role="alert" hidden></p>
             <button type="submit" name="checkout" class="btn btn--blue">Paiement sécurisé</button>
           </div>
         </div>
@@ -97,11 +191,41 @@
   .cart-link{color:var(--g-blue);text-decoration:underline;word-break:break-all}
   .cart-was{opacity:.55;margin-right:8px}
   .cart-now{font-weight:600}
-  .cart-summary .row--muted,.cart-summary .row--save{font-size:1rem;font-weight:500}
+  .cart-summary .row--muted,.cart-summary .row--save,.cart-summary .row--ship{font-size:1rem;font-weight:500}
   .cart-summary .row--save{color:var(--g-green)}
+  .cart-summary .row--ship span:last-child{color:var(--g-green)}
   .cart-summary .row--muted span:last-child{text-decoration:line-through;opacity:.6}
   .cart-summary .row+.row{margin-top:8px}
   .cart-verify{font-size:.82rem;line-height:1.45;color:var(--c-grey);background:color-mix(in srgb,var(--c-ink) 5%,transparent);border-radius:12px;padding:12px 14px;margin-top:16px}
+  .cart-error{margin-top:14px;font-size:.85rem;line-height:1.45;color:#b3261e}
+  .cart-error[hidden]{display:none}
+  /* Sélecteur de quantité, version panier : même pilule que la fiche produit,
+     posée sur fond clair. Les trois commandes gardent une cible tactile de
+     46 px. */
+  .qty--cart{border-color:color-mix(in srgb,var(--c-ink) 20%,transparent);background:#fff}
+  .qty--cart .qty-btn{display:inline-flex;align-items:center;justify-content:center;flex:none;width:46px;height:46px;padding:0;background:transparent;border:0;color:var(--c-ink);font-size:1.2rem;line-height:1;text-decoration:none;transition:background .2s,color .2s,transform .15s ease}
+  .qty--cart .qty-btn:hover{background:color-mix(in srgb,var(--c-ink) 7%,transparent);color:var(--c-ink)}
+  .qty--cart .qty-btn:active{transform:scale(.9)}
+  .qty--cart .qty-btn--remove{color:#b3261e}
+  .qty--cart .qty-btn--remove:hover{background:color-mix(in srgb,#b3261e 10%,transparent);color:#b3261e}
+  .qty-ico{width:19px;height:19px;pointer-events:none}
+  .qty--cart .qty-input{width:52px;text-align:center;background:transparent;border:0;color:var(--c-ink);font:inherit;-moz-appearance:textfield;appearance:textfield}
+  .qty--cart .qty-input::-webkit-outer-spin-button,.qty--cart .qty-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  /* Mise à jour en cours : le panier s'estompe, rien ne bouge. */
+  [data-cart-root][aria-busy="true"] .cart-table,[data-cart-root][aria-busy="true"] .cart-summary{opacity:.55;transition:opacity .2s}
+  .cart-note-status{margin-top:10px;min-height:1.3em;font-size:.78rem;line-height:1.3;color:var(--c-grey)}
+  @media (max-width:760px){
+    /* Quantité et total prennent chacun leur ligne : le sélecteur à trois
+       commandes ne tiendrait pas à côté du prix sous 400 px. */
+    .cart-table td:nth-child(2),.cart-table td:nth-child(3){grid-column:1/-1;justify-content:space-between}
+    /* Le badge d'avis est facultatif : sans note publiée, la cellule ne laisse
+       ni bloc vide ni filet en trop. */
+    .cart-table td:empty{display:none}
+  }
+  @media (max-width:560px){
+    .qty--cart .qty-btn{width:44px}
+    .qty--cart .qty-input{width:44px}
+  }
 </style>
 
 {% schema %}

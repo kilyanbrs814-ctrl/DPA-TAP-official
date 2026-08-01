@@ -41,8 +41,15 @@
         {%- endcomment -%}
         {%- render 'judgeme-badge', scope: 'product', product: product, variant: 'pdp' -%}
         <h1 class="h-lg">{{ section.settings.heading }}</h1>
+        {%- comment -%}
+          Le paragraphe d'introduction qui vivait ici, entre la réassurance et
+          le choix du modèle, a été retiré : la fiche enchaîne désormais
+          directement sur l'achat, comme la section produit de l'accueil. La
+          marge basse de .prod-reassure (20 px) porte seule l'espacement — pas
+          de blanc résiduel. Le réglage « Introduction » reste dans le schéma,
+          il n'est simplement plus rendu.
+        {%- endcomment -%}
         {%- render 'product-reassurance' -%}
-        <div class="seo-product__intro rte">{{ section.settings.intro }}</div>
         {% render 'buy-form', product: product %}
         <ul class="seo-product__trust">
           <li><a href="/pages/a-propos">Qui vend cette plaque</a></li>
@@ -387,13 +394,6 @@
   .seo-product__purchase h1 {
     margin-top: 14px;
     color: var(--c-paper);
-  }
-
-  .seo-product__intro {
-    max-width: 62ch;
-    margin: 20px 0 30px;
-    color: color-mix(in srgb, var(--c-paper) 72%, transparent);
-    font-size: 1.05rem;
   }
 
   .seo-product__purchase .buy-form-col {

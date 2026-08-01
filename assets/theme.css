@@ -302,20 +302,29 @@ p{margin:0;text-wrap:pretty}
    leur largeur naturelle (`nowrap` : aucune formulation n'est coupée) et
    repassent à la ligne d'eux-mêmes quand la colonne se resserre — une seule
    ligne dès que la place le permet. */
-/* Réassurance : une seule rangée horizontale sur écran large (nowrap + items
-   non compressibles), empilée verticalement sous 760 px. La taille de police est
-   fluide pour absorber la largeur variable de la colonne d'achat. */
-.prod-reassure{display:flex;flex-direction:row;flex-wrap:nowrap;align-items:center;justify-content:space-between;gap:clamp(10px,1.4vw,20px);margin:18px 0 20px;padding:14px 0;list-style:none;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}
-.prod-reassure li{display:flex;align-items:center;gap:8px;flex:0 1 auto;min-width:0}
+/* Une rangée horizontale tant que la colonne d'achat le permet, empilée
+   verticalement sous 760 px. La taille de police est fluide pour absorber la
+   largeur variable de la colonne.
+   `flex:0 0 auto` : un item ne se comprime jamais sous son texte. Avec
+   `white-space:nowrap`, la compression ne rétrécissait pas la formulation, elle
+   la faisait déborder sur la suivante — c'est ce chevauchement que le <br> de
+   la fiche produit contournait au cas par cas. Les items gardent donc leur
+   largeur naturelle et, quand la colonne est trop étroite pour les trois
+   (colonne d'achat de l'accueil : ~20 % plus étroite que celle de la fiche
+   produit), la rangée passe à la ligne au lieu de se superposer. */
+.prod-reassure{display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:clamp(10px,1.4vw,20px);margin:18px 0 20px;padding:14px 0;list-style:none;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}
+.prod-reassure li{display:flex;align-items:center;gap:8px;flex:0 0 auto;min-width:0}
 .prod-reassure__ico{flex:none;width:18px;height:18px;color:var(--g-blue)}
 .prod-reassure span{font-family:"Space Grotesk",sans-serif;font-weight:500;font-size:clamp(.72rem,.92vw,.85rem);line-height:1.25;white-space:nowrap;color:color-mix(in srgb,var(--c-paper) 82%,transparent)}
+/* « Garantie à vie » est un lien, pas un <span> : il lui faut sa propre
+   consigne pour tenir sur une seule ligne à toutes les largeurs. */
+.prod-reassure a{white-space:nowrap}
 .buy-title:has(+ .prod-reassure){margin-bottom:0}
-/* Fiche produit — desktop uniquement : coupe volontairement le 2e avantage
-   (« Livraison offerte : » / « domicile ou point relais ») sur deux lignes afin
-   d'éviter le chevauchement avec « Aucun abonnement ». Le <br> est masqué par
-   défaut, donc mobile, tablette (≤980px) et l'accueil restent strictement inchangés. */
-.prod-reassure__br-desk{display:none}
-@media (min-width:981px){.template-product .prod-reassure__br-desk{display:inline}}
+/* Le 2e avantage tient sur exactement deux lignes — « Livraison offerte : »
+   puis « domicile ou point relais » — partout : accueil comme fiche produit,
+   mobile comme bureau. Le <br> n'est plus réservé à la fiche produit, c'est ce
+   qui rend les trois features strictement identiques aux deux emplacements. */
+.prod-reassure__br{display:inline}
 .buy-price-row{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
 .buy-price{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:2.4rem;letter-spacing:-.02em}
 .buy-compare{color:var(--c-grey);text-decoration:line-through}
@@ -647,12 +656,11 @@ p{margin:0;text-wrap:pretty}
   .cart-table td:nth-child(2)::before,.cart-table td:nth-child(3)::before{content:attr(data-label);color:var(--c-grey);font-size:.78rem;text-transform:uppercase;letter-spacing:.08em}
   .cart-table td:nth-child(3){justify-content:flex-end}
   .cart-table td:nth-child(4){grid-column:1/-1;border-top:1px solid color-mix(in srgb,var(--c-ink) 10%,transparent)}
-  .cart-table td:nth-child(4) a{display:flex;align-items:center;min-height:44px;color:#b3261e}
+  .cart-table td:nth-child(4) a{display:inline-flex;align-items:center;min-height:44px;color:inherit}
   .cart-item{align-items:flex-start;gap:12px;min-width:0}
   .cart-item img{width:72px;flex:none}
   .cart-item>div{min-width:0;overflow-wrap:anywhere}
   .cart-foot{gap:24px}
-  .cart-note .btn{width:100%}
   .cart-summary{padding:20px}
   .search-form input{min-width:0;font-size:16px}
 }
@@ -1105,7 +1113,11 @@ p{margin:0;text-wrap:pretty}
    ceux de `.dpa-jdgm-badge`, communs à tous les emplacements. */
 .dpa-jdgm-badge--home_product{margin:0 0 12px}
 .dpa-jdgm-badge--pdp{margin:0 0 14px}
-.dpa-jdgm-badge--cart{display:flex;justify-content:center;margin:14px 0;text-align:center}
+/* Panier : le badge vit dans la carte produit, à la place qu'occupait le lien
+   « Retirer ». Il reprend donc l'alignement du texte de la carte plutôt que le
+   centrage qu'il avait sous le récapitulatif, et descend d'un cran en taille
+   pour ne pas concurrencer le titre de la ligne. */
+.dpa-jdgm-badge--cart{margin:0;font-size:.82rem}
 /* Grand écran : le badge du Hero suit l'agrandissement de la section (×1,125).
    Tout est dimensionné en em ou en rem, la composition suit la font-size. */
 @media (min-width:1200px){

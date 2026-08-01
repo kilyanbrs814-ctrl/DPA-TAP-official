@@ -80,7 +80,7 @@
     window.DPA = {
       moneyFormat: {{ shop.money_format | json }},
       cartCount: {{ cart.item_count }},
-      routes: { cartAdd: "{{ routes.cart_add_url }}.js", cart: "{{ routes.cart_url }}", cartJs: "{{ routes.cart_url }}.js" }
+      routes: { cartAdd: "{{ routes.cart_add_url }}.js", cart: "{{ routes.cart_url }}", cartJs: "{{ routes.cart_url }}.js", cartChange: "{{ routes.cart_change_url }}.js", cartUpdate: "{{ routes.cart_update_url }}.js" }
     };
   </script>
   <script src="{{ 'theme.js' | asset_url }}" defer></script>
