@@ -275,6 +275,39 @@ p{margin:0;text-wrap:pretty}
 .buy-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:64px;align-items:start}
 @media (min-width:981px){
   .buy-media{--buy-media-h:calc(min((100vw - 112px)*.575,676px) + 96px);position:sticky;top:max(100px,calc((100vh - var(--buy-media-h))/2));top:max(100px,calc((100svh - var(--buy-media-h))/2))}
+  /* PARITÉ DE LARGEUR UTILE AVEC LA FICHE PRODUIT
+     Les features sont rendues par le même snippet aux deux emplacements, mais
+     elles ne disposaient pas de la même place : la fiche produit leur offre
+     toute sa colonne d'achat (.seo-product__purchase, padding nul), l'accueil
+     seulement l'intérieur d'une carte. À 1240 px de container, cela faisait
+     541 px là-bas contre 426 px ici — 69 px de moins que les 495 px qu'exige la
+     rangée, d'où « Aucun abonnement » renvoyé seul à la ligne.
+
+     Les deux réglages ci-dessous rendent les deux largeurs utiles égales à
+     moins d'un pixel près, sur TOUTE la plage où la section reste en deux
+     colonnes :
+
+       fiche produit : utile = (container − 64) × 0,46
+                       (piste `minmax(360px, .92fr)` face à `1.08fr`)
+       accueil       : utile = piste × (1 − 2 × 3,8 %) − 2 px de bordures
+                       avec piste = (container − 64) × 0,5
+
+       ⇒ 0,5 × 0,924 = 0,462 ≈ 0,46
+
+     Le padding est exprimé en pourcentage, et non en pixels, précisément pour
+     que cette égalité tienne à toutes les largeurs : un padding fixe ferait
+     dériver le seuil de repli de l'accueil par rapport à celui de la fiche
+     produit. Les deux pages basculent donc sur deux rangées exactement au même
+     endroit (~1073 px), avec les mêmes espacements et les mêmes retours à la
+     ligne. Rien n'est réduit : ni le texte, ni les icônes, ni l'écart
+     icône/texte, et le <br> de « Livraison offerte » est intact.
+
+     Le sélecteur `:has()` limite la portée à la grille dont la colonne d'achat
+     porte réellement la réassurance — celle de sections/product-buy.liquid.
+     sections/main-product.liquid, où la réassurance vit dans la colonne de
+     gauche, garde ses proportions d'origine. */
+  .buy-grid:has(.buy-form-col .prod-reassure){grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .buy-form-col:has(.prod-reassure){padding-inline:3.8%}
 }
 .prod-thumbs{display:flex;gap:10px;margin-top:14px;padding:2px 2px 6px;overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x proximity;scrollbar-width:thin}
 .prod-thumb{flex:0 0 72px;width:72px;aspect-ratio:1;padding:0;overflow:hidden;border:1px solid rgba(255,255,255,.2);border-radius:10px;background:#141416;cursor:pointer;scroll-snap-align:start;transition:border-color .2s ease,box-shadow .2s ease,opacity .2s ease}

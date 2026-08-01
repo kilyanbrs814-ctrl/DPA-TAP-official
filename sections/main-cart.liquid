@@ -28,7 +28,7 @@
       <form action="{{ routes.cart_url }}" method="post" data-cart-form>
         <table class="cart-table">
           <thead>
-            <tr><th scope="col">Produit</th><th scope="col">Quantité</th><th scope="col">Total</th><th scope="col"><span class="visually-hidden">Avis</span></th></tr>
+            <tr><th scope="col">Produit</th><th scope="col">Quantité</th><th scope="col">Total</th><th scope="col">Avis</th></tr>
           </thead>
           <tbody>
             {% for item in cart.items %}
@@ -199,6 +199,14 @@
   .cart-verify{font-size:.82rem;line-height:1.45;color:var(--c-grey);background:color-mix(in srgb,var(--c-ink) 5%,transparent);border-radius:12px;padding:12px 14px;margin-top:16px}
   .cart-error{margin-top:14px;font-size:.85rem;line-height:1.45;color:#b3261e}
   .cart-error[hidden]{display:none}
+  /* Colonne « Quantité » — en-tête et cellules centrés d'un seul geste.
+     Le titre et la pilule partagent la même boîte horizontale (padding gauche
+     nul, 12 px à droite comme toutes les cellules) : leurs centres coïncident
+     donc exactement, quel que soit le nombre de lignes du panier. La pilule
+     reste un `inline-flex`, c'est `text-align` qui la centre — ni sa taille, ni
+     ses cibles tactiles, ni la logique poubelle/− ne sont touchées. */
+  .cart-table th:nth-child(2){text-align:center;padding-right:12px}
+  .cart-table td:nth-child(2){text-align:center}
   /* Sélecteur de quantité, version panier : même pilule que la fiche produit,
      posée sur fond clair. Les trois commandes gardent une cible tactile de
      46 px. */
@@ -217,9 +225,20 @@
   @media (max-width:760px){
     /* Quantité et total prennent chacun leur ligne : le sélecteur à trois
        commandes ne tiendrait pas à côté du prix sous 400 px. */
-    .cart-table td:nth-child(2),.cart-table td:nth-child(3){grid-column:1/-1;justify-content:space-between}
+    .cart-table td:nth-child(2),.cart-table td:nth-child(3){grid-column:1/-1}
+    .cart-table td:nth-child(3){justify-content:space-between}
+    /* Le <thead> est masqué à cette largeur : le libellé « Quantité » vient du
+       `data-label` de la cellule, et le sélecteur se centre dessous plutôt que
+       d'être renvoyé contre le bord droit. */
+    .cart-table td:nth-child(2){flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center}
+    /* Même traitement pour « Avis » : le libellé est empilé au-dessus du badge,
+       aligné sur le contenu de la carte, avec la typographie des autres
+       libellés mobiles. */
+    .cart-table td:nth-child(4){flex-direction:column;align-items:flex-start;justify-content:center;gap:6px;padding-top:12px}
+    .cart-table td:nth-child(4)::before{content:attr(data-label);color:var(--c-grey);font-size:.78rem;text-transform:uppercase;letter-spacing:.08em}
     /* Le badge d'avis est facultatif : sans note publiée, la cellule ne laisse
-       ni bloc vide ni filet en trop. */
+       ni bloc vide ni filet en trop. Cette règle reste la dernière : elle doit
+       l'emporter sur le `display:flex` ci-dessus. */
     .cart-table td:empty{display:none}
   }
   @media (max-width:560px){
