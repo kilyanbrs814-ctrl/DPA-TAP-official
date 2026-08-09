@@ -73,21 +73,27 @@
               case sector_key
                 when 'restaurant'
                   assign fallback_visual = 'sector-restaurant.webp'
+                  assign fallback_mobile_visual = 'sector-restaurant-mobile.webp'
                   assign fallback_alt = 'Exemple fictif de fiche Google pour le restaurant Le Jardin d’Ambre'
                 when 'coiffeur'
                   assign fallback_visual = 'sector-coiffeur.webp'
+                  assign fallback_mobile_visual = 'sector-coiffeur-mobile.webp'
                   assign fallback_alt = 'Exemple fictif de fiche Google pour le salon Studio Miroir'
                 when 'institut'
                   assign fallback_visual = 'sector-institut.webp'
+                  assign fallback_mobile_visual = 'sector-institut-mobile.webp'
                   assign fallback_alt = 'Exemple fictif de fiche Google pour l’institut Maison Éclat'
                 when 'hotel'
                   assign fallback_visual = 'sector-hotel.webp'
+                  assign fallback_mobile_visual = 'sector-hotel-mobile.webp'
                   assign fallback_alt = 'Exemple fictif de fiche Google pour Hôtel Rivage'
                 when 'garage'
                   assign fallback_visual = 'sector-garage.webp'
+                  assign fallback_mobile_visual = 'sector-garage-mobile.webp'
                   assign fallback_alt = 'Exemple fictif de fiche Google pour Garage Atlas'
                 else
                   assign fallback_visual = 'sector-autres.webp'
+                  assign fallback_mobile_visual = 'sector-autres-mobile.webp'
                   assign fallback_alt = 'Exemple fictif de fiche Google pour la boutique de vêtements Maison Noma'
               endcase
               assign sector_alt = block.settings.image.alt | default: block.settings.alt | default: fallback_alt
@@ -100,27 +106,38 @@
               data-sector-panel="{{ block.id }}"
               {% unless forloop.first %}hidden{% endunless %}
             >
-              {%- if block.settings.image != blank -%}
-                {{
-                  block.settings.image
-                  | image_url: width: 1800
-                  | image_tag:
-                    widths: '600, 900, 1200, 1500, 1800',
-                    sizes: '(max-width: 760px) calc(100vw - 32px), min(1200px, calc(100vw - 80px))',
-                    alt: sector_alt,
-                    class: 'lp-hero__sector-image',
-                    loading: 'lazy'
-                }}
-              {%- else -%}
-                <img
-                  class="lp-hero__sector-image"
-                  src="{{ fallback_visual | asset_url }}"
-                  width="1774"
-                  height="800"
-                  alt="{{ sector_alt | escape }}"
-                  {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}
-                >
-              {%- endif -%}
+              <picture class="lp-hero__sector-picture">
+                {%- if block.settings.mobile_image != blank -%}
+                  <source
+                    media="(max-width: 760px)"
+                    srcset="{{ block.settings.mobile_image | image_url: width: 1122 }}"
+                  >
+                {%- else -%}
+                  <source media="(max-width: 760px)" srcset="{{ fallback_mobile_visual | asset_url }}">
+                {%- endif -%}
+
+                {%- if block.settings.image != blank -%}
+                  {{
+                    block.settings.image
+                    | image_url: width: 1800
+                    | image_tag:
+                      widths: '600, 900, 1200, 1500, 1800',
+                      sizes: 'min(1200px, calc(100vw - 80px))',
+                      alt: sector_alt,
+                      class: 'lp-hero__sector-image',
+                      loading: 'lazy'
+                  }}
+                {%- else -%}
+                  <img
+                    class="lp-hero__sector-image"
+                    src="{{ fallback_visual | asset_url }}"
+                    width="1774"
+                    height="800"
+                    alt="{{ sector_alt | escape }}"
+                    {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}
+                  >
+                {%- endif -%}
+              </picture>
             </figure>
           {%- endfor -%}
         </div>
@@ -199,6 +216,7 @@
       "settings": [
         { "type": "text", "id": "label", "label": "Libellé", "default": "Restaurant" },
         { "type": "image_picker", "id": "image", "label": "Visuel du secteur", "info": "Laisser vide pour utiliser le visuel fictif livré avec le thème." },
+        { "type": "image_picker", "id": "mobile_image", "label": "Visuel mobile du secteur", "info": "Laisser vide pour utiliser le visuel mobile fictif livré avec le thème." },
         { "type": "text", "id": "alt", "label": "Texte alternatif de l’image" }
       ]
     }
