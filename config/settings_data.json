@@ -50,22 +50,22 @@
         "type": "header",
         "settings": {
           "logo_text": "DPA TAP",
-          "label_product": "Plaque NFC",
-          "link_product": "",
-          "label_how": "Fonctionnement",
-          "link_how": "",
-          "label_models": "Modèles",
-          "link_models": "",
+          "label_product": "La solution",
+          "link_product": "/#solution",
+          "label_how": "Comment ça marche",
+          "link_how": "/#fonctionnement",
+          "label_models": "Commander",
+          "link_models": "/#modeles",
           "label_faq": "FAQ",
-          "link_faq": ""
+          "link_faq": "/#faq"
         }
       },
       "footer": {
         "type": "footer",
         "settings": {
-          "cta_title": "Vos clients sont prêts à vous noter.",
-          "cta_label": "Choisir ma plaque",
-          "cta_link": "",
+          "cta_title": "Soyez mieux vu. Soyez choisi plus souvent.",
+          "cta_label": "Renforcer ma présence Google",
+          "cta_link": "/#modeles",
           "guides_label": "Guides",
           "guides_link": "",
           "menu": "",
@@ -78,7 +78,7 @@
     "blocks": {
       "14947870889598929745": {
         "type": "shopify://apps/smartbot/blocks/app-embed/d9407b81-7d3e-4612-91c3-2020086e2073",
-        "disabled": false,
+        "disabled": true,
         "settings": {}
       },
       "14060646107696862457": {
