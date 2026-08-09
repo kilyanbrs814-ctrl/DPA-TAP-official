@@ -1086,6 +1086,7 @@ p{margin:0;text-wrap:pretty}
 .lp-hero__sector-panel{grid-area:1/1;width:100%;margin:0;display:grid;place-items:center}
 .lp-hero__sector-panel[hidden]{display:none}
 .lp-hero__sector-panel.is-active{animation:lp-sector-in .42s cubic-bezier(.2,.72,.2,1) both}
+.lp-hero__sector-picture{display:block;width:100%}
 .lp-hero__sector-image{display:block;width:100%;height:auto;object-fit:contain;object-position:center}
 @keyframes lp-sector-in{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 
