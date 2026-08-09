@@ -84,9 +84,12 @@
                 when 'hotel'
                   assign fallback_visual = 'sector-hotel.webp'
                   assign fallback_alt = 'Exemple fictif de fiche Google pour Hôtel Rivage'
-                else
+                when 'garage'
                   assign fallback_visual = 'sector-garage.webp'
                   assign fallback_alt = 'Exemple fictif de fiche Google pour Garage Atlas'
+                else
+                  assign fallback_visual = 'sector-autres.webp'
+                  assign fallback_alt = 'Exemple fictif de fiche Google pour la boutique de vêtements Maison Noma'
               endcase
               assign sector_alt = block.settings.image.alt | default: block.settings.alt | default: fallback_alt
             -%}
@@ -201,7 +204,7 @@
       ]
     }
   ],
-  "max_blocks": 5,
+  "max_blocks": 6,
   "presets": [
     {
       "name": "Hero visibilité Google",
@@ -210,7 +213,8 @@
         { "type": "sector", "settings": { "label": "Coiffeur" } },
         { "type": "sector", "settings": { "label": "Institut" } },
         { "type": "sector", "settings": { "label": "Hôtel" } },
-        { "type": "sector", "settings": { "label": "Garage" } }
+        { "type": "sector", "settings": { "label": "Garage" } },
+        { "type": "sector", "settings": { "label": "Autres" } }
       ]
     }
   ]
