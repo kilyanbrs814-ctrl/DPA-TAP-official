@@ -25,11 +25,11 @@
 
       <div class="lp-hero__actions reveal">
         <a class="btn lp-hero__primary" href="{{ section.settings.cta1_link | default: '#modeles' }}">
-          {{ section.settings.cta1_label | default: 'Améliorer ma présence Google' }}
+          <span class="lp-hero__cta-label">{{ section.settings.cta1_label | default: 'Améliorer ma présence Google' }}</span>
           <span aria-hidden="true">→</span>
         </a>
         <a class="btn lp-hero__secondary" href="{{ section.settings.cta2_link | default: '#fonctionnement' }}">
-          {{ section.settings.cta2_label | default: 'Voir la plaque en action' }}
+          <span class="lp-hero__cta-label">{{ section.settings.cta2_label | default: 'Voir la plaque en action' }}</span>
         </a>
       </div>
 
