@@ -1150,6 +1150,8 @@ p{margin:0;text-wrap:pretty}
   .lp-hero__actions{display:grid;grid-template-columns:minmax(0,1.22fr) minmax(0,1fr);width:100%;gap:8px;margin-top:28px}
   .lp-hero__actions .btn{width:100%;min-width:0;min-height:60px;padding:11px 8px;font-size:clamp(.66rem,2.65vw,.78rem);line-height:1.2;text-align:center}
   .lp-hero__primary{gap:6px}
+  .lp-hero__primary .lp-hero__cta-label{max-width:16ch;text-wrap:balance}
+  .lp-hero__secondary .lp-hero__cta-label{max-width:14ch;text-wrap:balance}
   .lp-hero__trust{display:flex;justify-content:center;flex-wrap:nowrap;width:100%;gap:6px;font-size:clamp(.62rem,2.55vw,.72rem)}
   .lp-hero__trust li{flex:0 1 auto;gap:4px;white-space:nowrap}
   .lp-hero__trust li>span{width:16px;height:16px;font-size:.6rem}
