@@ -1,0 +1,84 @@
+{%- liquid
+  assign solution_product = section.settings.product
+  assign solution_price = solution_product.price_min
+-%}
+
+<section class="lp-solution" id="solution" aria-labelledby="lp-solution-title-{{ section.id }}">
+  <div class="container lp-solution__grid">
+    <div class="lp-solution__visual reveal">
+      <div class="lp-solution__halo" aria-hidden="true"></div>
+      <figure class="lp-solution__plaque lp-solution__plaque--black">
+        <img src="{{ 'plaque-noire.jpg' | asset_url }}" width="1254" height="1254" alt="Plaque NFC Avis Google noire DPA TAP" loading="lazy">
+      </figure>
+      <figure class="lp-solution__plaque lp-solution__plaque--blue">
+        <img src="{{ 'plaque-bleue.jpg' | asset_url }}" width="1254" height="1254" alt="Plaque NFC Avis Google bleue DPA TAP" loading="lazy">
+      </figure>
+    </div>
+
+    <div class="lp-solution__copy">
+      {%- if section.settings.eyebrow != blank -%}<p class="lp-solution__eyebrow reveal">{{ section.settings.eyebrow }}</p>{%- endif -%}
+      <h2 class="reveal" id="lp-solution-title-{{ section.id }}">{{ section.settings.title }}</h2>
+      <p class="lp-solution__text reveal">{{ section.settings.text }}</p>
+
+      <ul class="lp-solution__features">
+        {%- for block in section.blocks -%}
+          <li class="reveal" {{ block.shopify_attributes }}>
+            <span aria-hidden="true">✓</span>
+            <div><strong>{{ block.settings.title }}</strong><p>{{ block.settings.text }}</p></div>
+          </li>
+        {%- endfor -%}
+      </ul>
+
+      <div class="lp-solution__offer reveal">
+        {%- if solution_product != blank -%}
+          <span>À partir de</span>
+          <strong>{{ solution_price | money }}</strong>
+        {%- endif -%}
+        <span>Livraison offerte en France</span>
+      </div>
+
+      <div class="lp-solution__actions reveal">
+        <a class="btn btn--blue" href="{{ section.settings.primary_link | default: '#modeles' }}">{{ section.settings.primary_label | default: 'Commander ma plaque' }}</a>
+        <a class="lp-solution__text-link" href="{{ section.settings.secondary_link | default: '#fonctionnement' }}">{{ section.settings.secondary_label | default: 'Voir la démonstration' }} <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Solution DPA TAP",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Sur-titre", "default": "LA SOLUTION DPA TAP" },
+    { "type": "text", "id": "title", "label": "Titre", "default": "La plaque NFC qui transforme le bon moment en avis Google." },
+    { "type": "textarea", "id": "text", "label": "Texte", "default": "Placée près de la caisse ou de l’accueil, elle permet à votre client satisfait d’ouvrir directement votre page d’avis avant de partir. Aucun QR code à rechercher, aucune application à installer." },
+    { "type": "product", "id": "product", "label": "Produit" },
+    { "type": "text", "id": "primary_label", "label": "Bouton principal", "default": "Commander ma plaque" },
+    { "type": "url", "id": "primary_link", "label": "Lien principal" },
+    { "type": "text", "id": "secondary_label", "label": "Lien secondaire", "default": "Voir la démonstration" },
+    { "type": "url", "id": "secondary_link", "label": "Destination secondaire" }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Avantage",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Titre", "default": "Un geste simple" },
+        { "type": "textarea", "id": "text", "label": "Texte", "default": "Le téléphone détecte la plaque automatiquement." }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Solution DPA TAP",
+      "blocks": [
+        { "type": "feature", "settings": { "title": "Un geste simple", "text": "Le téléphone détecte la plaque automatiquement." } },
+        { "type": "feature", "settings": { "title": "Votre page Google directement", "text": "Le client arrive sur le formulaire d’avis sans recherche." } },
+        { "type": "feature", "settings": { "title": "Prête à l’emploi", "text": "Votre lien est programmé avant l’expédition." } },
+        { "type": "feature", "settings": { "title": "Aucun abonnement", "text": "Vous achetez la plaque une fois, sans limite de scans." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

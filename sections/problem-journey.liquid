@@ -1,0 +1,86 @@
+<section class="lp-problem" id="pourquoi-google" aria-labelledby="lp-problem-title-{{ section.id }}">
+  <div class="container">
+    <header class="lp-problem__head">
+      {%- if section.settings.eyebrow != blank -%}<p class="eyebrow reveal">{{ section.settings.eyebrow }}</p>{%- endif -%}
+      <h2 class="reveal" id="lp-problem-title-{{ section.id }}">{{ section.settings.title }}</h2>
+      {%- if section.settings.text != blank -%}<p class="lp-problem__intro reveal">{{ section.settings.text }}</p>{%- endif -%}
+    </header>
+
+    <ol class="lp-problem__steps">
+      {%- for block in section.blocks -%}
+        <li class="lp-problem__step reveal" {{ block.shopify_attributes }}>
+          <span class="lp-problem__number">{{ forloop.index }}</span>
+          <div class="lp-problem__icon" aria-hidden="true">
+            {%- case forloop.index -%}
+              {%- when 1 -%}
+                <svg viewBox="0 0 32 32"><circle cx="14" cy="14" r="8"></circle><path d="m20 20 7 7"></path></svg>
+              {%- when 2 -%}
+                <svg viewBox="0 0 32 32"><path d="M5 9h22M5 16h17M5 23h12"></path><path d="m25 20 1.5 3 3.5.5-2.5 2.5.6 3.5-3.1-1.7-3.1 1.7.6-3.5-2.5-2.5 3.5-.5z"></path></svg>
+              {%- else -%}
+                <svg viewBox="0 0 32 32"><path d="M5 16.5 12 24 27 8"></path></svg>
+            {%- endcase -%}
+          </div>
+          <h3>{{ block.settings.title }}</h3>
+          <p>{{ block.settings.text }}</p>
+        </li>
+      {%- endfor -%}
+    </ol>
+
+    {%- if section.settings.callout != blank -%}
+      <div class="lp-problem__callout reveal">
+        <span class="lp-problem__callout-dot" aria-hidden="true"></span>
+        <p>{{ section.settings.callout }}</p>
+      </div>
+    {%- endif -%}
+
+    <div class="lp-problem__lever reveal">
+      <div>
+        <p class="eyebrow">LE LIEN AVEC LES AVIS</p>
+        <h3>{{ section.settings.lever_title }}</h3>
+      </div>
+      <div>
+        <p>{{ section.settings.lever_text }}</p>
+        <ul aria-label="Principaux facteurs du classement local Google">
+          <li>Pertinence</li>
+          <li>Distance</li>
+          <li>Proéminence</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Parcours Google",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Sur-titre", "default": "LE VRAI ENJEU" },
+    { "type": "text", "id": "title", "label": "Titre", "default": "Avant de vous contacter, vos futurs clients vous comparent déjà." },
+    { "type": "textarea", "id": "text", "label": "Introduction", "default": "Votre fiche Google influence la première impression, la confiance et le choix final, souvent avant même qu’un client visite votre site ou vous appelle." },
+    { "type": "textarea", "id": "callout", "label": "Encadré final", "default": "Une fiche peu active ne dit pas que votre commerce est moins bon. Elle laisse simplement vos concurrents paraître plus rassurants." },
+    { "type": "text", "id": "lever_title", "label": "Titre — lien avec les avis", "default": "Les avis ne servent pas seulement à rassurer." },
+    { "type": "textarea", "id": "lever_text", "label": "Texte — lien avec les avis", "default": "Google explique que les résultats locaux reposent notamment sur la pertinence, la distance et la proéminence. Le nombre d’avis et les notes positives peuvent contribuer au classement local de votre établissement." }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Étape",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Titre", "default": "Ils recherchent" },
+        { "type": "textarea", "id": "text", "label": "Texte", "default": "Ils saisissent votre service et leur ville dans Google ou Google Maps." }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [
+    {
+      "name": "Parcours Google",
+      "blocks": [
+        { "type": "step", "settings": { "title": "Ils recherchent", "text": "Ils saisissent votre service et leur ville dans Google ou Google Maps." } },
+        { "type": "step", "settings": { "title": "Ils comparent", "text": "Ils regardent la note, le nombre d’avis, leur fraîcheur et les commentaires." } },
+        { "type": "step", "settings": { "title": "Ils choisissent", "text": "Ils contactent l’établissement qui paraît le plus visible, actif et rassurant." } }
+      ]
+    }
+  ]
+}
+{% endschema %}
