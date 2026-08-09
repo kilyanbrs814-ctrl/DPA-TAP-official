@@ -37,6 +37,7 @@
   assign mail_subj    = mail_subject | url_encode | replace: '+', '%20'
   assign wa_href      = 'https://wa.me/' | append: wa_digits | append: '?text=' | append: wa_text
   assign mail_href    = 'mailto:' | append: email | append: '?subject=' | append: mail_subj
+  assign vcard_href   = 'kilyan-bouras-dpa.vcf' | asset_url
 
   assign agency_label = agency_url | remove: 'https://' | remove: 'http://' | remove: 'www.' | split: '/' | first
 -%}
@@ -95,10 +96,10 @@
 
     {%- comment -%} ============ ACTIONS ============ {%- endcomment -%}
     <div class="dpa-contact__actions">
-      <button type="button" class="dpa-contact__act dpa-contact__act--primary" data-dpa-vcard>
+      <a class="dpa-contact__act dpa-contact__act--primary" href="{{ vcard_href }}" type="text/vcard">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M3.5 20c.8-3.2 2.9-5 5.5-5s4.7 1.8 5.5 5"/><path d="M18 8v6M15 11h6"/></svg>
         <span>Ajouter aux contacts</span>
-      </button>
+      </a>
 
       {%- if wa_digits != blank -%}
         <a class="dpa-contact__act" href="{{ wa_href }}" target="_blank" rel="noopener noreferrer">
@@ -376,87 +377,16 @@
     </footer>
   </main>
 
-  <script
-    type="application/json"
-    data-dpa-vcard-data>
-    {
-      "n": {{ full_name | json }},
-      "title": {{ job_title | json }},
-      "org": {{ company | json }},
-      "tel": {{ phone | json }},
-      "email": {{ email | json }},
-      "url": {{ agency_url | json }},
-      "wa": {{ wa_digits | json }},
-      "dpatap": {{ section.settings.dpatap_url | json }},
-      "note": {{ section.settings.vcard_note | default: 'Digital Project Agency — sites web, référencement SEO, flyers, logos et solutions NFC DPA Tap.' | json }},
-      "file": "kilyan-bouras-dpa.vcf"
-    }
-  </script>
 </section>
-
-<script>
-  (function () {
-    var root = document.getElementById('dpa-contact-{{ section.id }}');
-    if (!root || root.dataset.dpaContactReady === '1') return;
-    root.dataset.dpaContactReady = '1';
-
-    var btn = root.querySelector('[data-dpa-vcard]');
-    var dataEl = root.querySelector('[data-dpa-vcard-data]');
-    if (!btn || !dataEl) return;
-
-    var cfg;
-    try { cfg = JSON.parse(dataEl.textContent); } catch (e) { return; }
-
-    function esc(v) {
-      return String(v == null ? '' : v).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
-    }
-
-    function buildVcard() {
-      var parts = String(cfg.n || '').trim().split(/\s+/);
-      var first = parts.shift() || '';
-      var last = parts.join(' ');
-      var lines = ['BEGIN:VCARD', 'VERSION:3.0'];
-      lines.push('N:' + esc(last) + ';' + esc(first) + ';;;');
-      lines.push('FN:' + esc(cfg.n));
-      if (cfg.org) lines.push('ORG:' + esc(cfg.org));
-      if (cfg.title) lines.push('TITLE:' + esc(cfg.title));
-      if (cfg.tel) lines.push('TEL;TYPE=CELL,VOICE:' + esc(String(cfg.tel).replace(/\s+/g, '')));
-      if (cfg.email) lines.push('EMAIL;TYPE=INTERNET,WORK:' + esc(cfg.email));
-      if (cfg.url) lines.push('URL:' + esc(cfg.url));
-      if (cfg.wa) {
-        lines.push('item1.URL:https://wa.me/' + esc(cfg.wa));
-        lines.push('item1.X-ABLabel:WhatsApp');
-      }
-      if (cfg.dpatap) {
-        lines.push('item2.URL:' + esc(cfg.dpatap));
-        lines.push('item2.X-ABLabel:DPA Tap');
-      }
-      if (cfg.note) lines.push('NOTE:' + esc(cfg.note));
-      lines.push('END:VCARD');
-      return lines.join('\r\n');
-    }
-
-    btn.addEventListener('click', function () {
-      var blob = new Blob(['\ufeff' + buildVcard()], { type: 'text/vcard;charset=utf-8' });
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement('a');
-      a.href = url;
-      a.download = cfg.file || 'contact.vcf';
-      a.rel = 'noopener';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
-    });
-  })();
-</script>
 
 {% stylesheet %}
 /* ============ Carte de contact DPA (/pages/contact) ============ */
 /* Tout est scopé sous « .dpa-contact ». La largeur de la carte est bornée à
    431 px comme dans le design d'origine ; en dessous de cette largeur elle
    occupe tout l'écran et perd ses coins arrondis, exactement comme la maquette.
-   Le retrait haut reprend celui de `.page-pad` : il dégage l'en-tête fixe. */
+   Le retrait haut s'arrête juste sous l'en-tête fixe. La barre défilante
+   compense déjà sa propre hauteur sur le body : il ne faut pas la compter une
+   seconde fois ici. */
 .dpa-contact{
   --dpa-c-accent:var(--g-blue);
   --dpa-c-bg:var(--c-bg);
@@ -470,15 +400,15 @@
     radial-gradient(ellipse 70% 45% at 50% 108%,color-mix(in srgb,var(--dpa-c-accent) 7%,transparent),transparent 72%),
     var(--dpa-c-bg);
   color:var(--dpa-c-fg);
-  padding:120px 0 0;
+  padding:70px 0 0;
   font-family:"Instrument Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
   overflow-x:clip;
 }
 @media (min-width:432px){
-  .dpa-contact{--dpa-round:30px;padding:120px 16px 48px}
+  .dpa-contact{--dpa-round:30px;padding:70px 16px 48px}
 }
 @media (min-width:601px){
-  .dpa-contact{padding:160px 16px 56px}
+  .dpa-contact{padding:70px 16px 56px}
 }
 .dpa-contact *,.dpa-contact *::before,.dpa-contact *::after{box-sizing:border-box}
 .dpa-contact ::selection{background:color-mix(in srgb,var(--dpa-c-accent) 30%,transparent)}

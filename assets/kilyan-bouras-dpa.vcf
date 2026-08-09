@@ -1,0 +1,13 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Bouras;Kilyan;;;
+FN:Kilyan Bouras
+ORG:Digital Project Agency
+TITLE:Fondateur
+TEL;TYPE=CELL,VOICE:+33753801415
+EMAIL;TYPE=INTERNET,WORK:contact@digitalprojectagency.fr
+URL:https://digitalprojectagency.fr
+item1.URL:https://wa.me/33753801415
+item1.X-ABLabel:WhatsApp
+NOTE:Digital Project Agency - sites web\, referencement SEO\, flyers\, logos et solutions NFC DPA Tap.
+END:VCARD

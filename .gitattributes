@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Les vCards exigent des fins de ligne CRLF pour être reconnues nativement.
+*.vcf -text
