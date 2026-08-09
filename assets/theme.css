@@ -1146,6 +1146,8 @@ p{margin:0;text-wrap:pretty}
 }
 
 @media (max-width:760px){
+  .lp-hero{background:#f7f8fc}
+  .lp-hero__grid,.lp-hero__glow{display:none}
   .lp-hero__title{font-size:clamp(2.55rem,12vw,4.6rem)}
   .lp-hero__subtitle{font-size:1rem;line-height:1.55}
   .lp-hero__actions{display:grid;grid-template-columns:minmax(0,1.22fr) minmax(0,1fr);width:100%;gap:8px;margin-top:28px}
@@ -1157,9 +1159,11 @@ p{margin:0;text-wrap:pretty}
   .lp-hero__trust li>span{width:16px;height:16px;font-size:.6rem}
   .lp-hero__sectors{margin-top:28px}
   .lp-hero__sectors ul{justify-content:flex-start;flex-wrap:nowrap;width:100%;padding:3px 2px 10px;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none}
-  .lp-hero__sectors ul,.lp-hero__sector-showcase,.lp-hero__sector-panel,.lp-hero__sector-picture{background:transparent;border:0;box-shadow:none}
+  .lp-hero__sectors,.lp-hero__sectors ul,.lp-hero__sectors li,.lp-hero__sector-showcase,.lp-hero__sector-panel,.lp-hero__sector-picture,.lp-hero__sector-image{background:none!important;border:0!important;box-shadow:none!important}
+  .lp-hero__sectors::before,.lp-hero__sectors::after,.lp-hero__sector-showcase::before,.lp-hero__sector-showcase::after,.lp-hero__sector-panel::before,.lp-hero__sector-panel::after{content:none!important;display:none!important}
   .lp-hero__sectors ul::-webkit-scrollbar{display:none}
   .lp-hero__sectors li{flex:none;scroll-snap-align:center}
+  .lp-hero__sectors button,.lp-hero__sectors button:hover,.lp-hero__sectors button[aria-selected="true"]{box-shadow:none}
   .lp-hero__sectors button{padding:9px 16px;white-space:nowrap}
   .lp-hero__sector-showcase{width:100%;margin-top:-4px}
   .lp-hero__sector-image{width:100%;max-height:none}
