@@ -1277,7 +1277,7 @@ p{margin:0;text-wrap:pretty}
 .dpa-jdgm-badge__link{display:inline-block;max-width:100%;color:inherit;text-decoration:none}
 .dpa-jdgm-badge__link:hover .dpa-jdgm-badge{text-decoration:underline;text-underline-offset:3px}
 
-.dpa-jdgm-badge--hero{margin-top:22px}
+.dpa-jdgm-badge--hero{margin-top:0}
 /* Accueil : la mention passe au-dessus du nom du produit, comme sur la fiche
    produit. Seules les marges changent — étoiles, texte, couleurs et taille sont
    ceux de `.dpa-jdgm-badge`, communs à tous les emplacements. */
@@ -1291,7 +1291,7 @@ p{margin:0;text-wrap:pretty}
 /* Grand écran : le badge du Hero suit l'agrandissement de la section (×1,125).
    Tout est dimensionné en em ou en rem, la composition suit la font-size. */
 @media (min-width:1200px){
-  .dpa-jdgm-badge--hero{margin-top:25px;font-size:1.0125rem}
+  .dpa-jdgm-badge--hero{margin-top:0;font-size:1.0125rem}
 }
 
 /* ---- Section avis de la page d'accueil ---- */
