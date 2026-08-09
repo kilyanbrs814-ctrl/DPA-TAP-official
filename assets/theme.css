@@ -1082,11 +1082,11 @@ p{margin:0;text-wrap:pretty}
 .lp-hero__sectors button:hover{transform:translateY(-1px);border-color:rgba(17,18,23,.22);background:#fff;color:#111217}
 .lp-hero__sectors button:focus-visible{outline:3px solid rgba(66,133,244,.3);outline-offset:3px}
 .lp-hero__sectors button[aria-selected="true"]{background:#111217;color:#fff;border-color:#111217;box-shadow:0 12px 28px rgba(17,18,23,.16)}
-.lp-hero__sector-showcase{position:relative;width:min(1280px,100%);margin:14px auto 0;min-height:clamp(330px,48vw,640px);display:grid;place-items:center;overflow:visible}
+.lp-hero__sector-showcase{position:relative;width:min(1280px,100%);margin:0 auto;display:grid;place-items:center;overflow:visible}
 .lp-hero__sector-panel{grid-area:1/1;width:100%;margin:0;display:grid;place-items:center}
 .lp-hero__sector-panel[hidden]{display:none}
 .lp-hero__sector-panel.is-active{animation:lp-sector-in .42s cubic-bezier(.2,.72,.2,1) both}
-.lp-hero__sector-image{display:block;width:100%;height:auto;max-height:640px;object-fit:contain;object-position:center;transform:translateY(clamp(22px,5vw,96px))}
+.lp-hero__sector-image{display:block;width:100%;height:auto;object-fit:contain;object-position:center}
 @keyframes lp-sector-in{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 
 .lp-problem{background:var(--c-paper);color:var(--c-ink);padding:clamp(76px,9vw,120px) 0}
@@ -1140,7 +1140,6 @@ p{margin:0;text-wrap:pretty}
 
 @media (max-width:900px){
   .lp-hero{padding-top:116px}
-  .lp-hero__sector-showcase{min-height:clamp(290px,50vw,480px)}
   .lp-problem__steps{grid-template-columns:1fr}
   .lp-problem__step{min-height:0}
   .lp-solution__grid{grid-template-columns:1fr;gap:42px}
@@ -1160,7 +1159,7 @@ p{margin:0;text-wrap:pretty}
   .lp-hero__sectors ul::-webkit-scrollbar{display:none}
   .lp-hero__sectors li{flex:none;scroll-snap-align:center}
   .lp-hero__sectors button{padding:9px 16px;white-space:nowrap}
-  .lp-hero__sector-showcase{width:100%;min-height:clamp(190px,53vw,380px);margin-top:4px}
+  .lp-hero__sector-showcase{width:100%;margin-top:-4px}
   .lp-hero__sector-image{width:100%;max-height:none}
   .lp-problem{padding:66px 0}
   .lp-problem__head h2{font-size:clamp(2.2rem,10vw,3.35rem)}
@@ -1185,7 +1184,6 @@ p{margin:0;text-wrap:pretty}
   .lp-hero__title em{margin-top:5px}
   .lp-hero__trust{display:grid;grid-template-columns:1fr 1fr;justify-items:start;text-align:left}
   .lp-hero__trust li:last-child{grid-column:1/-1}
-  .lp-hero__sector-showcase{min-height:190px}
   .lp-solution__visual{min-height:420px}
   .lp-solution__plaque{width:70%}
   .lp-solution__tap-card{left:10%;bottom:9%;width:88%}
