@@ -70,17 +70,18 @@
         <div class="lp-hero__sector-showcase">
           {%- for block in section.blocks -%}
             {%- liquid
-              case forloop.index
-                when 1
+              assign sector_key = block.settings.label | handleize
+              case sector_key
+                when 'restaurant'
                   assign fallback_visual = 'sector-restaurant.webp'
                   assign fallback_alt = 'Exemple fictif de fiche Google pour le restaurant Le Jardin d’Ambre'
-                when 2
+                when 'coiffeur'
                   assign fallback_visual = 'sector-coiffeur.webp'
                   assign fallback_alt = 'Exemple fictif de fiche Google pour le salon Studio Miroir'
-                when 3
+                when 'institut'
                   assign fallback_visual = 'sector-institut.webp'
                   assign fallback_alt = 'Exemple fictif de fiche Google pour l’institut Maison Éclat'
-                when 4
+                when 'hotel'
                   assign fallback_visual = 'sector-hotel.webp'
                   assign fallback_alt = 'Exemple fictif de fiche Google pour Hôtel Rivage'
                 else
