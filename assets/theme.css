@@ -1115,10 +1115,10 @@ p{margin:0;text-wrap:pretty}
 .lp-solution__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.95fr);gap:clamp(46px,7vw,94px);align-items:center}
 .lp-solution__visual{position:relative;min-height:610px}
 .lp-solution__halo{position:absolute;left:5%;top:10%;width:80%;height:80%;border-radius:50%;background:radial-gradient(circle,rgba(66,133,244,.34),rgba(66,133,244,.06) 44%,transparent 69%);filter:blur(20px)}
-.lp-solution__plaque{position:absolute;margin:0;width:min(390px,72%);aspect-ratio:1;border-radius:32px;overflow:hidden;border:1px solid rgba(255,255,255,.14);box-shadow:0 50px 90px rgba(0,0,0,.55)}
+.lp-solution__plaque{position:absolute;margin:0;width:min(310px,42%);aspect-ratio:1;border-radius:28px;overflow:hidden;border:1px solid rgba(255,255,255,.14);box-shadow:0 42px 78px rgba(0,0,0,.5)}
 .lp-solution__plaque img{width:100%;height:100%;object-fit:cover}
-.lp-solution__plaque--black{left:2%;top:8%;z-index:2;transform:rotate(-7deg)}
-.lp-solution__plaque--blue{right:1%;bottom:5%;z-index:1;transform:rotate(8deg)}
+.lp-solution__plaque--black{left:4%;top:14%;z-index:2;transform:rotate(-6deg)}
+.lp-solution__plaque--blue{right:4%;bottom:14%;z-index:1;transform:rotate(6deg)}
 .lp-solution__eyebrow{font-family:"Space Grotesk",sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.2em;color:#6fa2ff}
 .lp-solution__copy h2{margin-top:15px;font-size:clamp(2.25rem,4.5vw,4.3rem);line-height:1.02;letter-spacing:-.055em;color:#fff}
 .lp-solution__text{margin-top:22px;color:rgba(255,255,255,.68);font-size:1.05rem;line-height:1.65}
@@ -1139,9 +1139,9 @@ p{margin:0;text-wrap:pretty}
   .lp-problem__steps{grid-template-columns:1fr}
   .lp-problem__step{min-height:0}
   .lp-solution__grid{grid-template-columns:1fr;gap:42px}
-  .lp-solution__visual{min-height:560px;order:2}
+  .lp-solution__visual{min-height:500px;order:2}
   .lp-solution__copy{order:1}
-  .lp-solution__plaque{width:min(360px,65%)}
+  .lp-solution__plaque{width:min(280px,42%)}
 }
 
 @media (max-width:760px){
@@ -1166,8 +1166,8 @@ p{margin:0;text-wrap:pretty}
   .lp-problem__lever{grid-template-columns:1fr;padding:24px}
   .lp-solution{padding:66px 0}
   .lp-solution__copy h2{font-size:clamp(2.2rem,10vw,3.35rem)}
-  .lp-solution__visual{min-height:480px}
-  .lp-solution__plaque{width:min(300px,68%);border-radius:24px}
+  .lp-solution__visual{min-height:380px}
+  .lp-solution__plaque{width:42%;border-radius:20px}
   .lp-solution__actions{display:grid;grid-template-columns:1fr;text-align:center}
   .lp-solution__actions .btn{width:100%}
 }
@@ -1179,8 +1179,8 @@ p{margin:0;text-wrap:pretty}
   .lp-hero__title em{margin-top:5px}
   .lp-hero__trust{display:grid;grid-template-columns:1fr 1fr;justify-items:start;text-align:left}
   .lp-hero__trust li:last-child{grid-column:1/-1}
-  .lp-solution__visual{min-height:420px}
-  .lp-solution__plaque{width:70%}
+  .lp-solution__visual{min-height:330px}
+  .lp-solution__plaque{width:42%}
   .lp-solution__offer strong{font-size:1.9rem}
 }
 /* Centrage bannière cookies — PC uniquement */
