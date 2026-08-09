@@ -31,10 +31,6 @@
         "sector_garage": {
           "type": "sector",
           "settings": { "label": "Garage" }
-        },
-        "sector_more": {
-          "type": "sector",
-          "settings": { "label": "+ de commerces" }
         }
       },
       "block_order": [
@@ -42,8 +38,7 @@
         "sector_coiffeur",
         "sector_institut",
         "sector_hotel",
-        "sector_garage",
-        "sector_more"
+        "sector_garage"
       ],
       "settings": {
         "eyebrow": "POUR LES COMMERCES QUI VEULENT ÊTRE CHOISIS SUR GOOGLE",

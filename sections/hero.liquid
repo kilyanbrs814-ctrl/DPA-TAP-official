@@ -47,54 +47,132 @@
     </div>
 
     {%- if section.blocks.size > 0 -%}
-      <div class="lp-hero__sectors reveal" aria-label="Secteurs compatibles">
+      <div class="lp-hero__sectors reveal" id="HeroSectors-{{ section.id }}" data-sector-tabs>
         <span class="lp-hero__sectors-label">Pensée pour les commerces locaux</span>
-        <ul>
+        <ul role="tablist" aria-label="Voir un exemple par secteur">
           {%- for block in section.blocks -%}
-            <li {{ block.shopify_attributes }}>{{ block.settings.label }}</li>
+            <li role="presentation">
+              <button
+                type="button"
+                id="SectorTab-{{ section.id }}-{{ block.id }}"
+                role="tab"
+                aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                aria-controls="SectorPanel-{{ section.id }}-{{ block.id }}"
+                tabindex="{% if forloop.first %}0{% else %}-1{% endif %}"
+                data-sector-tab="{{ block.id }}"
+                {{ block.shopify_attributes }}
+              >
+                {{ block.settings.label }}
+              </button>
+            </li>
           {%- endfor -%}
         </ul>
+        <div class="lp-hero__sector-showcase">
+          {%- for block in section.blocks -%}
+            {%- liquid
+              case forloop.index
+                when 1
+                  assign fallback_visual = 'sector-restaurant.webp'
+                  assign fallback_alt = 'Exemple fictif de fiche Google pour le restaurant Le Jardin d’Ambre'
+                when 2
+                  assign fallback_visual = 'sector-coiffeur.webp'
+                  assign fallback_alt = 'Exemple fictif de fiche Google pour le salon Studio Miroir'
+                when 3
+                  assign fallback_visual = 'sector-institut.webp'
+                  assign fallback_alt = 'Exemple fictif de fiche Google pour l’institut Maison Éclat'
+                when 4
+                  assign fallback_visual = 'sector-hotel.webp'
+                  assign fallback_alt = 'Exemple fictif de fiche Google pour Hôtel Rivage'
+                else
+                  assign fallback_visual = 'sector-garage.webp'
+                  assign fallback_alt = 'Exemple fictif de fiche Google pour Garage Atlas'
+              endcase
+              assign sector_alt = block.settings.image.alt | default: block.settings.alt | default: fallback_alt
+            -%}
+            <figure
+              class="lp-hero__sector-panel{% if forloop.first %} is-active{% endif %}"
+              id="SectorPanel-{{ section.id }}-{{ block.id }}"
+              role="tabpanel"
+              aria-labelledby="SectorTab-{{ section.id }}-{{ block.id }}"
+              data-sector-panel="{{ block.id }}"
+              {% unless forloop.first %}hidden{% endunless %}
+            >
+              {%- if block.settings.image != blank -%}
+                {{
+                  block.settings.image
+                  | image_url: width: 1800
+                  | image_tag:
+                    widths: '600, 900, 1200, 1500, 1800',
+                    sizes: '(max-width: 760px) calc(100vw - 32px), min(1200px, calc(100vw - 80px))',
+                    alt: sector_alt,
+                    class: 'lp-hero__sector-image',
+                    loading: 'lazy'
+                }}
+              {%- else -%}
+                <img
+                  class="lp-hero__sector-image"
+                  src="{{ fallback_visual | asset_url }}"
+                  width="1774"
+                  height="887"
+                  alt="{{ sector_alt | escape }}"
+                  {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}
+                >
+              {%- endif -%}
+            </figure>
+          {%- endfor -%}
+        </div>
       </div>
     {%- endif -%}
-
-    <div class="lp-hero__stage reveal">
-      <div class="lp-hero__stage-copy">
-        <span class="lp-hero__stage-kicker">DPA TAP · PLAQUE NFC AVIS GOOGLE</span>
-        <strong>Un client satisfait.<br>Un geste. Un avis.</strong>
-        <span>La page Google s’ouvre directement, sans application.</span>
-      </div>
-
-      <figure class="lp-hero__demo">
-        {%- if section.settings.visual != blank -%}
-          {%- assign visual_alt = section.settings.visual.alt | default: 'Téléphone ouvrant la page d’avis Google grâce à la plaque NFC DPA TAP' -%}
-          {{
-            section.settings.visual
-            | image_url: width: 1200
-            | image_tag:
-              widths: '480, 760, 960, 1200',
-              sizes: '(max-width: 760px) calc(100vw - 48px), 560px',
-              alt: visual_alt,
-              class: 'lp-hero__demo-image',
-              loading: 'eager',
-              fetchpriority: 'high'
-          }}
-        {%- else -%}
-          <img class="lp-hero__demo-image" src="{{ 'demo-plaque-nfc-poster.webp' | asset_url }}" width="1080" height="1350" alt="Téléphone ouvrant la page d’avis Google grâce à la plaque NFC DPA TAP" loading="eager" fetchpriority="high">
-        {%- endif -%}
-      </figure>
-
-      <div class="lp-hero__product-card">
-        <img src="{{ 'plaque-noire.jpg' | asset_url }}" width="1254" height="1254" alt="Plaque NFC Avis Google noire DPA TAP" loading="eager">
-        <span><strong>Plaque NFC DPA TAP</strong>Programmée avant l’expédition</span>
-      </div>
-
-      <div class="lp-hero__google-card" aria-label="Résultat attendu pour la présence Google">
-        <span class="lp-hero__google-g" aria-hidden="true">G</span>
-        <span><strong>Une fiche plus rassurante</strong>Avis récents · confiance · choix</span>
-      </div>
-    </div>
   </div>
 </section>
+
+<script>
+  (() => {
+    const root = document.getElementById('HeroSectors-{{ section.id }}');
+    if (!root || root.dataset.tabsReady === 'true') return;
+    root.dataset.tabsReady = 'true';
+
+    const tabs = Array.from(root.querySelectorAll('[data-sector-tab]'));
+    const panels = Array.from(root.querySelectorAll('[data-sector-panel]'));
+
+    const activate = (id, focusTab = false) => {
+      tabs.forEach((tab) => {
+        const active = tab.dataset.sectorTab === id;
+        tab.setAttribute('aria-selected', active ? 'true' : 'false');
+        tab.tabIndex = active ? 0 : -1;
+        if (active && focusTab) tab.focus();
+      });
+      panels.forEach((panel) => {
+        const active = panel.dataset.sectorPanel === id;
+        panel.hidden = !active;
+        panel.classList.toggle('is-active', active);
+      });
+    };
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => activate(tab.dataset.sectorTab));
+      tab.addEventListener('keydown', (event) => {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        let next = index;
+        if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
+        if (event.key === 'ArrowLeft') next = (index - 1 + tabs.length) % tabs.length;
+        if (event.key === 'Home') next = 0;
+        if (event.key === 'End') next = tabs.length - 1;
+        activate(tabs[next].dataset.sectorTab, true);
+      });
+    });
+
+    if (window.Shopify && Shopify.designMode) {
+      document.addEventListener('shopify:block:select', (event) => {
+        const selected = event.target.matches('[data-sector-tab]')
+          ? event.target
+          : event.target.querySelector('[data-sector-tab]');
+        if (selected && root.contains(selected)) activate(selected.dataset.sectorTab);
+      });
+    }
+  })();
+</script>
 
 {% schema %}
 {
@@ -108,7 +186,6 @@
     { "type": "url", "id": "cta1_link", "label": "Bouton principal — lien" },
     { "type": "text", "id": "cta2_label", "label": "Bouton secondaire — libellé", "default": "Voir la plaque en action" },
     { "type": "url", "id": "cta2_link", "label": "Bouton secondaire — lien" },
-    { "type": "image_picker", "id": "visual", "label": "Démonstration du hero", "info": "Laisser vide pour utiliser la vraie démonstration téléphone + plaque livrée avec le thème." },
     { "type": "product", "id": "product", "label": "Produit du badge d’avis" },
     { "type": "url", "id": "reviews_link", "label": "Lien du badge d’avis" }
   ],
@@ -117,11 +194,13 @@
       "type": "sector",
       "name": "Secteur",
       "settings": [
-        { "type": "text", "id": "label", "label": "Libellé", "default": "Restaurant" }
+        { "type": "text", "id": "label", "label": "Libellé", "default": "Restaurant" },
+        { "type": "image_picker", "id": "image", "label": "Visuel du secteur", "info": "Laisser vide pour utiliser le visuel fictif livré avec le thème." },
+        { "type": "text", "id": "alt", "label": "Texte alternatif de l’image" }
       ]
     }
   ],
-  "max_blocks": 6,
+  "max_blocks": 5,
   "presets": [
     {
       "name": "Hero visibilité Google",
@@ -130,8 +209,7 @@
         { "type": "sector", "settings": { "label": "Coiffeur" } },
         { "type": "sector", "settings": { "label": "Institut" } },
         { "type": "sector", "settings": { "label": "Hôtel" } },
-        { "type": "sector", "settings": { "label": "Garage" } },
-        { "type": "sector", "settings": { "label": "+ de commerces" } }
+        { "type": "sector", "settings": { "label": "Garage" } }
       ]
     }
   ]
