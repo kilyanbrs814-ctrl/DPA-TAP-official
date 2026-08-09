@@ -11,15 +11,49 @@
   "sections": {
     "hero": {
       "type": "hero",
+      "blocks": {
+        "sector_restaurant": {
+          "type": "sector",
+          "settings": { "label": "Restaurant" }
+        },
+        "sector_coiffeur": {
+          "type": "sector",
+          "settings": { "label": "Coiffeur" }
+        },
+        "sector_institut": {
+          "type": "sector",
+          "settings": { "label": "Institut" }
+        },
+        "sector_hotel": {
+          "type": "sector",
+          "settings": { "label": "Hôtel" }
+        },
+        "sector_garage": {
+          "type": "sector",
+          "settings": { "label": "Garage" }
+        },
+        "sector_more": {
+          "type": "sector",
+          "settings": { "label": "+ de commerces" }
+        }
+      },
+      "block_order": [
+        "sector_restaurant",
+        "sector_coiffeur",
+        "sector_institut",
+        "sector_hotel",
+        "sector_garage",
+        "sector_more"
+      ],
       "settings": {
-        "title_line1": "Plus d’avis Google,",
-        "title_line2": "en un seul geste.",
-        "subtitle": "Transformez chaque passage en caisse en une occasion de renforcer votre réputation locale.",
-        "cta1_label": "Choisir ma plaque",
-        "cta1_link": "shopify://products/plaque-nfc-avis-google",
-        "cta2_label": "Voir comment ça marche",
+        "eyebrow": "POUR LES COMMERCES QUI VEULENT ÊTRE CHOISIS SUR GOOGLE",
+        "title_line1": "Soyez plus visible sur Google.",
+        "title_line2": "Devenez le choix évident.",
+        "subtitle": "Vos futurs clients vous comparent déjà. DPA TAP facilite la collecte d’avis authentiques pour renforcer votre réputation, inspirer confiance et augmenter vos chances d’être choisi.",
+        "cta1_label": "Améliorer ma présence Google",
+        "cta1_link": "/#modeles",
+        "cta2_label": "Voir la plaque en action",
         "cta2_link": "/#fonctionnement",
-        "image": "shopify://shop_images/ChatGPT_Image_27_juil._2026_10_48_16.png",
         "product": "plaque-nfc-avis-google",
         "reviews_link": ""
       }
@@ -64,6 +98,94 @@
         "space_above_mobile": 20
       }
     },
+    "problem_journey": {
+      "type": "problem-journey",
+      "blocks": {
+        "problem_search": {
+          "type": "step",
+          "settings": {
+            "title": "Ils recherchent",
+            "text": "Ils saisissent votre service et leur ville dans Google ou Google Maps."
+          }
+        },
+        "problem_compare": {
+          "type": "step",
+          "settings": {
+            "title": "Ils comparent",
+            "text": "Ils regardent la note, le nombre d’avis, leur fraîcheur et les commentaires."
+          }
+        },
+        "problem_choose": {
+          "type": "step",
+          "settings": {
+            "title": "Ils choisissent",
+            "text": "Ils contactent l’établissement qui paraît le plus visible, actif et rassurant."
+          }
+        }
+      },
+      "block_order": [
+        "problem_search",
+        "problem_compare",
+        "problem_choose"
+      ],
+      "settings": {
+        "eyebrow": "LE VRAI ENJEU",
+        "title": "Avant de vous contacter, vos futurs clients vous comparent déjà.",
+        "text": "Votre fiche Google influence la première impression, la confiance et le choix final, souvent avant même qu’un client visite votre site ou vous appelle.",
+        "callout": "Une fiche peu active ne dit pas que votre commerce est moins bon. Elle laisse simplement vos concurrents paraître plus rassurants.",
+        "lever_title": "Les avis ne servent pas seulement à rassurer.",
+        "lever_text": "Google explique que les résultats locaux reposent notamment sur la pertinence, la distance et la proéminence. Le nombre d’avis et les notes positives peuvent contribuer au classement local de votre établissement."
+      }
+    },
+    "solution_early": {
+      "type": "solution-early",
+      "blocks": {
+        "solution_simple": {
+          "type": "feature",
+          "settings": {
+            "title": "Un geste simple",
+            "text": "Le téléphone détecte la plaque automatiquement."
+          }
+        },
+        "solution_google": {
+          "type": "feature",
+          "settings": {
+            "title": "Votre page Google directement",
+            "text": "Le client arrive sur le formulaire d’avis sans recherche."
+          }
+        },
+        "solution_ready": {
+          "type": "feature",
+          "settings": {
+            "title": "Prête à l’emploi",
+            "text": "Votre lien est programmé avant l’expédition."
+          }
+        },
+        "solution_no_sub": {
+          "type": "feature",
+          "settings": {
+            "title": "Aucun abonnement",
+            "text": "Vous achetez la plaque une fois, sans limite de scans."
+          }
+        }
+      },
+      "block_order": [
+        "solution_simple",
+        "solution_google",
+        "solution_ready",
+        "solution_no_sub"
+      ],
+      "settings": {
+        "eyebrow": "LA SOLUTION DPA TAP",
+        "title": "La plaque NFC qui transforme le bon moment en avis Google.",
+        "text": "Placée près de la caisse ou de l’accueil, elle permet à votre client satisfait d’ouvrir directement votre page d’avis avant de partir. Aucun QR code à rechercher, aucune application à installer.",
+        "product": "plaque-nfc-avis-google",
+        "primary_label": "Commander ma plaque",
+        "primary_link": "/#modeles",
+        "secondary_label": "Voir la démonstration",
+        "secondary_link": "/#fonctionnement"
+      }
+    },
     "how_it_works": {
       "type": "how-it-works",
       "settings": {
@@ -91,10 +213,10 @@
     "buy": {
       "type": "product-buy",
       "settings": {
-        "eyebrow": "Modèles",
-        "title_line1": "Facilitez la collecte",
-        "title_line2": "d’avis Google.",
-        "text": "Les deux modèles embarquent la même puce NFC, programmée avec le lien d’avis de votre établissement avant l’envoi. À l’unité ou en pack de deux.",
+        "eyebrow": "CHOISISSEZ VOTRE PLAQUE",
+        "title_line1": "Plus visible sur Google.",
+        "title_line2": "Plus souvent choisi.",
+        "text": "Noire ou bleue, chaque plaque est programmée avec le lien Google de votre établissement avant l’envoi. À l’unité ou en pack de deux.",
         "product": "plaque-nfc-avis-google"
       }
     },
@@ -155,15 +277,15 @@
         "b1": {
           "type": "benefit",
           "settings": {
-            "title": "Plus d’avis",
-            "text": "Demander un avis devient un réflexe au moment de l’encaissement, sans recherche ni long discours."
+            "title": "Plus de visibilité locale",
+            "text": "Des avis authentiques et récents peuvent renforcer la présence de votre établissement dans les résultats Google et Google Maps."
           }
         },
         "b3": {
           "type": "benefit",
           "settings": {
-            "title": "Visibilité locale",
-            "text": "Des avis authentiques et récents renforcent la présence de votre établissement sur Google et Google Maps."
+            "title": "Une meilleure image",
+            "text": "Une fiche active et entretenue donne immédiatement une impression plus sérieuse et professionnelle."
           }
         },
         "b2": {
@@ -176,28 +298,28 @@
         "b4": {
           "type": "benefit",
           "settings": {
-            "title": "Conversion",
-            "text": "Une fiche Google active et rassurante aide vos futurs clients à franchir le pas : un clic, un appel, une visite."
+            "title": "Plus de chances d’être choisi",
+            "text": "Une fiche rassurante aide vos futurs clients à franchir le pas : un clic, un appel ou une visite."
           }
         },
         "b5": {
           "type": "benefit",
           "settings": {
-            "title": "Être le préféré",
-            "text": "Face à plusieurs adresses similaires, des avis récents et accessibles augmentent vos chances d’être choisi."
+            "title": "Plus d’avis simplement",
+            "text": "Demander un avis devient un geste naturel au moment où votre client est encore présent et satisfait."
           }
         }
       },
       "block_order": [
         "b1",
-        "b3",
         "b2",
         "b4",
+        "b3",
         "b5"
       ],
       "settings": {
-        "eyebrow": "Bénéfices",
-        "title": "Les bénéfices pour votre entreprise"
+        "eyebrow": "VISIBILITÉ · CONFIANCE · CLIENTS",
+        "title": "Ce que votre fiche Google peut changer pour votre commerce"
       }
     },
     "judgeme_reviews": {
@@ -274,90 +396,19 @@
         "eyebrow": "FAQ",
         "title": "Les questions qu’on nous pose."
       }
-    },
-    "gallery": {
-      "type": "gallery",
-      "blocks": {
-        "photo_63ggNi": {
-          "type": "photo",
-          "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_27_juil._2026_10_20_16.png",
-            "caption": "intitut de beauté",
-            "fallback": "scene-cafe.png"
-          }
-        },
-        "photo_88ACRT": {
-          "type": "photo",
-          "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_1_aout_2026_15_02_31.png",
-            "caption": "hotel",
-            "fallback": "scene-cafe.png"
-          }
-        },
-        "g1": {
-          "type": "photo",
-          "settings": {
-            "caption": "Salon de coiffure",
-            "fallback": "scene-salon.png"
-          }
-        },
-        "photo_eirqzp": {
-          "type": "photo",
-          "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_27_juil._2026_10_14_13.png",
-            "caption": "boutique",
-            "fallback": "scene-cafe.png"
-          }
-        },
-        "g2": {
-          "type": "photo",
-          "settings": {
-            "caption": "Café",
-            "fallback": "scene-cafe.png"
-          }
-        },
-        "g4": {
-          "type": "photo",
-          "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_27_juil._2026_10_01_29.png",
-            "caption": "garage",
-            "fallback": "scene-restaurant.png"
-          }
-        },
-        "g3": {
-          "type": "photo",
-          "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_27_juil._2026_09_58_20.png",
-            "caption": "boulangerie",
-            "fallback": "scene-boutique.png"
-          }
-        }
-      },
-      "block_order": [
-        "photo_63ggNi",
-        "photo_88ACRT",
-        "g1",
-        "photo_eirqzp",
-        "g2",
-        "g4",
-        "g3"
-      ],
-      "settings": {
-        "eyebrow": "En situation",
-        "title": "Exemples d’installation"
-      }
     }
   },
   "order": [
     "hero",
     "reassurance_marquee",
+    "problem_journey",
+    "solution_early",
     "how_it_works",
-    "buy",
-    "pro_network",
-    "install",
     "benefits",
+    "buy",
     "judgeme_reviews",
-    "faq",
-    "gallery"
+    "install",
+    "pro_network",
+    "faq"
   ]
 }
