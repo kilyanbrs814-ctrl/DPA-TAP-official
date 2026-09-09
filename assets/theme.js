@@ -662,7 +662,7 @@
       var NOTE_DEBOUNCE = 600;
       var sectionId = root.getAttribute('data-section-id');
       var busy = false;
-      var resubmitting = false;
+      var checkoutPending = false;
       var lastSubmitter = null;
       var pending = Object.create(null);
       var pendingCount = 0;
@@ -890,37 +890,69 @@
          ouvre le checkout. */
       root.addEventListener('submit', function (e) {
         var form = near(e.target, '[data-cart-form]');
-        if (!form || resubmitting) return;
+        if (!form) return;
+        if (checkoutPending) { e.preventDefault(); return; }
+
+        /* Sans requête en cours, conserver la soumission native : Shopify
+           reçoit le bouton checkout, les quantités et la note ensemble.
+           requestSubmit() depuis la microtâche du premier submit peut être
+           ignoré par le navigateur pendant cette même soumission. */
+        var note = pick('[data-cart-note]');
+        if (!busy && !pendingCount && (!note || note.value === noteSaved)) {
+          if (noteTimer) { clearTimeout(noteTimer); noteTimer = null; }
+          return;
+        }
+
         var submitter = e.submitter || lastSubmitter;
-        var name = submitter && submitter.name ? submitter.name : '';
+        var name = submitter && submitter.name ? submitter.name : 'checkout';
         var value = submitter && submitter.value ? submitter.value : '';
         e.preventDefault();
+        checkoutPending = true;
+        fail('');
         root.setAttribute('aria-busy', 'true');
 
+        var expired = false;
+        var timeout = setTimeout(function () {
+          expired = true;
+          checkoutPending = false;
+          root.removeAttribute('aria-busy');
+          fail('La mise à jour du panier prend trop de temps. Rechargez la page avant de réessayer le paiement.');
+        }, 15000);
+
         Promise.all([flushQty(), flushNote()]).then(function () {
-          /* Le rendu a pu remplacer le formulaire entre-temps : on repart de
-             celui qui est réellement dans la page. Panier vidé au passage,
-             donc plus de formulaire : il n'y a plus rien à payer. */
-          var live = root.querySelector('[data-cart-form]');
-          if (!live) { root.removeAttribute('aria-busy'); return; }
-          var btn = name ? live.querySelector('button[name="' + name + '"],input[type="submit"][name="' + name + '"]') : null;
-          resubmitting = true;
-          if (live.requestSubmit) {
-            try {
-              live.requestSubmit(btn || undefined);
-              return;
-            } catch (err) { /* on retombe sur la soumission classique */ }
+          if (expired) return;
+          clearTimeout(timeout);
+          var live = pick('[data-cart-form]');
+          if (!live) {
+            checkoutPending = false;
+            root.removeAttribute('aria-busy');
+            return;
           }
-          /* form.submit() n'embarque aucun bouton : sans `checkout`, Shopify
-             se contenterait de mettre le panier à jour. */
-          if (name) {
-            var hidden = document.createElement('input');
-            hidden.type = 'hidden';
-            hidden.name = name;
-            hidden.value = value;
-            live.appendChild(hidden);
+          var error = pick('[data-cart-error]');
+          if (error && !error.hidden && error.textContent) {
+            checkoutPending = false;
+            root.removeAttribute('aria-busy');
+            return;
           }
-          live.submit();
+          if (!live.reportValidity()) {
+            checkoutPending = false;
+            root.removeAttribute('aria-busy');
+            return;
+          }
+          /* Soumission native sans redispatcher submit. Le champ explicite
+             conserve l'intention checkout normalement portée par le bouton. */
+          var hidden = document.createElement('input');
+          hidden.type = 'hidden';
+          hidden.name = name;
+          hidden.value = value;
+          live.appendChild(hidden);
+          HTMLFormElement.prototype.submit.call(live);
+        }).catch(function () {
+          if (expired) return;
+          clearTimeout(timeout);
+          checkoutPending = false;
+          root.removeAttribute('aria-busy');
+          fail('Impossible de passer au paiement. Rechargez la page et réessayez.');
         });
       });
 
